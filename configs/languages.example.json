@@ -1,0 +1,35 @@
+{
+  "languages": [
+    {
+      "code": "en",
+      "name": "English",
+      "prompt_prefix": "Answer the following question based on the given context. Be factual and concise."
+    },
+    {
+      "code": "zh",
+      "name": "Chinese",
+      "prompt_prefix": "请根据给定的背景信息回答问题。请保持事实准确并简洁。"
+    },
+    {
+      "code": "hi",
+      "name": "Hindi",
+      "prompt_prefix": "दिए गए संदर्भ के आधार पर प्रश्न का उत्तर दें। तथ्यात्मक और संक्षिप्त रहें।"
+    },
+    {
+      "code": "ar",
+      "name": "Arabic",
+      "prompt_prefix": "أجب عن السؤال بناء على السياق المعطى. كن دقيقا ومختصرا."
+    },
+    {
+      "code": "id",
+      "name": "Indonesian",
+      "prompt_prefix": "Jawab pertanyaan berikut berdasarkan konteks yang diberikan. Jawablah secara faktual dan ringkas."
+    },
+    {
+      "code": "es",
+      "name": "Spanish",
+      "prompt_prefix": "Responde la siguiente pregunta basándote en el contexto dado. Sé factual y conciso."
+    }
+  ]
+}
+

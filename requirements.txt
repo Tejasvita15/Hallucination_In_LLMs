@@ -1,0 +1,11 @@
+torch
+transformers
+accelerate
+datasets
+sentencepiece
+protobuf
+safetensors
+numpy
+pandas
+matplotlib
+

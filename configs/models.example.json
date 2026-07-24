@@ -1,0 +1,41 @@
+{
+  "models": [
+    {
+      "name": "qwen3-8b",
+      "path": "Qwen/Qwen3-8B",
+      "family": "Qwen",
+      "notes": "Strong multilingual open-weight baseline"
+    },
+    {
+      "name": "qwen3-14b",
+      "path": "Qwen/Qwen3-14B",
+      "family": "Qwen",
+      "notes": "Recommended medium multilingual model"
+    },
+    {
+      "name": "qwen3-32b",
+      "path": "Qwen/Qwen3-32B",
+      "family": "Qwen",
+      "notes": "Strong single-A100 candidate"
+    },
+    {
+      "name": "aya-expanse-8b",
+      "path": "CohereLabs/aya-expanse-8b",
+      "family": "Aya",
+      "notes": "Multilingual-specialized comparison"
+    },
+    {
+      "name": "aya-expanse-32b",
+      "path": "CohereLabs/aya-expanse-32b",
+      "family": "Aya",
+      "notes": "Larger multilingual-specialized comparison"
+    },
+    {
+      "name": "gemma-3-27b-it",
+      "path": "google/gemma-3-27b-it",
+      "family": "Gemma",
+      "notes": "General open-weight baseline"
+    }
+  ]
+}
+
