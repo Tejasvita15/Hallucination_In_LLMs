@@ -31,6 +31,8 @@ def main() -> None:
         seed=int(cfg.get("seed", 42)),
         dataset_cfg=cfg.get("dataset", {}),
     )
+    if not samples_en:
+        raise RuntimeError("No samples loaded; aborting before model inference.")
     write_json(output_root / "config.json", cfg)
     print(f"Loaded {len(samples_en)} valid HaluEval QA samples")
 
@@ -82,4 +84,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
