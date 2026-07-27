@@ -5,7 +5,7 @@
   "num_samples": 150,
   "dataset": {
     "name": "pminervini/HaluEval",
-    "subset": "qa_samples",
+    "subset": "qa",
     "split": "data"
   },
   "models": [
@@ -37,4 +37,3 @@
     "high_confidence_threshold": 0.75
   }
 }
-

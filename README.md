@@ -50,7 +50,13 @@ python scripts/run_halueval_detection.py --config configs/detection.example.json
 The runner evaluates both the grounded and hallucinated candidate for every
 source sample. The smoke test therefore produces 40 balanced decisions per
 language. It asks for a strict `YES` (hallucinated) or `NO` (grounded) response
-and classifies using normalized first-token probability over those labels.
+and uses that generated decision for classification. Normalized first-token
+probability over those labels is retained as the confidence score.
+
+The paired runner requires HaluEval subset `qa`. Do not change it to
+`qa_samples`: that subset contains one candidate plus a `yes`/`no` label rather
+than separate `right_answer` and `hallucinated_answer` fields. The loader rejects
+that incompatible schema before model inference.
 
 Run the smoke test on the NTU CCDS TC2 partition:
 
@@ -87,6 +93,7 @@ results/detection/<experiment_name>/
   <model>/<language>/
     summary.json
     predictions.jsonl
+    paired_audit.csv
 ```
 
 The dataset cache stores source and translated fields together, a stable source
@@ -100,8 +107,14 @@ Detection summaries report:
 - specificity and Matthews correlation coefficient
 - confusion matrix
 - Brier score, negative log likelihood, and expected calibration error
+- ROC AUC and paired-candidate ranking accuracy
 - strict output-format compliance
 - high-confidence errors
+
+Official classification metrics use the model's generated `YES`/`NO` response.
+First-token probabilities are retained for confidence, calibration, ROC AUC,
+and paired ranking. `paired_audit.csv` places both candidates and predictions
+on one row for manual review.
 
 `scripts/run_crosslingual.py` is retained as an exploratory open-ended
 generation runner. Its substring-based `correct`, `hallucinated`, and `neither`

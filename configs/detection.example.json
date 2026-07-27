@@ -5,7 +5,7 @@
   "num_samples": 20,
   "dataset": {
     "name": "pminervini/HaluEval",
-    "subset": "qa_samples",
+    "subset": "qa",
     "split": "data"
   },
   "models": [

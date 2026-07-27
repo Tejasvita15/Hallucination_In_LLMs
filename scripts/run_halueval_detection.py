@@ -14,13 +14,21 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from hallu_llm.data import QASample, load_halueval_qa
 from hallu_llm.detection import (
+    build_paired_audit_rows,
     build_detection_instances,
     evaluate_detection_instances,
     stable_sample_id,
 )
 from hallu_llm.models import HFGenerator
 from hallu_llm.translation import TranslationResult, Translator
-from hallu_llm.utils import ensure_dir, read_json, set_seed, write_json, write_jsonl
+from hallu_llm.utils import (
+    ensure_dir,
+    read_json,
+    set_seed,
+    write_csv,
+    write_json,
+    write_jsonl,
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -117,6 +125,7 @@ def main() -> None:
             run_dir = ensure_dir(output_root / model_name / language_code)
             write_json(run_dir / "summary.json", summary)
             write_jsonl(run_dir / "predictions.jsonl", rows)
+            write_csv(run_dir / "paired_audit.csv", build_paired_audit_rows(rows))
             print(json.dumps(summary, indent=2, ensure_ascii=False))
 
         del generator

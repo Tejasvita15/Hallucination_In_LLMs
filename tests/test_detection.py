@@ -7,8 +7,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from hallu_llm.data import QASample
+from hallu_llm.data import QASample, validate_paired_qa_schema
 from hallu_llm.detection import (
+    build_paired_audit_rows,
     build_detection_instances,
     is_strict_binary_response,
     parse_binary_response,
@@ -45,6 +46,33 @@ class DetectionInstanceTests(unittest.TestCase):
             self.assertEqual(labels, {"grounded", "hallucinated"})
 
 
+class DataSchemaTests(unittest.TestCase):
+    def test_rejects_single_candidate_qa_samples_schema(self) -> None:
+        rows = [
+            {
+                "knowledge": "Evidence",
+                "question": "Question",
+                "answer": "Candidate answer",
+                "hallucination": "yes",
+            }
+        ]
+
+        with self.assertRaisesRegex(ValueError, "requires the 'qa' subset"):
+            validate_paired_qa_schema(rows, "qa_samples")
+
+    def test_accepts_full_paired_qa_schema(self) -> None:
+        rows = [
+            {
+                "knowledge": "Evidence",
+                "question": "Question",
+                "right_answer": "Grounded answer",
+                "hallucinated_answer": "Unsupported answer",
+            }
+        ]
+
+        validate_paired_qa_schema(rows, "qa")
+
+
 class ResponseParsingTests(unittest.TestCase):
     def test_accepts_leading_yes_or_no(self) -> None:
         self.assertIs(parse_binary_response("YES"), True)
@@ -64,10 +92,10 @@ class ResponseParsingTests(unittest.TestCase):
 class DetectionMetricsTests(unittest.TestCase):
     def test_confusion_matrix_and_balanced_metrics(self) -> None:
         rows = [
-            self._row(actual=True, predicted=True, probability=0.90),
-            self._row(actual=True, predicted=False, probability=0.40),
-            self._row(actual=False, predicted=True, probability=0.80),
-            self._row(actual=False, predicted=False, probability=0.10),
+            self._row("sample-a", 0, actual=True, predicted=True, probability=0.90),
+            self._row("sample-b", 1, actual=True, predicted=False, probability=0.40),
+            self._row("sample-a", 0, actual=False, predicted=True, probability=0.80),
+            self._row("sample-b", 1, actual=False, predicted=False, probability=0.10),
         ]
 
         summary = summarize_detection(rows, "en", "test-model", 0.75)
@@ -84,13 +112,28 @@ class DetectionMetricsTests(unittest.TestCase):
         self.assertAlmostEqual(summary["hallucination_f1"], 0.5)
         self.assertAlmostEqual(summary["mcc"], 0.0)
         self.assertEqual(summary["high_confidence_errors"], 1)
+        self.assertAlmostEqual(summary["roc_auc"], 0.75)
+        self.assertAlmostEqual(summary["pairwise_ranking_accuracy"], 1.0)
+        self.assertAlmostEqual(summary["pairwise_classification_accuracy"], 0.0)
 
     @staticmethod
-    def _row(actual: bool, predicted: bool, probability: float) -> dict[str, object]:
+    def _row(
+        sample_id: str,
+        sample_index: int,
+        actual: bool,
+        predicted: bool,
+        probability: float,
+    ) -> dict[str, object]:
         return {
-            "sample_index": 0,
+            "sample_index": sample_index,
+            "sample_id": sample_id,
+            "model": "test-model",
+            "language": "en",
+            "candidate_type": "hallucinated" if actual else "grounded",
             "actual_label": "hallucinated" if actual else "grounded",
             "predicted_label": "hallucinated" if predicted else "grounded",
+            "prediction_source": "generated_response",
+            "logit_predicted_label": "hallucinated" if predicted else "grounded",
             "prediction_correct": actual == predicted,
             "output_parseable": True,
             "format_valid": True,
@@ -99,7 +142,24 @@ class DetectionMetricsTests(unittest.TestCase):
             "decision_confidence": max(probability, 1 - probability),
             "label_probability_mass": 0.95,
             "translation_warnings": [],
+            "question": f"Question {sample_id}",
+            "knowledge": f"Knowledge {sample_id}",
+            "candidate_answer": "Hallucinated" if actual else "Grounded",
+            "generation": "YES" if predicted else "NO",
         }
+
+    def test_builds_one_audit_row_per_pair(self) -> None:
+        rows = [
+            self._row("sample-a", 0, actual=True, predicted=True, probability=0.90),
+            self._row("sample-a", 0, actual=False, predicted=False, probability=0.20),
+        ]
+
+        audit_rows = build_paired_audit_rows(rows)
+
+        self.assertEqual(len(audit_rows), 1)
+        self.assertEqual(audit_rows[0]["sample_id"], "sample-a")
+        self.assertTrue(audit_rows[0]["pairwise_rank_correct"])
+        self.assertTrue(audit_rows[0]["both_candidates_classified_correctly"])
 
 
 class DetectionPromptTests(unittest.TestCase):

@@ -48,15 +48,32 @@ def _first_present(row: dict[str, Any], candidates: tuple[str, ...]) -> str:
     return ""
 
 
+def validate_paired_qa_schema(rows: list[dict[str, Any]], subset: str) -> None:
+    if not rows:
+        return
+    first_row = _maybe_expand_row(rows[0])
+    keys = {str(key).lower().replace(" ", "_") for key in first_row}
+    has_paired_answers = "right_answer" in keys and "hallucinated_answer" in keys
+    has_sample_label = "answer" in keys and "hallucination" in keys
+    if has_sample_label and not has_paired_answers:
+        raise ValueError(
+            f"HaluEval subset {subset!r} contains one candidate answer plus a yes/no "
+            "hallucination label. Paired evaluation requires the 'qa' subset with "
+            "right_answer and hallucinated_answer fields."
+        )
+
+
 def load_halueval_qa(num_samples: int, seed: int, dataset_cfg: dict[str, Any]) -> list[QASample]:
     from datasets import load_dataset
 
+    subset = dataset_cfg.get("subset", "qa")
     ds = load_dataset(
         dataset_cfg.get("name", "pminervini/HaluEval"),
-        dataset_cfg.get("subset", "qa_samples"),
+        subset,
         split=dataset_cfg.get("split", "data"),
     )
     rows = list(ds)
+    validate_paired_qa_schema(rows, subset)
     random.Random(seed).shuffle(rows)
 
     samples: list[QASample] = []
@@ -71,7 +88,6 @@ def load_halueval_qa(num_samples: int, seed: int, dataset_cfg: dict[str, Any]) -
             (
                 "hallucinated_answer",
                 "hallucinated_ans",
-                "hallucination",
                 "hallucinated_response",
                 "fake_answer",
                 "wrong_answer",
@@ -91,6 +107,16 @@ def load_halueval_qa(num_samples: int, seed: int, dataset_cfg: dict[str, Any]) -
         )
         if len(samples) >= num_samples:
             break
+
+    label_like_answers = sum(
+        sample.hallucinated_answer.strip().lower() in {"yes", "no", "true", "false", "0", "1"}
+        for sample in samples
+    )
+    if samples and label_like_answers >= max(5, int(0.8 * len(samples))):
+        raise ValueError(
+            "Most loaded hallucinated answers are binary labels rather than answer text. "
+            "Use the HaluEval 'qa' subset, not 'qa_samples'."
+        )
 
     if not samples:
         preview_rows = [_maybe_expand_row(row) for row in rows[:3]]
