@@ -13,7 +13,8 @@ env/
 
 # Experiment outputs
 results/
-logs/
+logs/*
+!logs/.gitkeep
 *.out
 *.err
 
@@ -28,4 +29,3 @@ data/cache/
 Thumbs.db
 .vscode/
 .idea/
-

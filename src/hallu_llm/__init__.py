@@ -2,6 +2,7 @@
 
 __all__ = [
     "data",
+    "detection",
     "evaluation",
     "metrics",
     "models",
@@ -9,4 +10,3 @@ __all__ = [
     "translation",
     "utils",
 ]
-

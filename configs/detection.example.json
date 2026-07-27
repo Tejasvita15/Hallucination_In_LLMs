@@ -1,0 +1,38 @@
+{
+  "experiment_name": "crosslingual_halueval_detection_smoke",
+  "output_dir": "results/detection",
+  "seed": 42,
+  "num_samples": 20,
+  "dataset": {
+    "name": "pminervini/HaluEval",
+    "subset": "qa_samples",
+    "split": "data"
+  },
+  "models": [
+    {
+      "name": "qwen2.5-7b",
+      "path": "Qwen/Qwen2.5-7B-Instruct"
+    }
+  ],
+  "languages": [
+    {
+      "code": "en",
+      "name": "English",
+      "translator": null
+    },
+    {
+      "code": "zh",
+      "name": "Chinese",
+      "translator": "Helsinki-NLP/opus-mt-en-zh",
+      "translation_max_length": 512
+    }
+  ],
+  "model_loading": {
+    "dtype": "bfloat16",
+    "device_map": "auto"
+  },
+  "detection": {
+    "max_new_tokens": 4,
+    "high_confidence_threshold": 0.75
+  }
+}

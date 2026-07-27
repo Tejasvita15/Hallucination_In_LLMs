@@ -5,8 +5,6 @@ import random
 from dataclasses import dataclass
 from typing import Any
 
-from datasets import load_dataset
-
 
 @dataclass
 class QASample:
@@ -51,6 +49,8 @@ def _first_present(row: dict[str, Any], candidates: tuple[str, ...]) -> str:
 
 
 def load_halueval_qa(num_samples: int, seed: int, dataset_cfg: dict[str, Any]) -> list[QASample]:
+    from datasets import load_dataset
+
     ds = load_dataset(
         dataset_cfg.get("name", "pminervini/HaluEval"),
         dataset_cfg.get("subset", "qa_samples"),
