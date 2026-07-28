@@ -29,6 +29,7 @@ export TRANSFORMERS_OFFLINE="${TRANSFORMERS_OFFLINE:-1}"
 CONFIG="${CONFIG:-configs/detection.example.json}"
 NUM_SAMPLES="${NUM_SAMPLES:-}"
 EXPERIMENT_NAME="${EXPERIMENT_NAME:-}"
+FAIL_ON_TRANSLATION_QUALITY="${FAIL_ON_TRANSLATION_QUALITY:-0}"
 
 echo "Host: $(hostname)"
 echo "Started: $(date)"
@@ -40,6 +41,9 @@ if [ -n "$NUM_SAMPLES" ]; then
 fi
 if [ -n "$EXPERIMENT_NAME" ]; then
   CMD+=(--experiment-name "$EXPERIMENT_NAME")
+fi
+if [ "$FAIL_ON_TRANSLATION_QUALITY" = "1" ]; then
+  CMD+=(--fail-on-translation-quality)
 fi
 
 echo "Command: ${CMD[*]}"

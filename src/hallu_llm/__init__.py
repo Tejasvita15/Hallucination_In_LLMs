@@ -7,6 +7,7 @@ __all__ = [
     "metrics",
     "models",
     "prompts",
+    "text",
     "translation",
     "translation_quality",
     "utils",

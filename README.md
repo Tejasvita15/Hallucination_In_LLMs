@@ -7,12 +7,14 @@ and cross-lingual refusal calibration in open-weight LLMs.
 
 ```text
 configs/
-  detection.example.json       Correct paired HaluEval detection smoke test
+  detection.example.json       NLLB-1.3B paired HaluEval smoke test
+  detection.nllb-600m.json     Matched NLLB-600M ablation
   experiment.example.json      Example experiment configuration
   models.example.json          Open-weight model list
   languages.example.json       Language list and prompt templates
 jobs/
   submit_detection_tc2.sh      HaluEval detection job for CCDS MGPU-TC2
+  submit_nllb_ablation_tc2.sh  Two-task NLLB model-size ablation
   submit_experiment_ntu.sh     Slurm entrypoint for NTU GPU cluster
 scripts/
   prefetch_hf_assets.py        Downloads configured models and datasets
@@ -27,6 +29,7 @@ src/hallu_llm/
   metrics.py                   Metrics and confidence helpers
   models.py                    HF model loading and generation
   prompts.py                   Prompt templates
+  text.py                      Conservative sentence-boundary repair
   translation.py               Translation helpers
   translation_quality.py       Translation diagnostics and quality gate
   utils.py                     IO, seeds, filesystem helpers
@@ -49,10 +52,12 @@ Run the 20-source-sample HaluEval detection smoke test:
 python scripts/run_halueval_detection.py --config configs/detection.example.json
 ```
 
-The example uses `facebook/nllb-200-distilled-600M` for English-to-Simplified
-Chinese translation with the NLLB language codes `eng_Latn` and `zho_Hans`.
-Four-beam deterministic decoding is used to reduce the translation corruption
-seen with the earlier OPUS baseline.
+The primary example uses `facebook/nllb-200-distilled-1.3B` for
+English-to-Simplified-Chinese translation with the NLLB language codes
+`eng_Latn` and `zho_Hans`. Four-beam deterministic decoding is used. Knowledge
+passages are split into sentences before translation, including repair of
+missing HaluEval boundaries such as `Thun.FC Thun`, so NLLB cannot silently
+discard all later evidence sentences in one generation.
 
 The runner evaluates both the grounded and hallucinated candidate for every
 source sample. The smoke test therefore produces 40 balanced decisions per
@@ -65,25 +70,33 @@ The paired runner requires HaluEval subset `qa`. Do not change it to
 than separate `right_answer` and `hallucinated_answer` fields. The loader rejects
 that incompatible schema before model inference.
 
-Prefetch the dataset, detector model, and NLLB model from a login node before
-submitting an offline compute job:
+Prefetch the dataset, detector model, and both NLLB sizes from a login node
+before submitting offline compute jobs:
 
 ```bash
 HF_HUB_OFFLINE=0 TRANSFORMERS_OFFLINE=0 \
-  python scripts/prefetch_hf_assets.py --config configs/detection.example.json
+  python scripts/prefetch_hf_assets.py \
+    --config configs/detection.nllb-600m.json \
+    --config configs/detection.example.json
 ```
 
-Run the smoke test on the NTU CCDS TC2 partition:
+Run the controlled 600M-versus-1.3B smoke-test array on the NTU CCDS TC2
+partition:
 
 ```bash
-sbatch --export=ALL,CONFIG=configs/detection.example.json jobs/submit_detection_tc2.sh
+sbatch jobs/submit_nllb_ablation_tc2.sh
 ```
 
-After manually checking the smoke-test predictions, run 150 source samples
-without editing the tracked configuration:
+The two tasks use the same seed, 20 source pairs, detector, prompts, and
+decoding settings. Only the NLLB checkpoint differs. A single configuration
+can still be submitted with `jobs/submit_detection_tc2.sh`.
+
+Do not scale to 150 samples until the selected translation configuration passes
+its quality gate and its `datasets/zh.audit.csv` has been manually checked.
+For a full run, make the gate fatal and override the sample count:
 
 ```bash
-sbatch --export=ALL,CONFIG=configs/detection.example.json,NUM_SAMPLES=150,EXPERIMENT_NAME=crosslingual_halueval_detection_nllb_150_v1 jobs/submit_detection_tc2.sh
+sbatch --export=ALL,CONFIG=configs/detection.example.json,NUM_SAMPLES=150,EXPERIMENT_NAME=crosslingual_halueval_detection_nllb_1.3b_150_v2,FAIL_ON_TRANSLATION_QUALITY=1 jobs/submit_detection_tc2.sh
 ```
 
 Run the focused unit tests:
@@ -102,9 +115,11 @@ results/detection/<experiment_name>/
   summary_all.json
   datasets/
     en.jsonl
+    en.audit.csv
     en.meta.json
     en.quality.json
     zh.jsonl
+    zh.audit.csv
     zh.meta.json
     zh.quality.json
   <model>/<language>/
@@ -119,11 +134,12 @@ reused only when its translator settings and source-data fingerprint match.
 Changing from OPUS to NLLB therefore rebuilds the Chinese cache automatically.
 
 `datasets/<language>.quality.json` reports missing numbers, repeated output,
-lost question intent, truncation, empty output, and loss of grounded-answer
-alignment between the translated answer and knowledge. The smoke config records
-quality-gate failures without aborting so the audit files are available. After
-validating suitable thresholds, set `fail_on_quality_gate` to `true` for full
-runs so model inference cannot continue on a damaged translated dataset.
+lost question intent, low-coverage or empty sentence translations, truncation,
+empty output, and loss of grounded-answer alignment. Preserved English entity
+names count as valid answer aliases. `datasets/<language>.audit.csv` includes
+the source and translation plus every knowledge segment for manual review. The
+smoke configs record quality-gate failures without aborting so these audit
+files remain available. Set `fail_on_quality_gate` to `true` for full runs.
 
 Detection summaries report:
 
@@ -135,6 +151,9 @@ Detection summaries report:
 - ROC AUC and paired-candidate ranking accuracy
 - strict output-format compliance
 - high-confidence errors
+- predicted-hallucination rate
+- candidate-length-only ROC AUC and probability correlation
+- performance on a one-to-one length-matched subset
 
 Official classification metrics use the model's generated `YES`/`NO` response.
 First-token probabilities are retained for confidence, calibration, ROC AUC,
@@ -151,7 +170,7 @@ Both experiment runners accept a structured NLLB translator configuration:
 ```json
 {
   "translator": {
-    "model": "facebook/nllb-200-distilled-600M",
+    "model": "facebook/nllb-200-distilled-1.3B",
     "source_lang": "eng_Latn",
     "target_lang": "zho_Hans",
     "dtype": "float16",

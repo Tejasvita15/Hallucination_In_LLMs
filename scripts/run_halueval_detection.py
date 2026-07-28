@@ -22,6 +22,7 @@ from hallu_llm.detection import (
 from hallu_llm.models import HFGenerator
 from hallu_llm.translation import TranslationResult, Translator
 from hallu_llm.translation_quality import (
+    grounded_answer_alignment_status,
     summarize_translation_quality,
     translation_quality_warnings,
 )
@@ -49,6 +50,11 @@ def parse_args() -> argparse.Namespace:
         "--experiment-name",
         help="Override experiment_name so smoke and full runs remain separate.",
     )
+    parser.add_argument(
+        "--fail-on-translation-quality",
+        action="store_true",
+        help="Abort before model inference when a translation quality gate fails.",
+    )
     return parser.parse_args()
 
 
@@ -57,8 +63,19 @@ def main() -> None:
     cfg = read_json(args.config)
     seed = int(cfg.get("seed", 42))
     set_seed(seed)
-    num_samples = args.num_samples if args.num_samples is not None else int(cfg.get("num_samples", 20))
+    num_samples = (
+        args.num_samples
+        if args.num_samples is not None
+        else int(cfg.get("num_samples", 20))
+    )
     experiment_name = args.experiment_name or cfg["experiment_name"]
+    if args.fail_on_translation_quality:
+        for language_cfg in cfg.get("languages", []):
+            if language_cfg.get("translator") is None:
+                continue
+            quality_cfg = dict(language_cfg.get("translation_quality", {}))
+            quality_cfg["fail_on_quality_gate"] = True
+            language_cfg["translation_quality"] = quality_cfg
     effective_cfg = dict(cfg)
     effective_cfg["num_samples"] = num_samples
     effective_cfg["experiment_name"] = experiment_name
@@ -124,6 +141,12 @@ def main() -> None:
                 high_confidence_threshold=confidence_threshold,
                 prompt_instruction=language_cfg.get("detection_instruction"),
                 translation_warnings=translation_warnings,
+                length_match_max_relative_difference=float(
+                    detection_cfg.get(
+                        "length_match_max_relative_difference",
+                        0.25,
+                    )
+                ),
             )
             all_summaries.append(summary)
             run_dir = ensure_dir(output_root / model_name / language_code)
@@ -149,18 +172,43 @@ def prepare_language_dataset(
     language_code = language_cfg["code"]
     translator_spec = _normalize_translator_spec(language_cfg.get("translator"))
     quality_cfg = dict(language_cfg.get("translation_quality", {}))
+    sentence_split_fields = sorted(
+        {
+            str(field)
+            for field in language_cfg.get("sentence_split_fields", ["knowledge"])
+        }
+    )
+    supported_fields = {
+        "question",
+        "knowledge",
+        "right_answer",
+        "hallucinated_answer",
+    }
+    unsupported_fields = set(sentence_split_fields) - supported_fields
+    if unsupported_fields:
+        raise ValueError(
+            "Unsupported sentence_split_fields: "
+            f"{sorted(unsupported_fields)}"
+        )
     cache_path = cache_dir / f"{language_code}.jsonl"
     metadata_path = cache_dir / f"{language_code}.meta.json"
     expected_metadata = {
-        "schema_version": 2,
+        "schema_version": 3,
         "language": language_code,
         "source_fingerprint": source_fingerprint,
         "num_samples": len(source_samples),
         "translator": translator_spec,
         "translation_max_length": int(language_cfg.get("translation_max_length", 512)),
+        "sentence_split_fields": sentence_split_fields,
         "translation_quality_rules": {
             "require_grounded_answer_alignment": bool(
                 quality_cfg.get("require_grounded_answer_alignment", True)
+            ),
+            "min_segment_output_ratio": float(
+                quality_cfg.get("min_segment_output_ratio", 0.2)
+            ),
+            "min_segment_source_tokens": int(
+                quality_cfg.get("min_segment_source_tokens", 8)
             ),
         },
     }
@@ -192,7 +240,12 @@ def prepare_language_dataset(
     max_length = int(language_cfg.get("translation_max_length", 512))
     try:
         for position, source in enumerate(source_samples, start=1):
-            translated, diagnostics = _translate_sample(source, translator, max_length)
+            translated, diagnostics = _translate_sample(
+                source,
+                translator,
+                max_length,
+                sentence_split_fields=set(sentence_split_fields),
+            )
             sample_id = stable_sample_id(source)
             warnings = translation_quality_warnings(
                 source=source,
@@ -201,6 +254,12 @@ def prepare_language_dataset(
                 language_code=language_code,
                 require_grounded_answer_alignment=bool(
                     quality_cfg.get("require_grounded_answer_alignment", True)
+                ),
+                min_segment_output_ratio=float(
+                    quality_cfg.get("min_segment_output_ratio", 0.2)
+                ),
+                min_segment_source_tokens=int(
+                    quality_cfg.get("min_segment_source_tokens", 8)
                 ),
             )
             rows.append(
@@ -226,9 +285,30 @@ def prepare_language_dataset(
                             "output_tokens": result.output_tokens,
                             "input_truncated": result.input_truncated,
                             "output_truncated": result.output_truncated,
+                            "segment_count": len(result.segments),
+                            "segments": [
+                                {
+                                    "source_text": segment.source_text,
+                                    "translated_text": segment.translated_text,
+                                    "source_tokens": segment.source_tokens,
+                                    "output_tokens": segment.output_tokens,
+                                    "output_source_token_ratio": (
+                                        segment.output_tokens
+                                        / segment.source_tokens
+                                        if segment.source_tokens
+                                        else None
+                                    ),
+                                    "input_truncated": segment.input_truncated,
+                                    "output_truncated": segment.output_truncated,
+                                }
+                                for segment in result.segments
+                            ],
                         }
                         for field, result in diagnostics.items()
                     },
+                    "grounded_answer_alignment": (
+                        grounded_answer_alignment_status(source, translated)
+                    ),
                     "translation_warnings": warnings,
                 }
             )
@@ -256,6 +336,7 @@ def _translate_sample(
     source: QASample,
     translator: Translator | None,
     max_length: int,
+    sentence_split_fields: set[str] | None = None,
 ) -> tuple[QASample, dict[str, TranslationResult]]:
     source_fields = {
         "question": source.question,
@@ -275,8 +356,13 @@ def _translate_sample(
             for field, text in source_fields.items()
         }
     else:
+        split_fields = sentence_split_fields or set()
         diagnostics = {
-            field: translator.translate_with_metadata(text, max_length=max_length)
+            field: translator.translate_with_metadata(
+                text,
+                max_length=max_length,
+                split_sentences=field in split_fields,
+            )
             for field, text in source_fields.items()
         }
 
@@ -302,6 +388,10 @@ def _validate_translation_quality(
     }
     quality_path = cache_dir / f"{language_code}.quality.json"
     write_json(quality_path, summary)
+    write_csv(
+        cache_dir / f"{language_code}.audit.csv",
+        _translation_audit_rows(rows),
+    )
     print(
         f"Translation quality ({language_code}): "
         f"critical={summary['critical_warning_rate']:.1%}, "
@@ -316,6 +406,56 @@ def _validate_translation_quality(
             f"Translation quality gate failed for {language_code}; "
             f"inspect {quality_path} and {cache_dir / f'{language_code}.jsonl'}."
         )
+
+
+def _translation_audit_rows(
+    rows: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    audit_rows: list[dict[str, Any]] = []
+    for row in rows:
+        knowledge_diagnostics = row.get("translation_diagnostics", {}).get(
+            "knowledge",
+            {},
+        )
+        segments = list(knowledge_diagnostics.get("segments", []))
+        segment_ratios = [
+            float(segment["output_source_token_ratio"])
+            for segment in segments
+            if segment.get("output_source_token_ratio") is not None
+        ]
+        audit_rows.append(
+            {
+                "sample_index": row["sample_index"],
+                "sample_id": row["sample_id"],
+                "language": row["language"],
+                "translation_warnings": "|".join(row["translation_warnings"]),
+                "grounded_answer_alignment": row.get(
+                    "grounded_answer_alignment",
+                    "unknown",
+                ),
+                "knowledge_segment_count": len(segments),
+                "minimum_segment_output_ratio": (
+                    min(segment_ratios) if segment_ratios else None
+                ),
+                "source_question": row["source"]["question"],
+                "translated_question": row["translated"]["question"],
+                "source_knowledge": row["source"]["knowledge"],
+                "translated_knowledge": row["translated"]["knowledge"],
+                "source_right_answer": row["source"]["right_answer"],
+                "translated_right_answer": row["translated"]["right_answer"],
+                "source_hallucinated_answer": row["source"][
+                    "hallucinated_answer"
+                ],
+                "translated_hallucinated_answer": row["translated"][
+                    "hallucinated_answer"
+                ],
+                "knowledge_segments_json": json.dumps(
+                    segments,
+                    ensure_ascii=False,
+                ),
+            }
+        )
+    return audit_rows
 
 
 def _samples_from_cache_rows(
@@ -359,7 +499,10 @@ def _normalize_translator_spec(value: Any) -> dict[str, Any] | None:
             )
             if value.get(key) is not None
         }
-    raise ValueError("translator must be null, a model-name string, or an object with a model field")
+    raise ValueError(
+        "translator must be null, a model-name string, "
+        "or an object with a model field"
+    )
 
 
 def _load_translator(spec: dict[str, Any]) -> Translator:

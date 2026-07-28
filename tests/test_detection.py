@@ -115,6 +115,27 @@ class DetectionMetricsTests(unittest.TestCase):
         self.assertAlmostEqual(summary["roc_auc"], 0.75)
         self.assertAlmostEqual(summary["pairwise_ranking_accuracy"], 1.0)
         self.assertAlmostEqual(summary["pairwise_classification_accuracy"], 0.0)
+        length_diagnostics = summary["candidate_length_diagnostics"]
+        self.assertEqual(length_diagnostics["mean_grounded"], 8.0)
+        self.assertEqual(length_diagnostics["mean_hallucinated"], 12.0)
+        self.assertEqual(length_diagnostics["length_only_roc_auc"], 1.0)
+        self.assertEqual(
+            length_diagnostics["matched_subset"]["matched_per_class"],
+            0,
+        )
+        matched_summary = summarize_detection(
+            rows,
+            "en",
+            "test-model",
+            0.75,
+            length_match_max_relative_difference=0.5,
+        )
+        matched_subset = matched_summary[
+            "candidate_length_diagnostics"
+        ]["matched_subset"]
+        self.assertEqual(matched_subset["matched_per_class"], 2)
+        self.assertEqual(matched_subset["instance_coverage"], 1.0)
+        self.assertAlmostEqual(matched_subset["roc_auc"], 0.75)
 
     @staticmethod
     def _row(
@@ -160,6 +181,18 @@ class DetectionMetricsTests(unittest.TestCase):
         self.assertEqual(audit_rows[0]["sample_id"], "sample-a")
         self.assertTrue(audit_rows[0]["pairwise_rank_correct"])
         self.assertTrue(audit_rows[0]["both_candidates_classified_correctly"])
+        self.assertEqual(
+            audit_rows[0]["grounded_candidate_character_length"],
+            8,
+        )
+        self.assertEqual(
+            audit_rows[0]["hallucinated_candidate_character_length"],
+            12,
+        )
+        self.assertEqual(
+            audit_rows[0]["hallucinated_to_grounded_length_ratio"],
+            1.5,
+        )
 
 
 class DetectionPromptTests(unittest.TestCase):

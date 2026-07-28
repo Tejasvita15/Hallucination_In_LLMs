@@ -92,6 +92,7 @@ def evaluate_detection_instances(
     high_confidence_threshold: float,
     prompt_instruction: str | None = None,
     translation_warnings: dict[int, list[str]] | None = None,
+    length_match_max_relative_difference: float = 0.25,
 ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     rows: list[dict[str, Any]] = []
     warnings = translation_warnings or {}
@@ -156,6 +157,9 @@ def evaluate_detection_instances(
                 "question": instance.question,
                 "knowledge": instance.knowledge,
                 "candidate_answer": instance.candidate_answer,
+                "candidate_character_length": _content_character_length(
+                    instance.candidate_answer
+                ),
                 "prompt": prompt,
                 "generation": decision.text,
             }
@@ -166,6 +170,9 @@ def evaluate_detection_instances(
         language_code=language_code,
         model_name=model_name,
         high_confidence_threshold=high_confidence_threshold,
+        length_match_max_relative_difference=(
+            length_match_max_relative_difference
+        ),
     )
     return summary, rows
 
@@ -175,6 +182,7 @@ def summarize_detection(
     language_code: str,
     model_name: str,
     high_confidence_threshold: float,
+    length_match_max_relative_difference: float = 0.25,
 ) -> dict[str, Any]:
     total = len(rows)
     if total == 0:
@@ -212,13 +220,20 @@ def summarize_detection(
         for is_correct, conf in zip(correct, confidence)
     )
     epsilon = 1e-12
-    brier_score = sum((probability - int(label)) ** 2 for probability, label in zip(probabilities, actual)) / total
+    brier_score = sum(
+        (probability - int(label)) ** 2
+        for probability, label in zip(probabilities, actual)
+    ) / total
     negative_log_likelihood = -sum(
         int(label) * math.log(max(probability, epsilon))
         + (1 - int(label)) * math.log(max(1 - probability, epsilon))
         for probability, label in zip(probabilities, actual)
     ) / total
     pairwise = _pairwise_metrics(rows)
+    length_diagnostics = _length_diagnostics(
+        rows,
+        max_relative_difference=length_match_max_relative_difference,
+    )
 
     return {
         "protocol": "paired_halueval_detection",
@@ -246,6 +261,8 @@ def summarize_detection(
             "true_grounded": tn,
             "false_grounded": fn,
         },
+        "predicted_hallucination_rate": sum(predicted) / total,
+        "logit_predicted_hallucination_rate": sum(logit_predicted) / total,
         "output_parseable_rate": sum(output_parseable) / total,
         "generated_prediction_fallbacks": sum(
             row["prediction_source"] == "logit_fallback" for row in rows
@@ -279,6 +296,7 @@ def summarize_detection(
         "samples_with_translation_warnings": len(
             {row["sample_index"] for row in rows if row["translation_warnings"]}
         ),
+        "candidate_length_diagnostics": length_diagnostics,
         **pairwise,
     }
 
@@ -302,6 +320,18 @@ def build_paired_audit_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
             continue
         grounded_probability = float(grounded["hallucination_probability"])
         hallucinated_probability = float(hallucinated["hallucination_probability"])
+        grounded_length = int(
+            grounded.get(
+                "candidate_character_length",
+                _content_character_length(grounded["candidate_answer"]),
+            )
+        )
+        hallucinated_length = int(
+            hallucinated.get(
+                "candidate_character_length",
+                _content_character_length(hallucinated["candidate_answer"]),
+            )
+        )
         audit_rows.append(
             {
                 "sample_index": grounded["sample_index"],
@@ -311,10 +341,17 @@ def build_paired_audit_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 "question": grounded["question"],
                 "knowledge": grounded["knowledge"],
                 "grounded_candidate": grounded["candidate_answer"],
+                "grounded_candidate_character_length": grounded_length,
                 "grounded_prediction": grounded["predicted_label"],
                 "grounded_generation": grounded["generation"],
                 "grounded_hallucination_probability": grounded_probability,
                 "hallucinated_candidate": hallucinated["candidate_answer"],
+                "hallucinated_candidate_character_length": hallucinated_length,
+                "hallucinated_to_grounded_length_ratio": (
+                    hallucinated_length / grounded_length
+                    if grounded_length
+                    else None
+                ),
                 "hallucinated_prediction": hallucinated["predicted_label"],
                 "hallucinated_generation": hallucinated["generation"],
                 "hallucinated_hallucination_probability": hallucinated_probability,
@@ -335,6 +372,180 @@ def build_paired_audit_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
             }
         )
     return sorted(audit_rows, key=lambda row: int(row["sample_index"]))
+
+
+def _length_diagnostics(
+    rows: list[dict[str, Any]],
+    max_relative_difference: float,
+) -> dict[str, Any]:
+    lengths = [
+        int(
+            row.get(
+                "candidate_character_length",
+                _content_character_length(row["candidate_answer"]),
+            )
+        )
+        for row in rows
+    ]
+    actual = [row["actual_label"] == "hallucinated" for row in rows]
+    probabilities = [float(row["hallucination_probability"]) for row in rows]
+    grounded_lengths = [
+        length for length, label in zip(lengths, actual) if not label
+    ]
+    hallucinated_lengths = [
+        length for length, label in zip(lengths, actual) if label
+    ]
+    grounded_mean = _mean([float(length) for length in grounded_lengths])
+    hallucinated_mean = _mean(
+        [float(length) for length in hallucinated_lengths]
+    )
+    return {
+        "unit": "unicode_alphanumeric_characters",
+        "mean_grounded": grounded_mean,
+        "mean_hallucinated": hallucinated_mean,
+        "hallucinated_to_grounded_ratio": (
+            hallucinated_mean / grounded_mean
+            if grounded_mean and hallucinated_mean is not None
+            else None
+        ),
+        "length_only_roc_auc": _roc_auc(
+            actual,
+            [float(length) for length in lengths],
+        ),
+        "length_probability_correlation": _pearson_correlation(
+            [float(length) for length in lengths],
+            probabilities,
+        ),
+        "matched_subset": _length_matched_metrics(
+            rows,
+            max_relative_difference=max_relative_difference,
+        ),
+    }
+
+
+def _length_matched_metrics(
+    rows: list[dict[str, Any]],
+    max_relative_difference: float,
+) -> dict[str, Any]:
+    if max_relative_difference < 0:
+        raise ValueError("max_relative_difference must be non-negative")
+    grounded = [
+        row for row in rows if row["actual_label"] == "grounded"
+    ]
+    hallucinated = [
+        row for row in rows if row["actual_label"] == "hallucinated"
+    ]
+    candidates: list[tuple[float, int, int]] = []
+    for grounded_index, grounded_row in enumerate(grounded):
+        grounded_length = _row_candidate_length(grounded_row)
+        for hallucinated_index, hallucinated_row in enumerate(hallucinated):
+            hallucinated_length = _row_candidate_length(hallucinated_row)
+            denominator = max(grounded_length, hallucinated_length, 1)
+            relative_difference = (
+                abs(grounded_length - hallucinated_length) / denominator
+            )
+            candidates.append(
+                (
+                    relative_difference,
+                    grounded_index,
+                    hallucinated_index,
+                )
+            )
+
+    used_grounded: set[int] = set()
+    used_hallucinated: set[int] = set()
+    matched_rows: list[dict[str, Any]] = []
+    differences: list[float] = []
+    for difference, grounded_index, hallucinated_index in sorted(candidates):
+        if difference > max_relative_difference:
+            break
+        if (
+            grounded_index in used_grounded
+            or hallucinated_index in used_hallucinated
+        ):
+            continue
+        used_grounded.add(grounded_index)
+        used_hallucinated.add(hallucinated_index)
+        matched_rows.extend(
+            (grounded[grounded_index], hallucinated[hallucinated_index])
+        )
+        differences.append(difference)
+
+    matched_per_class = len(differences)
+    if not matched_rows:
+        return {
+            "max_relative_difference": max_relative_difference,
+            "matched_per_class": 0,
+            "instance_coverage": 0.0,
+            "mean_relative_length_difference": None,
+            "accuracy": None,
+            "balanced_accuracy": None,
+            "roc_auc": None,
+        }
+
+    actual = [
+        row["actual_label"] == "hallucinated" for row in matched_rows
+    ]
+    predicted = [
+        row["predicted_label"] == "hallucinated" for row in matched_rows
+    ]
+    probabilities = [
+        float(row["hallucination_probability"]) for row in matched_rows
+    ]
+    true_positive = sum(
+        label and prediction
+        for label, prediction in zip(actual, predicted)
+    )
+    true_negative = sum(
+        not label and not prediction
+        for label, prediction in zip(actual, predicted)
+    )
+    recall = _safe_div(true_positive, matched_per_class)
+    specificity = _safe_div(true_negative, matched_per_class)
+    return {
+        "max_relative_difference": max_relative_difference,
+        "matched_per_class": matched_per_class,
+        "instance_coverage": len(matched_rows) / len(rows),
+        "mean_relative_length_difference": _mean(differences),
+        "accuracy": (true_positive + true_negative) / len(matched_rows),
+        "balanced_accuracy": (recall + specificity) / 2,
+        "roc_auc": _roc_auc(actual, probabilities),
+    }
+
+
+def _row_candidate_length(row: dict[str, Any]) -> int:
+    return int(
+        row.get(
+            "candidate_character_length",
+            _content_character_length(row["candidate_answer"]),
+        )
+    )
+
+
+def _content_character_length(text: str) -> int:
+    return sum(character.isalnum() for character in text)
+
+
+def _pearson_correlation(
+    left: list[float],
+    right: list[float],
+) -> float | None:
+    if len(left) != len(right) or len(left) < 2:
+        return None
+    left_mean = sum(left) / len(left)
+    right_mean = sum(right) / len(right)
+    numerator = sum(
+        (left_value - left_mean) * (right_value - right_mean)
+        for left_value, right_value in zip(left, right)
+    )
+    left_scale = math.sqrt(
+        sum((value - left_mean) ** 2 for value in left)
+    )
+    right_scale = math.sqrt(
+        sum((value - right_mean) ** 2 for value in right)
+    )
+    denominator = left_scale * right_scale
+    return numerator / denominator if denominator else None
 
 
 def _pairwise_metrics(rows: list[dict[str, Any]]) -> dict[str, Any]:

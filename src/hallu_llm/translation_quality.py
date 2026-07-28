@@ -18,7 +18,9 @@ EN_QUESTION_PREFIX = re.compile(
 ZH_QUESTION_MARKERS = ("什么", "哪个", "哪一", "谁", "多少", "是否", "几", "何时", "哪里", "为什么")
 CRITICAL_WARNING_CODES = {
     "empty_output",
+    "empty_segment",
     "input_truncated",
+    "low_segment_coverage",
     "numbers_missing",
     "output_truncated",
     "question_intent_lost",
@@ -32,6 +34,8 @@ def translation_quality_warnings(
     diagnostics: Mapping[str, Any],
     language_code: str,
     require_grounded_answer_alignment: bool = True,
+    min_segment_output_ratio: float = 0.2,
+    min_segment_source_tokens: int = 8,
 ) -> list[str]:
     warnings: list[str] = []
     source_fields = {
@@ -54,6 +58,23 @@ def translation_quality_warnings(
             warnings.append(f"{field}:output_truncated")
         if source_fields[field].strip() and not translated_fields[field].strip():
             warnings.append(f"{field}:empty_output")
+        if field not in {"question", "knowledge"}:
+            continue
+        for segment_index, segment in enumerate(
+            getattr(result, "segments", ()),
+            start=1,
+        ):
+            if segment.source_text.strip() and not segment.translated_text.strip():
+                warnings.append(f"{field}:empty_segment:{segment_index}")
+                continue
+            if segment.source_tokens < min_segment_source_tokens:
+                continue
+            output_ratio = segment.output_tokens / segment.source_tokens
+            if output_ratio < min_segment_output_ratio:
+                warnings.append(
+                    f"{field}:low_segment_coverage:{segment_index}:"
+                    f"{output_ratio:.3f}"
+                )
 
     for field, source_text in source_fields.items():
         translated_text = translated_fields[field]
@@ -66,12 +87,9 @@ def translation_quality_warnings(
     if _question_intent_lost(source.question, translated.question, language_code):
         warnings.append("question:question_intent_lost")
 
-    source_has_answer = _contains(source.context, source.right_answer)
-    translated_has_answer = _contains(translated.context, translated.right_answer)
     if (
         require_grounded_answer_alignment
-        and source_has_answer
-        and not translated_has_answer
+        and grounded_answer_alignment_status(source, translated) == "lost"
     ):
         warnings.append("right_answer:grounded_alignment_lost")
 
@@ -87,8 +105,12 @@ def summarize_translation_quality(
     warning_samples = 0
     critical_samples = 0
     alignment_loss_samples = 0
+    alignment_status_counts: Counter[str] = Counter()
 
     for row in rows:
+        alignment_status_counts[
+            str(row.get("grounded_answer_alignment", "unknown"))
+        ] += 1
         warnings = list(row.get("translation_warnings", []))
         if warnings:
             warning_samples += 1
@@ -127,8 +149,24 @@ def summarize_translation_quality(
         "max_critical_warning_rate": max_critical_rate,
         "max_grounded_alignment_loss_rate": max_alignment_loss_rate,
         "quality_gate_passed": passed,
+        "grounded_answer_alignment_counts": dict(
+            sorted(alignment_status_counts.items())
+        ),
         "warning_counts": dict(sorted(warning_counts.items())),
     }
+
+
+def grounded_answer_alignment_status(
+    source: QASample,
+    translated: QASample,
+) -> str:
+    if not _contains(source.context, source.right_answer):
+        return "not_applicable"
+    if _contains(translated.context, translated.right_answer):
+        return "translated_answer"
+    if _contains(translated.context, source.right_answer):
+        return "source_answer_alias"
+    return "lost"
 
 
 def _missing_numbers(source: str, translated: str) -> list[str]:
