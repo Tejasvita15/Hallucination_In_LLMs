@@ -45,6 +45,35 @@ class DetectionInstanceTests(unittest.TestCase):
             }
             self.assertEqual(labels, {"grounded", "hallucinated"})
 
+    def test_marks_reviewed_source_pair_for_primary_metric_exclusion(self) -> None:
+        sample = QASample(
+            0,
+            "Question",
+            "Knowledge",
+            "Right",
+            "Wrong",
+        )
+
+        instances = build_detection_instances(
+            [sample],
+            seed=7,
+            sample_ids={0: "source-a"},
+            source_reviews={
+                "source-a": {
+                    "exclude_from_primary_metrics": True,
+                    "reason": "Both candidates are supported.",
+                }
+            },
+        )
+
+        self.assertTrue(
+            all(instance.excluded_from_primary_metrics for instance in instances)
+        )
+        self.assertEqual(
+            {instance.source_review_reason for instance in instances},
+            {"Both candidates are supported."},
+        )
+
 
 class DataSchemaTests(unittest.TestCase):
     def test_rejects_single_candidate_qa_samples_schema(self) -> None:
@@ -192,6 +221,38 @@ class DetectionMetricsTests(unittest.TestCase):
         self.assertEqual(
             audit_rows[0]["hallucinated_to_grounded_length_ratio"],
             1.5,
+        )
+
+    def test_excludes_reviewed_pairs_only_from_primary_metrics(self) -> None:
+        rows = [
+            self._row("sample-a", 0, actual=True, predicted=True, probability=0.90),
+            self._row("sample-a", 0, actual=False, predicted=False, probability=0.10),
+            self._row("sample-b", 1, actual=True, predicted=False, probability=0.20),
+            self._row("sample-b", 1, actual=False, predicted=True, probability=0.80),
+        ]
+        for row in rows:
+            row["excluded_from_primary_metrics"] = row["sample_id"] == "sample-b"
+            row["source_review_reason"] = (
+                "Ambiguous source label."
+                if row["sample_id"] == "sample-b"
+                else None
+            )
+
+        summary = summarize_detection(rows, "en", "test-model", 0.75)
+        audit_rows = build_paired_audit_rows(rows)
+
+        self.assertEqual(summary["num_generated_source_samples"], 2)
+        self.assertEqual(summary["num_source_samples"], 1)
+        self.assertEqual(summary["num_excluded_source_samples"], 1)
+        self.assertEqual(summary["excluded_sample_ids"], ["sample-b"])
+        self.assertEqual(summary["accuracy"], 1.0)
+        excluded_audit = next(
+            row for row in audit_rows if row["sample_id"] == "sample-b"
+        )
+        self.assertTrue(excluded_audit["excluded_from_primary_metrics"])
+        self.assertEqual(
+            excluded_audit["source_review_reason"],
+            "Ambiguous source label.",
         )
 
 

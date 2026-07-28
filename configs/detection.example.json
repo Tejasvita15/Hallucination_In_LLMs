@@ -1,5 +1,5 @@
 {
-  "experiment_name": "crosslingual_halueval_detection_nllb_600m_retry_smoke_v3",
+  "experiment_name": "crosslingual_halueval_detection_nllb_600m_reviewed_smoke_v4",
   "output_dir": "results/detection",
   "seed": 42,
   "num_samples": 20,
@@ -8,6 +8,7 @@
     "subset": "qa",
     "split": "data"
   },
+  "review_manifest": "halueval_reviews.json",
   "models": [
     {
       "name": "qwen2.5-7b",

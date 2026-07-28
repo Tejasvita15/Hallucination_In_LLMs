@@ -30,6 +30,8 @@ CONFIG="${CONFIG:-configs/detection.example.json}"
 NUM_SAMPLES="${NUM_SAMPLES:-}"
 EXPERIMENT_NAME="${EXPERIMENT_NAME:-}"
 FAIL_ON_TRANSLATION_QUALITY="${FAIL_ON_TRANSLATION_QUALITY:-0}"
+PREPARE_ONLY="${PREPARE_ONLY:-0}"
+ALL_SAMPLES="${ALL_SAMPLES:-0}"
 
 echo "Host: $(hostname)"
 echo "Started: $(date)"
@@ -44,6 +46,12 @@ if [ -n "$EXPERIMENT_NAME" ]; then
 fi
 if [ "$FAIL_ON_TRANSLATION_QUALITY" = "1" ]; then
   CMD+=(--fail-on-translation-quality)
+fi
+if [ "$PREPARE_ONLY" = "1" ]; then
+  CMD+=(--prepare-only)
+fi
+if [ "$ALL_SAMPLES" = "1" ]; then
+  CMD+=(--all-samples)
 fi
 
 echo "Command: ${CMD[*]}"

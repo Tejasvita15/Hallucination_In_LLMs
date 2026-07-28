@@ -63,9 +63,15 @@ def validate_paired_qa_schema(rows: list[dict[str, Any]], subset: str) -> None:
         )
 
 
-def load_halueval_qa(num_samples: int, seed: int, dataset_cfg: dict[str, Any]) -> list[QASample]:
+def load_halueval_qa(
+    num_samples: int | None,
+    seed: int,
+    dataset_cfg: dict[str, Any],
+) -> list[QASample]:
     from datasets import load_dataset
 
+    if num_samples is not None and num_samples < 1:
+        raise ValueError("num_samples must be at least 1 or null for all samples.")
     subset = dataset_cfg.get("subset", "qa")
     ds = load_dataset(
         dataset_cfg.get("name", "pminervini/HaluEval"),
@@ -105,7 +111,7 @@ def load_halueval_qa(num_samples: int, seed: int, dataset_cfg: dict[str, Any]) -
                 hallucinated_answer=hallucinated_answer,
             )
         )
-        if len(samples) >= num_samples:
+        if num_samples is not None and len(samples) >= num_samples:
             break
 
     label_like_answers = sum(

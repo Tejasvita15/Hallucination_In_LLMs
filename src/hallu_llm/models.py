@@ -5,7 +5,6 @@ from dataclasses import dataclass
 from typing import Any
 
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from .metrics import token_confidence_from_scores
 
@@ -43,6 +42,8 @@ class HFGenerator:
         device_map: str = "auto",
         trust_remote_code: bool = True,
     ) -> "HFGenerator":
+        from transformers import AutoModelForCausalLM, AutoTokenizer
+
         tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=trust_remote_code)
         if tokenizer.pad_token_id is None:
             tokenizer.pad_token = tokenizer.eos_token

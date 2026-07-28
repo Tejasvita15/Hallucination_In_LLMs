@@ -15,6 +15,7 @@ EMBEDDED_INTERROGATIVE = re.compile(
     re.IGNORECASE,
 )
 LANGUAGE_NEUTRAL_NUMBER = re.compile(r"[\d\s.,:%+/\-–—()]+")
+TRAILING_CLAUSE_SEPARATOR = re.compile(r"[\s,，;；]+$")
 PRECEDING_TOKEN = re.compile(r"([A-Za-z.]+)[.!?]$")
 PROTECTED_ABBREVIATIONS = {
     "dr",
@@ -84,6 +85,15 @@ def split_english_question_clauses(text: str) -> list[str]:
 
 def is_language_neutral_number(text: str) -> bool:
     return bool(text.strip() and LANGUAGE_NEUTRAL_NUMBER.fullmatch(text.strip()))
+
+
+def join_translated_question_clauses(clauses: list[str]) -> str:
+    cleaned = [
+        TRAILING_CLAUSE_SEPARATOR.sub("", clause.strip())
+        for clause in clauses
+        if clause.strip()
+    ]
+    return "，".join(clause for clause in cleaned if clause)
 
 
 def _ends_with_protected_abbreviation(text: str) -> bool:

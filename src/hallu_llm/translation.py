@@ -3,10 +3,10 @@ from __future__ import annotations
 from dataclasses import dataclass, replace
 
 import torch
-from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 
 from .data import QASample
 from .text import (
+    join_translated_question_clauses,
     split_english_question_clauses,
     split_english_sentences,
 )
@@ -44,6 +44,8 @@ class Translator:
         dtype: str = "float32",
         num_beams: int = 1,
     ) -> None:
+        from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
+
         self.model_name = model_name
         self.source_lang = source_lang
         self.target_lang = target_lang
@@ -117,7 +119,16 @@ class Translator:
             separator="\uff0c",
             strategy="question_clause_retry",
         )
-        return replace(result, initial_text=initial_text)
+        return replace(
+            result,
+            text=join_translated_question_clauses(
+                [
+                    segment.translated_text
+                    for segment in result.segments
+                ]
+            ),
+            initial_text=initial_text,
+        )
 
     def _translate_segments(
         self,

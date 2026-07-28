@@ -20,6 +20,11 @@ from hallu_llm.detection import (
     stable_sample_id,
 )
 from hallu_llm.models import HFGenerator
+from hallu_llm.reviews import (
+    load_review_manifest,
+    review_manifest_metadata,
+    translation_review,
+)
 from hallu_llm.text import is_language_neutral_number
 from hallu_llm.translation import TranslationResult, Translator
 from hallu_llm.translation_quality import (
@@ -54,6 +59,16 @@ def parse_args() -> argparse.Namespace:
         help="Override experiment_name so smoke and full runs remain separate.",
     )
     parser.add_argument(
+        "--all-samples",
+        action="store_true",
+        help="Use every valid row in the configured dataset split.",
+    )
+    parser.add_argument(
+        "--prepare-only",
+        action="store_true",
+        help="Build and validate translation caches without loading detector models.",
+    )
+    parser.add_argument(
         "--fail-on-translation-quality",
         action="store_true",
         help="Abort before model inference when a translation quality gate fails.",
@@ -63,15 +78,28 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    cfg = read_json(args.config)
+    config_path = Path(args.config).resolve()
+    cfg = read_json(config_path)
     seed = int(cfg.get("seed", 42))
     set_seed(seed)
-    num_samples = (
-        args.num_samples
-        if args.num_samples is not None
-        else int(cfg.get("num_samples", 20))
-    )
+    configured_num_samples = cfg.get("num_samples", 20)
+    if args.num_samples is not None and args.all_samples:
+        raise ValueError("--num-samples and --all-samples cannot be used together.")
+    if args.all_samples:
+        num_samples = None
+    elif args.num_samples is not None:
+        num_samples = args.num_samples
+    elif configured_num_samples is None:
+        num_samples = None
+    else:
+        num_samples = int(configured_num_samples)
     experiment_name = args.experiment_name or cfg["experiment_name"]
+    review_path = _resolve_optional_path(
+        cfg.get("review_manifest"),
+        base_dir=config_path.parent,
+    )
+    reviews = load_review_manifest(review_path)
+    reviews_metadata = review_manifest_metadata(reviews)
     if args.fail_on_translation_quality:
         for language_cfg in cfg.get("languages", []):
             if language_cfg.get("translator") is None:
@@ -82,6 +110,7 @@ def main() -> None:
     effective_cfg = dict(cfg)
     effective_cfg["num_samples"] = num_samples
     effective_cfg["experiment_name"] = experiment_name
+    effective_cfg["review_manifest_metadata"] = reviews_metadata
 
     output_root = ensure_dir(
         Path(cfg.get("output_dir", "results/detection")) / experiment_name
@@ -95,8 +124,16 @@ def main() -> None:
     write_json(output_root / "config.json", effective_cfg)
     print(f"Loaded {len(source_samples)} HaluEval source samples")
     print(f"Source fingerprint: {source_fingerprint}")
+    print(
+        "Review manifest: "
+        f"{review_path if review_path is not None else 'none'} "
+        f"({reviews_metadata['sample_reviews']} sample reviews)"
+    )
 
-    prepared_languages: dict[str, tuple[list[QASample], dict[int, str], dict[int, list[str]]]] = {}
+    prepared_languages: dict[
+        str,
+        tuple[list[QASample], dict[int, str], dict[int, list[str]]],
+    ] = {}
     for language_cfg in cfg["languages"]:
         language_code = language_cfg["code"]
         print(f"\n=== Preparing dataset: {language_code} ===")
@@ -105,7 +142,16 @@ def main() -> None:
             source_fingerprint=source_fingerprint,
             language_cfg=language_cfg,
             cache_dir=ensure_dir(output_root / "datasets"),
+            review_manifest=reviews,
+            review_metadata=reviews_metadata,
         )
+
+    if args.prepare_only:
+        print(
+            "\nPreparation complete. Translation caches and quality audits "
+            f"saved to {output_root / 'datasets'}"
+        )
+        return
 
     model_cfg_defaults = cfg.get("model_loading", cfg.get("generation", {}))
     detection_cfg = cfg.get("detection", {})
@@ -130,6 +176,7 @@ def main() -> None:
                 samples,
                 seed=seed,
                 sample_ids=sample_ids,
+                source_reviews=reviews.get("samples", {}),
             )
             print(
                 f"\n--- Detecting hallucinations: {model_name} / {language_code} "
@@ -171,6 +218,8 @@ def prepare_language_dataset(
     source_fingerprint: str,
     language_cfg: dict[str, Any],
     cache_dir: Path,
+    review_manifest: dict[str, Any] | None = None,
+    review_metadata: dict[str, Any] | None = None,
 ) -> tuple[list[QASample], dict[int, str], dict[int, list[str]]]:
     language_code = language_cfg["code"]
     translator_spec = _normalize_translator_spec(language_cfg.get("translator"))
@@ -202,7 +251,7 @@ def prepare_language_dataset(
     cache_path = cache_dir / f"{language_code}.jsonl"
     metadata_path = cache_dir / f"{language_code}.meta.json"
     expected_metadata = {
-        "schema_version": 4,
+        "schema_version": 5,
         "language": language_code,
         "source_fingerprint": source_fingerprint,
         "num_samples": len(source_samples),
@@ -224,6 +273,11 @@ def prepare_language_dataset(
                 quality_cfg.get("min_segment_source_tokens", 8)
             ),
         },
+        "review_manifest": review_metadata
+        or review_manifest_metadata(
+            review_manifest
+            or {"schema_version": 1, "samples": {}}
+        ),
     }
 
     if cache_path.exists() and metadata_path.exists():
@@ -253,7 +307,8 @@ def prepare_language_dataset(
     max_length = int(language_cfg.get("translation_max_length", 512))
     try:
         for position, source in enumerate(source_samples, start=1):
-            translated, diagnostics = _translate_sample(
+            sample_id = stable_sample_id(source)
+            automatic_translated, automatic_diagnostics = _translate_sample(
                 source,
                 translator,
                 max_length,
@@ -262,7 +317,39 @@ def prepare_language_dataset(
                 preserve_numeric_answers=preserve_numeric_answers,
                 retry_failed_questions=retry_failed_questions,
             )
-            sample_id = stable_sample_id(source)
+            automatic_alignment = grounded_answer_alignment_status(
+                source,
+                automatic_translated,
+            )
+            automatic_warnings = translation_quality_warnings(
+                source=source,
+                translated=automatic_translated,
+                diagnostics=automatic_diagnostics,
+                language_code=language_code,
+                require_grounded_answer_alignment=bool(
+                    quality_cfg.get("require_grounded_answer_alignment", True)
+                ),
+                min_segment_output_ratio=float(
+                    quality_cfg.get("min_segment_output_ratio", 0.2)
+                ),
+                min_segment_source_tokens=int(
+                    quality_cfg.get("min_segment_source_tokens", 8)
+                ),
+            )
+            applied_review = translation_review(
+                review_manifest or {},
+                sample_id,
+                language_code,
+            )
+            translated, diagnostics = _apply_translation_review(
+                automatic_translated,
+                automatic_diagnostics,
+                applied_review,
+            )
+            automatic_reviewed_alignment = grounded_answer_alignment_status(
+                source,
+                translated,
+            )
             warnings = translation_quality_warnings(
                 source=source,
                 translated=translated,
@@ -278,6 +365,17 @@ def prepare_language_dataset(
                     quality_cfg.get("min_segment_source_tokens", 8)
                 ),
             )
+            alignment = automatic_reviewed_alignment
+            if (
+                applied_review.get("accept_grounded_alignment", False)
+                and automatic_reviewed_alignment == "lost"
+            ):
+                warnings = [
+                    warning
+                    for warning in warnings
+                    if warning != "right_answer:grounded_alignment_lost"
+                ]
+                alignment = "reviewed_semantic_alignment"
             rows.append(
                 {
                     "sample_index": source.index,
@@ -295,6 +393,18 @@ def prepare_language_dataset(
                         "right_answer": translated.right_answer,
                         "hallucinated_answer": translated.hallucinated_answer,
                     },
+                    "automatic_translated": (
+                        {
+                            "question": automatic_translated.question,
+                            "knowledge": automatic_translated.context,
+                            "right_answer": automatic_translated.right_answer,
+                            "hallucinated_answer": (
+                                automatic_translated.hallucinated_answer
+                            ),
+                        }
+                        if applied_review
+                        else None
+                    ),
                     "translation_diagnostics": {
                         field: {
                             "source_tokens": result.source_tokens,
@@ -324,10 +434,11 @@ def prepare_language_dataset(
                         }
                         for field, result in diagnostics.items()
                     },
-                    "grounded_answer_alignment": (
-                        grounded_answer_alignment_status(source, translated)
-                    ),
+                    "automatic_grounded_answer_alignment": automatic_alignment,
+                    "grounded_answer_alignment": alignment,
+                    "automatic_translation_warnings": automatic_warnings,
                     "translation_warnings": warnings,
+                    "translation_review": applied_review or None,
                 }
             )
             if translator is not None and (position % 10 == 0 or position == len(source_samples)):
@@ -438,6 +549,39 @@ def _translate_sample(
     return translated, diagnostics
 
 
+def _apply_translation_review(
+    translated: QASample,
+    diagnostics: dict[str, TranslationResult],
+    review: dict[str, Any],
+) -> tuple[QASample, dict[str, TranslationResult]]:
+    fields = dict(review.get("fields", {}))
+    if not fields:
+        return translated, diagnostics
+
+    reviewed_diagnostics = dict(diagnostics)
+    for field, replacement_text in fields.items():
+        previous = reviewed_diagnostics[field]
+        reviewed_diagnostics[field] = TranslationResult(
+            text=replacement_text.strip(),
+            source_tokens=previous.source_tokens,
+            output_tokens=previous.output_tokens,
+            input_truncated=previous.input_truncated,
+            output_truncated=previous.output_truncated,
+            segments=(),
+            strategy="review_override",
+            initial_text=previous.text,
+        )
+
+    reviewed = QASample(
+        index=translated.index,
+        question=reviewed_diagnostics["question"].text,
+        context=reviewed_diagnostics["knowledge"].text,
+        right_answer=reviewed_diagnostics["right_answer"].text,
+        hallucinated_answer=reviewed_diagnostics["hallucinated_answer"].text,
+    )
+    return reviewed, reviewed_diagnostics
+
+
 def _question_issue_score(
     source_question: str,
     translated_question: str,
@@ -493,7 +637,8 @@ def _translation_audit_rows(
 ) -> list[dict[str, Any]]:
     audit_rows: list[dict[str, Any]] = []
     for row in rows:
-        knowledge_diagnostics = row.get("translation_diagnostics", {}).get(
+        diagnostics = row.get("translation_diagnostics", {})
+        knowledge_diagnostics = diagnostics.get(
             "knowledge",
             {},
         )
@@ -503,23 +648,54 @@ def _translation_audit_rows(
             for segment in segments
             if segment.get("output_source_token_ratio") is not None
         ]
+        review = row.get("translation_review") or {}
+        automatic_translated = row.get("automatic_translated") or {}
         audit_rows.append(
             {
                 "sample_index": row["sample_index"],
                 "sample_id": row["sample_id"],
                 "language": row["language"],
+                "automatic_translation_warnings": "|".join(
+                    row.get("automatic_translation_warnings", [])
+                ),
                 "translation_warnings": "|".join(row["translation_warnings"]),
+                "automatic_grounded_answer_alignment": row.get(
+                    "automatic_grounded_answer_alignment",
+                    "unknown",
+                ),
                 "grounded_answer_alignment": row.get(
                     "grounded_answer_alignment",
                     "unknown",
                 ),
+                "translation_review_reason": review.get("reason"),
+                "reviewed_fields": "|".join(
+                    sorted(review.get("fields", {}))
+                ),
+                "accept_grounded_alignment": review.get(
+                    "accept_grounded_alignment",
+                    False,
+                ),
                 "knowledge_segment_count": len(segments),
-                "question_translation_strategy": row[
-                    "translation_diagnostics"
-                ]["question"].get("strategy", "unknown"),
-                "initial_question_translation": row[
-                    "translation_diagnostics"
-                ]["question"].get("initial_text"),
+                "knowledge_translation_strategy": knowledge_diagnostics.get(
+                    "strategy",
+                    "unknown",
+                ),
+                "initial_knowledge_translation": knowledge_diagnostics.get(
+                    "initial_text"
+                ),
+                "question_translation_strategy": diagnostics["question"].get(
+                    "strategy",
+                    "unknown",
+                ),
+                "initial_question_translation": diagnostics["question"].get(
+                    "initial_text"
+                ),
+                "right_answer_translation_strategy": diagnostics[
+                    "right_answer"
+                ].get("strategy", "unknown"),
+                "initial_right_answer_translation": diagnostics[
+                    "right_answer"
+                ].get("initial_text"),
                 "minimum_segment_output_ratio": (
                     min(segment_ratios) if segment_ratios else None
                 ),
@@ -529,6 +705,12 @@ def _translation_audit_rows(
                 "translated_knowledge": row["translated"]["knowledge"],
                 "source_right_answer": row["source"]["right_answer"],
                 "translated_right_answer": row["translated"]["right_answer"],
+                "automatic_translated_knowledge": automatic_translated.get(
+                    "knowledge"
+                ),
+                "automatic_translated_right_answer": automatic_translated.get(
+                    "right_answer"
+                ),
                 "source_hallucinated_answer": row["source"][
                     "hallucinated_answer"
                 ],
@@ -621,6 +803,18 @@ def _samples_fingerprint(samples: list[QASample]) -> str:
 def _read_jsonl(path: Path) -> list[dict[str, Any]]:
     with path.open("r", encoding="utf-8") as handle:
         return [json.loads(line) for line in handle if line.strip()]
+
+
+def _resolve_optional_path(
+    value: Any,
+    base_dir: Path,
+) -> Path | None:
+    if value is None:
+        return None
+    path = Path(str(value))
+    if not path.is_absolute():
+        path = base_dir / path
+    return path.resolve()
 
 
 if __name__ == "__main__":

@@ -9,6 +9,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from hallu_llm.text import (
     is_language_neutral_number,
+    join_translated_question_clauses,
     split_english_question_clauses,
     split_english_sentences,
 )
@@ -75,6 +76,14 @@ class SentenceSplittingTests(unittest.TestCase):
         self.assertTrue(is_language_neutral_number("16"))
         self.assertTrue(is_language_neutral_number("1943-1944"))
         self.assertFalse(is_language_neutral_number("16 people"))
+
+    def test_joins_translated_clauses_without_duplicate_punctuation(self) -> None:
+        self.assertEqual(
+            join_translated_question_clauses(
+                ["学校在火灾中被烧毁,", "有多少人?"]
+            ),
+            "学校在火灾中被烧毁，有多少人?",
+        )
 
 
 if __name__ == "__main__":

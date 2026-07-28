@@ -6,6 +6,7 @@ from difflib import SequenceMatcher
 from typing import Any, Mapping
 
 from .data import QASample
+from .text import is_language_neutral_number
 
 
 NUMBER_PATTERN = re.compile(r"\d+(?:[.,]\d+)?")
@@ -104,11 +105,16 @@ def summarize_translation_quality(
 ) -> dict[str, Any]:
     total = len(rows)
     warning_counts: Counter[str] = Counter()
+    automatic_warning_counts: Counter[str] = Counter()
     warning_samples = 0
+    automatic_warning_samples = 0
     critical_samples = 0
     alignment_loss_samples = 0
     alignment_status_counts: Counter[str] = Counter()
     strategy_counts: Counter[str] = Counter()
+    reviewed_samples = 0
+    reviewed_alignment_samples = 0
+    manual_override_samples = 0
 
     for row in rows:
         alignment_status_counts[
@@ -120,6 +126,23 @@ def summarize_translation_quality(
         ).items():
             strategy = str(diagnostics.get("strategy", "unknown"))
             strategy_counts[f"{field}:{strategy}"] += 1
+        review = row.get("translation_review")
+        if review:
+            reviewed_samples += 1
+            reviewed_alignment_samples += int(
+                bool(review.get("accept_grounded_alignment", False))
+            )
+            manual_override_samples += int(bool(review.get("fields")))
+        automatic_warnings = list(
+            row.get(
+                "automatic_translation_warnings",
+                row.get("translation_warnings", []),
+            )
+        )
+        if automatic_warnings:
+            automatic_warning_samples += 1
+        for warning in automatic_warnings:
+            automatic_warning_counts[_warning_code(str(warning))] += 1
         warnings = list(row.get("translation_warnings", []))
         if warnings:
             warning_samples += 1
@@ -149,6 +172,13 @@ def summarize_translation_quality(
 
     return {
         "num_samples": total,
+        "samples_with_automatic_warnings": automatic_warning_samples,
+        "automatic_sample_warning_rate": (
+            automatic_warning_samples / total if total else 0.0
+        ),
+        "automatic_warning_counts": dict(
+            sorted(automatic_warning_counts.items())
+        ),
         "samples_with_warnings": warning_samples,
         "sample_warning_rate": warning_rate,
         "samples_with_critical_warnings": critical_samples,
@@ -163,6 +193,9 @@ def summarize_translation_quality(
         ),
         "translation_strategy_counts": dict(sorted(strategy_counts.items())),
         "warning_counts": dict(sorted(warning_counts.items())),
+        "reviewed_samples": reviewed_samples,
+        "reviewed_alignment_samples": reviewed_alignment_samples,
+        "manual_override_samples": manual_override_samples,
     }
 
 
@@ -172,6 +205,11 @@ def grounded_answer_alignment_status(
 ) -> str:
     if not _contains(source.context, source.right_answer):
         return "not_applicable"
+    if (
+        is_language_neutral_number(translated.right_answer)
+        and _contains(translated.context, translated.right_answer)
+    ):
+        return "translated_numeric_answer"
     if _contains(translated.context, translated.right_answer):
         return "translated_answer"
     if _contains(translated.context, source.right_answer):
@@ -230,6 +268,17 @@ def question_intent_lost(
 
 
 def _contains(container: str, value: str) -> bool:
+    if is_language_neutral_number(value):
+        value_numbers = Counter(NUMBER_PATTERN.findall(value))
+        container_numbers = Counter(NUMBER_PATTERN.findall(container))
+        return bool(
+            value_numbers
+            and all(
+                container_numbers[number] >= count
+                for number, count in value_numbers.items()
+            )
+        )
+
     if re.search(r"[\u3400-\u9fff]", value):
         normalized_container = re.sub(r"[\W_]+", "", container).lower()
         normalized_value = re.sub(r"[\W_]+", "", value).lower()

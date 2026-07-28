@@ -7,9 +7,12 @@ and cross-lingual refusal calibration in open-weight LLMs.
 
 ```text
 configs/
-  detection.example.json       Selected NLLB-600M retry smoke test
+  detection.example.json       Selected NLLB-600M reviewed smoke test
   detection.nllb-600m.json     Explicit NLLB-600M configuration
+  detection.nllb-600m.full.json
+                               Strict 150-sample full-study configuration
   detection.nllb-1.3b.json     Optional matched NLLB-1.3B ablation
+  halueval_reviews.json        Versioned translation and label review decisions
   experiment.example.json      Example experiment configuration
   models.example.json          Open-weight model list
   languages.example.json       Language list and prompt templates
@@ -63,6 +66,17 @@ discard all later evidence sentences in one generation.
 Language-neutral numeric answers are preserved without translation. A question
 that loses its interrogative intent or a source number is retried as independent
 clauses, and the retry is accepted only when it reduces those errors.
+Numeric answer alignment uses extracted number values, so values embedded next
+to Chinese characters, such as `1946年`, are matched without accepting partial
+matches such as `16` inside `2016`.
+
+Reviewed translation corrections and accepted semantic alignments are stored in
+`configs/halueval_reviews.json`. The original NLLB text remains in the dataset
+cache and audit CSV. Changing the review manifest changes its recorded hash and
+invalidates the translation cache. The same manifest records source pairs whose
+alleged hallucinated answer is actually supported by the evidence. Predictions
+are still generated and saved for those pairs, but they are excluded from
+primary metrics with the review reason attached.
 
 The runner evaluates both the grounded and hallucinated candidate for every
 source sample. The smoke test therefore produces 40 balanced decisions per
@@ -95,12 +109,29 @@ sbatch --export=ALL,CONFIG=configs/detection.nllb-600m.json \
 600M-versus-1.3B comparison is needed. Its two tasks use the same seed, source
 pairs, detector, prompts, and decoding settings.
 
-Do not scale to 150 samples until the selected translation configuration passes
-its quality gate and its `datasets/zh.audit.csv` has been manually checked.
-For a full run, make the gate fatal and override the sample count:
+Run the strict 150-sample translation preflight first. It creates the complete
+dataset audit without loading Qwen and aborts if the quality gate fails:
 
 ```bash
-sbatch --export=ALL,CONFIG=configs/detection.nllb-600m.json,NUM_SAMPLES=150,EXPERIMENT_NAME=crosslingual_halueval_detection_nllb_600m_150_v3,FAIL_ON_TRANSLATION_QUALITY=1 jobs/submit_detection_tc2.sh
+sbatch --export=ALL,CONFIG=configs/detection.nllb-600m.full.json,PREPARE_ONLY=1 \
+  jobs/submit_detection_tc2.sh
+```
+
+After `datasets/zh.quality.json` reports `"quality_gate_passed": true`, submit
+the detector run with the same config. The validated translation cache is reused:
+
+```bash
+sbatch --export=ALL,CONFIG=configs/detection.nllb-600m.full.json \
+  jobs/submit_detection_tc2.sh
+```
+
+To evaluate every valid row in the HaluEval split instead of the planned
+150-sample study, set `ALL_SAMPLES=1` and give the experiment a distinct name.
+This can require substantially more cluster time:
+
+```bash
+sbatch --export=ALL,CONFIG=configs/detection.nllb-600m.full.json,ALL_SAMPLES=1,EXPERIMENT_NAME=crosslingual_halueval_detection_nllb_600m_all_v4 \
+  jobs/submit_detection_tc2.sh
 ```
 
 Run the focused unit tests:
@@ -135,18 +166,22 @@ results/detection/<experiment_name>/
 The dataset cache stores source and translated fields together, a stable source
 ID, translation token counts, and field-level quality warnings. A cache is
 reused only when its translator settings and source-data fingerprint match.
-Changing from OPUS to NLLB therefore rebuilds the Chinese cache automatically.
+Changing the translator, source data, translation policy, or review manifest
+therefore rebuilds the Chinese cache automatically.
 
 `datasets/<language>.quality.json` reports missing numbers, repeated output,
 lost question intent, low-coverage or empty sentence translations, truncation,
-empty output, and loss of grounded-answer alignment. Preserved English entity
-names count as valid answer aliases. `datasets/<language>.audit.csv` includes
-the source and translation plus every knowledge segment for manual review. The
-smoke configs record quality-gate failures without aborting so these audit
-files remain available. Set `fail_on_quality_gate` to `true` for full runs.
+empty output, and loss of grounded-answer alignment. It separates initial
+automatic warnings from unresolved warnings after recorded review decisions.
+Preserved English entity names and exact numeric values count as valid aliases.
+`datasets/<language>.audit.csv` includes original machine translations, final
+reviewed translations, strategies, review reasons, and knowledge segments.
+Smoke configs record gate failures without aborting; the full config makes the
+gate fatal.
 
 Detection summaries report:
 
+- generated, excluded, and primary-metric sample counts
 - accuracy and balanced accuracy
 - hallucination precision, recall, and F1
 - specificity and Matthews correlation coefficient
@@ -162,7 +197,7 @@ Detection summaries report:
 Official classification metrics use the model's generated `YES`/`NO` response.
 First-token probabilities are retained for confidence, calibration, ROC AUC,
 and paired ranking. `paired_audit.csv` places both candidates and predictions
-on one row for manual review.
+on one row for manual review, including any source-review exclusion and reason.
 
 `scripts/run_crosslingual.py` is retained as an exploratory open-ended
 generation runner. Its substring-based `correct`, `hallucinated`, and `neither`

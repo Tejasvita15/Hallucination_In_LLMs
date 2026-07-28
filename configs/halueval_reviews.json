@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "samples": {
+    "98cc533e74788cf9": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB changed Best Female Debut into Best Actress in both the evidence and grounded answer.",
+          "fields": {
+            "knowledge": "她的第一部印地语电影于次年上映，是法拉·汗执导的情节剧《Om Shanti Om》，她在片中与 Shah Rukh Khan 搭档并饰演双重角色。凭借这一表演，她获得了印度电影观众奖最佳女新人奖，并在该颁奖礼上获得最佳女演员提名。影片由 Shah Rukh Khan 和新人 Deepika Padukone 主演，Arjun Rampal、Shreyas Talpade 和 Kirron Kher 饰演配角。",
+            "right_answer": "印度电影观众奖最佳女新人奖"
+          }
+        }
+      }
+    },
+    "fdc685e1e61bd62d": {
+      "exclude_from_primary_metrics": true,
+      "reason": "Both candidates are supported: the evidence describes both works as documentary films.",
+      "translations": {
+        "zh": {
+          "reason": "电影 is a valid hypernym of 纪录片, so the automatic lexical alignment warning is a false positive.",
+          "accept_grounded_alignment": true
+        }
+      }
+    },
+    "cebb100562624f67": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB translated triathlete as 三人运动员 instead of 铁人三项运动员.",
+          "fields": {
+            "knowledge": "克劳迪亚·里瓦斯·维加（1989年6月15日出生）是一名墨西哥铁人三项运动员。2015年泛美运动会，正式名称为第17届泛美运动会，通常称为2015年多伦多泛美运动会（法语：Jeux panaméricains de 2015 à Toronto），是由泛美体育组织（PASO）管理、按照泛美运动会传统举办的大型国际综合性体育赛事。",
+            "right_answer": "铁人三项运动员"
+          }
+        }
+      }
+    },
+    "461e120f60f0cfd1": {
+      "exclude_from_primary_metrics": true,
+      "reason": "The alleged hallucination, Simple Plan is not from Glastonbury, is supported by the evidence that it is from Montreal."
+    },
+    "8fffb21b7331c3b2": {
+      "exclude_from_primary_metrics": true,
+      "reason": "The alleged hallucination that the arena is in Duluth near Atlanta is supported by the evidence."
+    }
+  }
+}

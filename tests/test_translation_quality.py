@@ -184,6 +184,79 @@ class TranslationQualityTests(unittest.TestCase):
             "translated_answer_alias",
         )
 
+    def test_accepts_numeric_answer_embedded_in_cjk_text(self) -> None:
+        source = QASample(
+            0,
+            "When was she born?",
+            "She was born on 20 October 1946.",
+            "1946",
+            "1945",
+        )
+        translated = QASample(
+            0,
+            "她是哪一年出生的？",
+            "她出生于1946年10月20日。",
+            "1946",
+            "1945",
+        )
+
+        status = grounded_answer_alignment_status(source, translated)
+        warnings = translation_quality_warnings(
+            source=source,
+            translated=translated,
+            diagnostics=self._diagnostics(),
+            language_code="zh",
+        )
+
+        self.assertEqual(status, "translated_numeric_answer")
+        self.assertNotIn("right_answer:grounded_alignment_lost", warnings)
+
+    def test_numeric_alignment_does_not_match_a_larger_number(self) -> None:
+        source = QASample(
+            0,
+            "How many people?",
+            "The fire killed 16 people.",
+            "16",
+            "15",
+        )
+        translated = QASample(
+            0,
+            "有多少人？",
+            "这座建筑于2016年被烧毁。",
+            "16",
+            "15",
+        )
+
+        self.assertEqual(
+            grounded_answer_alignment_status(source, translated),
+            "lost",
+        )
+
+    def test_quality_summary_distinguishes_reviewed_warnings(self) -> None:
+        rows = [
+            {
+                "automatic_translation_warnings": [
+                    "right_answer:grounded_alignment_lost"
+                ],
+                "translation_warnings": [],
+                "grounded_answer_alignment": "reviewed_semantic_alignment",
+                "translation_review": {
+                    "reason": "Reviewed semantic entailment.",
+                    "accept_grounded_alignment": True,
+                },
+            }
+        ]
+
+        summary = summarize_translation_quality(
+            rows,
+            {"max_grounded_alignment_loss_rate": 0.0},
+        )
+
+        self.assertTrue(summary["quality_gate_passed"])
+        self.assertEqual(summary["samples_with_automatic_warnings"], 1)
+        self.assertEqual(summary["samples_with_warnings"], 0)
+        self.assertEqual(summary["reviewed_alignment_samples"], 1)
+
     def test_does_not_fuzzy_match_a_common_noun_mistranslation(self) -> None:
         source = QASample(
             0,

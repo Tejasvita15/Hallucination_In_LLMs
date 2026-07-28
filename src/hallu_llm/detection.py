@@ -5,7 +5,7 @@ import math
 import random
 import re
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Mapping
 
 from .data import QASample
 from .prompts import halueval_detection_prompt
@@ -23,6 +23,8 @@ class DetectionInstance:
     candidate_answer: str
     candidate_type: str
     is_hallucinated: bool
+    excluded_from_primary_metrics: bool = False
+    source_review_reason: str | None = None
 
 
 def stable_sample_id(sample: QASample) -> str:
@@ -36,10 +38,18 @@ def build_detection_instances(
     samples: list[QASample],
     seed: int,
     sample_ids: dict[int, str] | None = None,
+    source_reviews: Mapping[str, Any] | None = None,
 ) -> list[DetectionInstance]:
     instances: list[DetectionInstance] = []
     for sample in samples:
         sample_id = (sample_ids or {}).get(sample.index, stable_sample_id(sample))
+        review = dict((source_reviews or {}).get(sample_id, {}))
+        excluded = bool(review.get("exclude_from_primary_metrics", False))
+        review_reason = (
+            str(review.get("reason")).strip()
+            if review.get("reason") is not None
+            else None
+        )
         instances.extend(
             (
                 DetectionInstance(
@@ -50,6 +60,8 @@ def build_detection_instances(
                     candidate_answer=sample.right_answer,
                     candidate_type="grounded",
                     is_hallucinated=False,
+                    excluded_from_primary_metrics=excluded,
+                    source_review_reason=review_reason,
                 ),
                 DetectionInstance(
                     sample_index=sample.index,
@@ -59,6 +71,8 @@ def build_detection_instances(
                     candidate_answer=sample.hallucinated_answer,
                     candidate_type="hallucinated",
                     is_hallucinated=True,
+                    excluded_from_primary_metrics=excluded,
+                    source_review_reason=review_reason,
                 ),
             )
         )
@@ -140,6 +154,10 @@ def evaluate_detection_instances(
                     else ("hallucinated" if parsed_prediction else "grounded")
                 ),
                 "prediction_correct": primary_prediction == instance.is_hallucinated,
+                "excluded_from_primary_metrics": (
+                    instance.excluded_from_primary_metrics
+                ),
+                "source_review_reason": instance.source_review_reason,
                 "output_parseable": parsed_prediction is not None,
                 "format_valid": is_strict_binary_response(decision.text),
                 "parsed_logit_agreement": (
@@ -184,9 +202,29 @@ def summarize_detection(
     high_confidence_threshold: float,
     length_match_max_relative_difference: float = 0.25,
 ) -> dict[str, Any]:
+    generated_total = len(rows)
+    excluded_sample_ids = sorted(
+        {
+            str(row["sample_id"])
+            for row in rows
+            if row.get("excluded_from_primary_metrics", False)
+        }
+    )
+    all_translation_warning_samples = len(
+        {
+            row["sample_index"]
+            for row in rows
+            if row.get("translation_warnings", [])
+        }
+    )
+    rows = [
+        row
+        for row in rows
+        if not row.get("excluded_from_primary_metrics", False)
+    ]
     total = len(rows)
     if total == 0:
-        raise ValueError("Cannot summarize an empty detection run.")
+        raise ValueError("No detection rows remain for primary metrics.")
 
     actual = [row["actual_label"] == "hallucinated" for row in rows]
     predicted = [row["predicted_label"] == "hallucinated" for row in rows]
@@ -239,6 +277,10 @@ def summarize_detection(
         "protocol": "paired_halueval_detection",
         "model": model_name,
         "language": language_code,
+        "num_generated_source_samples": generated_total // 2,
+        "num_generated_instances": generated_total,
+        "num_excluded_source_samples": len(excluded_sample_ids),
+        "excluded_sample_ids": excluded_sample_ids,
         "num_source_samples": total // 2,
         "num_instances": total,
         "grounded_instances": sum(not label for label in actual),
@@ -296,6 +338,9 @@ def summarize_detection(
         "samples_with_translation_warnings": len(
             {row["sample_index"] for row in rows if row["translation_warnings"]}
         ),
+        "all_generated_samples_with_translation_warnings": (
+            all_translation_warning_samples
+        ),
         "candidate_length_diagnostics": length_diagnostics,
         **pairwise,
     }
@@ -336,6 +381,10 @@ def build_paired_audit_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
             {
                 "sample_index": grounded["sample_index"],
                 "sample_id": sample_id,
+                "excluded_from_primary_metrics": bool(
+                    grounded.get("excluded_from_primary_metrics", False)
+                ),
+                "source_review_reason": grounded.get("source_review_reason"),
                 "model": grounded["model"],
                 "language": grounded["language"],
                 "question": grounded["question"],
