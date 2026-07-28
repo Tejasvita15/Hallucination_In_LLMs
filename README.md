@@ -15,6 +15,7 @@ jobs/
   submit_detection_tc2.sh      HaluEval detection job for CCDS MGPU-TC2
   submit_experiment_ntu.sh     Slurm entrypoint for NTU GPU cluster
 scripts/
+  prefetch_hf_assets.py        Downloads configured models and datasets
   run_halueval_detection.py    Paired multilingual hallucination detector
   run_crosslingual.py          Main cross-lingual experiment runner
   run_hallulens_task.py        HalluLens-style task runner
@@ -27,6 +28,7 @@ src/hallu_llm/
   models.py                    HF model loading and generation
   prompts.py                   Prompt templates
   translation.py               Translation helpers
+  translation_quality.py       Translation diagnostics and quality gate
   utils.py                     IO, seeds, filesystem helpers
 ```
 
@@ -47,6 +49,11 @@ Run the 20-source-sample HaluEval detection smoke test:
 python scripts/run_halueval_detection.py --config configs/detection.example.json
 ```
 
+The example uses `facebook/nllb-200-distilled-600M` for English-to-Simplified
+Chinese translation with the NLLB language codes `eng_Latn` and `zho_Hans`.
+Four-beam deterministic decoding is used to reduce the translation corruption
+seen with the earlier OPUS baseline.
+
 The runner evaluates both the grounded and hallucinated candidate for every
 source sample. The smoke test therefore produces 40 balanced decisions per
 language. It asks for a strict `YES` (hallucinated) or `NO` (grounded) response
@@ -58,6 +65,14 @@ The paired runner requires HaluEval subset `qa`. Do not change it to
 than separate `right_answer` and `hallucinated_answer` fields. The loader rejects
 that incompatible schema before model inference.
 
+Prefetch the dataset, detector model, and NLLB model from a login node before
+submitting an offline compute job:
+
+```bash
+HF_HUB_OFFLINE=0 TRANSFORMERS_OFFLINE=0 \
+  python scripts/prefetch_hf_assets.py --config configs/detection.example.json
+```
+
 Run the smoke test on the NTU CCDS TC2 partition:
 
 ```bash
@@ -68,7 +83,7 @@ After manually checking the smoke-test predictions, run 150 source samples
 without editing the tracked configuration:
 
 ```bash
-sbatch --export=ALL,CONFIG=configs/detection.example.json,NUM_SAMPLES=150,EXPERIMENT_NAME=crosslingual_halueval_detection_150 jobs/submit_detection_tc2.sh
+sbatch --export=ALL,CONFIG=configs/detection.example.json,NUM_SAMPLES=150,EXPERIMENT_NAME=crosslingual_halueval_detection_nllb_150_v1 jobs/submit_detection_tc2.sh
 ```
 
 Run the focused unit tests:
@@ -88,8 +103,10 @@ results/detection/<experiment_name>/
   datasets/
     en.jsonl
     en.meta.json
+    en.quality.json
     zh.jsonl
     zh.meta.json
+    zh.quality.json
   <model>/<language>/
     summary.json
     predictions.jsonl
@@ -97,8 +114,16 @@ results/detection/<experiment_name>/
 ```
 
 The dataset cache stores source and translated fields together, a stable source
-ID, translation token counts, and truncation warnings. A cache is reused only
-when its translator settings and source-data fingerprint match.
+ID, translation token counts, and field-level quality warnings. A cache is
+reused only when its translator settings and source-data fingerprint match.
+Changing from OPUS to NLLB therefore rebuilds the Chinese cache automatically.
+
+`datasets/<language>.quality.json` reports missing numbers, repeated output,
+lost question intent, truncation, empty output, and loss of grounded-answer
+alignment between the translated answer and knowledge. The smoke config records
+quality-gate failures without aborting so the audit files are available. After
+validating suitable thresholds, set `fail_on_quality_gate` to `true` for full
+runs so model inference cannot continue on a damaged translated dataset.
 
 Detection summaries report:
 
@@ -121,15 +146,16 @@ generation runner. Its substring-based `correct`, `hallucinated`, and `neither`
 rates must not be used as final paper results without a validated semantic
 judge.
 
-For NLLB translation, the detection runner also accepts a structured translator
-configuration:
+Both experiment runners accept a structured NLLB translator configuration:
 
 ```json
 {
   "translator": {
     "model": "facebook/nllb-200-distilled-600M",
     "source_lang": "eng_Latn",
-    "target_lang": "zho_Hans"
+    "target_lang": "zho_Hans",
+    "dtype": "float16",
+    "num_beams": 4
   }
 }
 ```

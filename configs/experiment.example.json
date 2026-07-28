@@ -1,5 +1,5 @@
 {
-  "experiment_name": "crosslingual_halueval_pilot",
+  "experiment_name": "crosslingual_halueval_nllb_pilot",
   "output_dir": "results/structured",
   "seed": 42,
   "num_samples": 150,
@@ -23,7 +23,13 @@
     {
       "code": "zh",
       "name": "Chinese",
-      "translator": "Helsinki-NLP/opus-mt-en-zh"
+      "translator": {
+        "model": "facebook/nllb-200-distilled-600M",
+        "source_lang": "eng_Latn",
+        "target_lang": "zho_Hans",
+        "dtype": "float16",
+        "num_beams": 4
+      }
     }
   ],
   "generation": {

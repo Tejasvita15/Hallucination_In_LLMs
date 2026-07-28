@@ -8,5 +8,6 @@ __all__ = [
     "models",
     "prompts",
     "translation",
+    "translation_quality",
     "utils",
 ]

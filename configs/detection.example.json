@@ -1,5 +1,5 @@
 {
-  "experiment_name": "crosslingual_halueval_detection_smoke",
+  "experiment_name": "crosslingual_halueval_detection_nllb_smoke_v1",
   "output_dir": "results/detection",
   "seed": 42,
   "num_samples": 20,
@@ -23,8 +23,20 @@
     {
       "code": "zh",
       "name": "Chinese",
-      "translator": "Helsinki-NLP/opus-mt-en-zh",
-      "translation_max_length": 512
+      "translator": {
+        "model": "facebook/nllb-200-distilled-600M",
+        "source_lang": "eng_Latn",
+        "target_lang": "zho_Hans",
+        "dtype": "float16",
+        "num_beams": 4
+      },
+      "translation_max_length": 512,
+      "translation_quality": {
+        "require_grounded_answer_alignment": true,
+        "max_critical_warning_rate": 0.1,
+        "max_grounded_alignment_loss_rate": 0.25,
+        "fail_on_quality_gate": false
+      }
     }
   ],
   "model_loading": {

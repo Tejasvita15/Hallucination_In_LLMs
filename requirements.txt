@@ -2,10 +2,10 @@ torch
 transformers
 accelerate
 datasets
+huggingface_hub
 sentencepiece
 protobuf
 safetensors
 numpy
 pandas
 matplotlib
-

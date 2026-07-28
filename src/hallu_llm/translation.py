@@ -24,14 +24,29 @@ class Translator:
         device: str | None = None,
         source_lang: str | None = None,
         target_lang: str | None = None,
+        dtype: str = "float32",
+        num_beams: int = 1,
     ) -> None:
         self.model_name = model_name
         self.source_lang = source_lang
         self.target_lang = target_lang
+        if num_beams < 1:
+            raise ValueError("num_beams must be at least 1")
+        self.num_beams = num_beams
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
+        if "nllb" in model_name.lower() and (not source_lang or not target_lang):
+            raise ValueError(
+                "NLLB requires both source_lang and target_lang, for example "
+                "'eng_Latn' and 'zho_Hans'."
+            )
         tokenizer_kwargs = {"src_lang": source_lang} if source_lang else {}
         self.tokenizer = AutoTokenizer.from_pretrained(model_name, **tokenizer_kwargs)
-        self.model = AutoModelForSeq2SeqLM.from_pretrained(model_name).to(self.device)
+        if source_lang and hasattr(self.tokenizer, "src_lang"):
+            self.tokenizer.src_lang = source_lang
+        self.model = AutoModelForSeq2SeqLM.from_pretrained(
+            model_name,
+            torch_dtype=_translation_dtype(dtype),
+        ).to(self.device)
         self.model.eval()
 
     def translate(self, text: str, max_length: int = 512) -> str:
@@ -42,7 +57,11 @@ class Translator:
             return TranslationResult("", 0, 0, False, False)
         full_ids = self.tokenizer(text, add_special_tokens=True, truncation=False)["input_ids"]
         inputs = self.tokenizer(text, return_tensors="pt", truncation=True, max_length=max_length).to(self.model.device)
-        generate_kwargs = {"max_length": max_length}
+        generate_kwargs = {
+            "max_length": max_length,
+            "num_beams": self.num_beams,
+            "do_sample": False,
+        }
         if self.target_lang:
             target_id = self.tokenizer.convert_tokens_to_ids(self.target_lang)
             if target_id is None or target_id == self.tokenizer.unk_token_id:
@@ -64,6 +83,16 @@ class Translator:
             input_truncated=len(full_ids) > max_length,
             output_truncated=output_tokens >= max_length and not ended_with_eos,
         )
+
+
+def _translation_dtype(name: str) -> torch.dtype:
+    if name == "float16":
+        return torch.float16
+    if name == "bfloat16":
+        return torch.bfloat16
+    if name == "float32":
+        return torch.float32
+    raise ValueError(f"Unsupported translation dtype: {name}")
 
 
 def translate_samples(samples: list[QASample], translator: Translator | None) -> list[QASample]:

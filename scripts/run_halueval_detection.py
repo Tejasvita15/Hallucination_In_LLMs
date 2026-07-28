@@ -21,6 +21,10 @@ from hallu_llm.detection import (
 )
 from hallu_llm.models import HFGenerator
 from hallu_llm.translation import TranslationResult, Translator
+from hallu_llm.translation_quality import (
+    summarize_translation_quality,
+    translation_quality_warnings,
+)
 from hallu_llm.utils import (
     ensure_dir,
     read_json,
@@ -144,15 +148,21 @@ def prepare_language_dataset(
 ) -> tuple[list[QASample], dict[int, str], dict[int, list[str]]]:
     language_code = language_cfg["code"]
     translator_spec = _normalize_translator_spec(language_cfg.get("translator"))
+    quality_cfg = dict(language_cfg.get("translation_quality", {}))
     cache_path = cache_dir / f"{language_code}.jsonl"
     metadata_path = cache_dir / f"{language_code}.meta.json"
     expected_metadata = {
-        "schema_version": 1,
+        "schema_version": 2,
         "language": language_code,
         "source_fingerprint": source_fingerprint,
         "num_samples": len(source_samples),
         "translator": translator_spec,
         "translation_max_length": int(language_cfg.get("translation_max_length", 512)),
+        "translation_quality_rules": {
+            "require_grounded_answer_alignment": bool(
+                quality_cfg.get("require_grounded_answer_alignment", True)
+            ),
+        },
     }
 
     if cache_path.exists() and metadata_path.exists():
@@ -161,6 +171,12 @@ def prepare_language_dataset(
             rows = _read_jsonl(cache_path)
             if len(rows) == len(source_samples):
                 print(f"Reusing validated translation cache: {cache_path}")
+                _validate_translation_quality(
+                    rows,
+                    language_code=language_code,
+                    quality_cfg=quality_cfg,
+                    cache_dir=cache_dir,
+                )
                 return _samples_from_cache_rows(rows)
             print("Translation cache row count changed; rebuilding it.")
         else:
@@ -178,7 +194,15 @@ def prepare_language_dataset(
         for position, source in enumerate(source_samples, start=1):
             translated, diagnostics = _translate_sample(source, translator, max_length)
             sample_id = stable_sample_id(source)
-            warnings = _translation_warnings(diagnostics)
+            warnings = translation_quality_warnings(
+                source=source,
+                translated=translated,
+                diagnostics=diagnostics,
+                language_code=language_code,
+                require_grounded_answer_alignment=bool(
+                    quality_cfg.get("require_grounded_answer_alignment", True)
+                ),
+            )
             rows.append(
                 {
                     "sample_index": source.index,
@@ -219,6 +243,12 @@ def prepare_language_dataset(
     write_jsonl(cache_path, rows)
     write_json(metadata_path, expected_metadata)
     print(f"Wrote fixed dataset cache: {cache_path}")
+    _validate_translation_quality(
+        rows,
+        language_code=language_code,
+        quality_cfg=quality_cfg,
+        cache_dir=cache_dir,
+    )
     return _samples_from_cache_rows(rows)
 
 
@@ -260,16 +290,32 @@ def _translate_sample(
     return translated, diagnostics
 
 
-def _translation_warnings(diagnostics: dict[str, TranslationResult]) -> list[str]:
-    warnings: list[str] = []
-    for field, result in diagnostics.items():
-        if result.input_truncated:
-            warnings.append(f"{field}:input_truncated")
-        if result.output_truncated:
-            warnings.append(f"{field}:output_truncated")
-        if result.source_tokens and not result.text:
-            warnings.append(f"{field}:empty_output")
-    return warnings
+def _validate_translation_quality(
+    rows: list[dict[str, Any]],
+    language_code: str,
+    quality_cfg: dict[str, Any],
+    cache_dir: Path,
+) -> None:
+    summary = {
+        "language": language_code,
+        **summarize_translation_quality(rows, quality_cfg),
+    }
+    quality_path = cache_dir / f"{language_code}.quality.json"
+    write_json(quality_path, summary)
+    print(
+        f"Translation quality ({language_code}): "
+        f"critical={summary['critical_warning_rate']:.1%}, "
+        f"grounded-alignment-loss={summary['grounded_alignment_loss_rate']:.1%}, "
+        f"passed={summary['quality_gate_passed']}"
+    )
+    if (
+        quality_cfg.get("fail_on_quality_gate", False)
+        and not summary["quality_gate_passed"]
+    ):
+        raise RuntimeError(
+            f"Translation quality gate failed for {language_code}; "
+            f"inspect {quality_path} and {cache_dir / f'{language_code}.jsonl'}."
+        )
 
 
 def _samples_from_cache_rows(
@@ -303,7 +349,14 @@ def _normalize_translator_spec(value: Any) -> dict[str, Any] | None:
     if isinstance(value, dict) and value.get("model"):
         return {
             key: value[key]
-            for key in ("model", "source_lang", "target_lang", "device")
+            for key in (
+                "model",
+                "source_lang",
+                "target_lang",
+                "device",
+                "dtype",
+                "num_beams",
+            )
             if value.get(key) is not None
         }
     raise ValueError("translator must be null, a model-name string, or an object with a model field")
@@ -316,6 +369,8 @@ def _load_translator(spec: dict[str, Any]) -> Translator:
         device=spec.get("device"),
         source_lang=spec.get("source_lang"),
         target_lang=spec.get("target_lang"),
+        dtype=spec.get("dtype", "float32"),
+        num_beams=int(spec.get("num_beams", 1)),
     )
 
 

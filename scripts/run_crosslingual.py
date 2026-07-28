@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import sys
 from pathlib import Path
+from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
@@ -52,8 +53,7 @@ def main() -> None:
         for lang_cfg in cfg["languages"]:
             lang_code = lang_cfg["code"]
             print(f"\n--- Evaluating {model_name} on {lang_code} ---")
-            translator_name = lang_cfg.get("translator")
-            translator = Translator(translator_name) if translator_name else None
+            translator = _load_translator(lang_cfg.get("translator"))
             samples = translate_samples(samples_en, translator)
 
             summary, rows = evaluate_qa_samples(
@@ -80,6 +80,25 @@ def main() -> None:
 
     write_json(output_root / "summary_all.json", all_summaries)
     print(f"\nDone. Results saved to {output_root}")
+
+
+def _load_translator(value: Any) -> Translator | None:
+    if value is None:
+        return None
+    if isinstance(value, str):
+        return Translator(value)
+    if isinstance(value, dict) and value.get("model"):
+        return Translator(
+            model_name=value["model"],
+            device=value.get("device"),
+            source_lang=value.get("source_lang"),
+            target_lang=value.get("target_lang"),
+            dtype=value.get("dtype", "float32"),
+            num_beams=int(value.get("num_beams", 1)),
+        )
+    raise ValueError(
+        "translator must be null, a model-name string, or an object with a model field"
+    )
 
 
 if __name__ == "__main__":
