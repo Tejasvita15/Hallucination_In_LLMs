@@ -136,3 +136,15 @@ def _validate_review_manifest(manifest: Any) -> None:
                     f"accept_grounded_alignment for "
                     f"{sample_id}/{language_code} must be boolean."
                 )
+            accepted_warnings = translation.get("accepted_warnings", [])
+            if (
+                not isinstance(accepted_warnings, list)
+                or not all(
+                    isinstance(warning, str) and warning.strip()
+                    for warning in accepted_warnings
+                )
+            ):
+                raise ValueError(
+                    f"accepted_warnings for {sample_id}/{language_code} "
+                    "must be a list of non-empty strings."
+                )

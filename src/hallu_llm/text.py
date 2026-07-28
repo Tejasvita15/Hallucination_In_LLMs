@@ -9,13 +9,17 @@ MISSING_BOUNDARY_SPACE = re.compile(
 SENTENCE_BOUNDARY = re.compile(
     r"(?P<punctuation>[.!?])\s+(?=[\"'(\[]?[A-Z0-9])"
 )
-QUESTION_CLAUSE_BOUNDARY = re.compile(r"\s*[,;]\s*")
+QUESTION_CLAUSE_BOUNDARY = re.compile(r"\s*[,;:]\s*")
 EMBEDDED_INTERROGATIVE = re.compile(
     r"\b(?:how many|how much|which(?:\s+one)?|what|where|when|why)\b",
     re.IGNORECASE,
 )
 LANGUAGE_NEUTRAL_NUMBER = re.compile(r"[\d\s.,:%+/\-–—()]+")
 TRAILING_CLAUSE_SEPARATOR = re.compile(r"[\s,，;；]+$")
+NUMBER_RANGE = re.compile(
+    r"(?<!\d)(\d[\d,]*(?:\.\d+)?)\s*[–—-]\s*"
+    r"(\d[\d,]*(?:\.\d+)?)(?!\d)"
+)
 PRECEDING_TOKEN = re.compile(r"([A-Za-z.]+)[.!?]$")
 PROTECTED_ABBREVIATIONS = {
     "dr",
@@ -94,6 +98,20 @@ def join_translated_question_clauses(clauses: list[str]) -> str:
         if clause.strip()
     ]
     return "，".join(clause for clause in cleaned if clause)
+
+
+def repair_concatenated_number_ranges(source: str, translated: str) -> str:
+    repaired = translated
+    for match in NUMBER_RANGE.finditer(source):
+        left = match.group(1).replace(",", "")
+        right = match.group(2).replace(",", "")
+        concatenated = f"{left}{right}"
+        repaired = re.sub(
+            rf"(?<!\d){re.escape(concatenated)}(?!\d)",
+            f"{left}–{right}",
+            repaired,
+        )
+    return repaired
 
 
 def _ends_with_protected_abbreviation(text: str) -> bool:

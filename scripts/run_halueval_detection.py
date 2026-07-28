@@ -25,8 +25,15 @@ from hallu_llm.reviews import (
     review_manifest_metadata,
     translation_review,
 )
-from hallu_llm.text import is_language_neutral_number
-from hallu_llm.translation import TranslationResult, Translator
+from hallu_llm.text import (
+    is_language_neutral_number,
+    repair_concatenated_number_ranges,
+)
+from hallu_llm.translation import (
+    TranslationResult,
+    TranslationSegment,
+    Translator,
+)
 from hallu_llm.translation_quality import (
     grounded_answer_alignment_status,
     missing_numbers,
@@ -251,7 +258,7 @@ def prepare_language_dataset(
     cache_path = cache_dir / f"{language_code}.jsonl"
     metadata_path = cache_dir / f"{language_code}.meta.json"
     expected_metadata = {
-        "schema_version": 5,
+        "schema_version": 6,
         "language": language_code,
         "source_fingerprint": source_fingerprint,
         "num_samples": len(source_samples),
@@ -282,9 +289,9 @@ def prepare_language_dataset(
 
     if cache_path.exists() and metadata_path.exists():
         cached_metadata = read_json(metadata_path)
-        if cached_metadata == expected_metadata:
-            rows = _read_jsonl(cache_path)
-            if len(rows) == len(source_samples):
+        rows = _read_jsonl(cache_path)
+        if len(rows) == len(source_samples):
+            if cached_metadata == expected_metadata:
                 print(f"Reusing validated translation cache: {cache_path}")
                 _validate_translation_quality(
                     rows,
@@ -293,9 +300,33 @@ def prepare_language_dataset(
                     cache_dir=cache_dir,
                 )
                 return _samples_from_cache_rows(rows)
-            print("Translation cache row count changed; rebuilding it.")
-        else:
+            if _can_refresh_translation_cache(
+                cached_metadata,
+                expected_metadata,
+            ):
+                print(
+                    "Refreshing translation reviews and deterministic repairs "
+                    f"without rerunning the translator: {cache_path}"
+                )
+                rows = _refresh_translation_cache_rows(
+                    rows=rows,
+                    source_samples=source_samples,
+                    language_code=language_code,
+                    quality_cfg=quality_cfg,
+                    review_manifest=review_manifest or {},
+                )
+                write_jsonl(cache_path, rows)
+                write_json(metadata_path, expected_metadata)
+                _validate_translation_quality(
+                    rows,
+                    language_code=language_code,
+                    quality_cfg=quality_cfg,
+                    cache_dir=cache_dir,
+                )
+                return _samples_from_cache_rows(rows)
             print("Translation cache metadata changed; rebuilding it.")
+        else:
+            print("Translation cache row count changed; rebuilding it.")
 
     if language_code != "en" and translator_spec is None:
         raise ValueError(
@@ -317,129 +348,21 @@ def prepare_language_dataset(
                 preserve_numeric_answers=preserve_numeric_answers,
                 retry_failed_questions=retry_failed_questions,
             )
-            automatic_alignment = grounded_answer_alignment_status(
-                source,
-                automatic_translated,
-            )
-            automatic_warnings = translation_quality_warnings(
-                source=source,
-                translated=automatic_translated,
-                diagnostics=automatic_diagnostics,
-                language_code=language_code,
-                require_grounded_answer_alignment=bool(
-                    quality_cfg.get("require_grounded_answer_alignment", True)
-                ),
-                min_segment_output_ratio=float(
-                    quality_cfg.get("min_segment_output_ratio", 0.2)
-                ),
-                min_segment_source_tokens=int(
-                    quality_cfg.get("min_segment_source_tokens", 8)
-                ),
-            )
             applied_review = translation_review(
                 review_manifest or {},
                 sample_id,
                 language_code,
             )
-            translated, diagnostics = _apply_translation_review(
-                automatic_translated,
-                automatic_diagnostics,
-                applied_review,
-            )
-            automatic_reviewed_alignment = grounded_answer_alignment_status(
-                source,
-                translated,
-            )
-            warnings = translation_quality_warnings(
-                source=source,
-                translated=translated,
-                diagnostics=diagnostics,
-                language_code=language_code,
-                require_grounded_answer_alignment=bool(
-                    quality_cfg.get("require_grounded_answer_alignment", True)
-                ),
-                min_segment_output_ratio=float(
-                    quality_cfg.get("min_segment_output_ratio", 0.2)
-                ),
-                min_segment_source_tokens=int(
-                    quality_cfg.get("min_segment_source_tokens", 8)
-                ),
-            )
-            alignment = automatic_reviewed_alignment
-            if (
-                applied_review.get("accept_grounded_alignment", False)
-                and automatic_reviewed_alignment == "lost"
-            ):
-                warnings = [
-                    warning
-                    for warning in warnings
-                    if warning != "right_answer:grounded_alignment_lost"
-                ]
-                alignment = "reviewed_semantic_alignment"
             rows.append(
-                {
-                    "sample_index": source.index,
-                    "sample_id": sample_id,
-                    "language": language_code,
-                    "source": {
-                        "question": source.question,
-                        "knowledge": source.context,
-                        "right_answer": source.right_answer,
-                        "hallucinated_answer": source.hallucinated_answer,
-                    },
-                    "translated": {
-                        "question": translated.question,
-                        "knowledge": translated.context,
-                        "right_answer": translated.right_answer,
-                        "hallucinated_answer": translated.hallucinated_answer,
-                    },
-                    "automatic_translated": (
-                        {
-                            "question": automatic_translated.question,
-                            "knowledge": automatic_translated.context,
-                            "right_answer": automatic_translated.right_answer,
-                            "hallucinated_answer": (
-                                automatic_translated.hallucinated_answer
-                            ),
-                        }
-                        if applied_review
-                        else None
-                    ),
-                    "translation_diagnostics": {
-                        field: {
-                            "source_tokens": result.source_tokens,
-                            "output_tokens": result.output_tokens,
-                            "input_truncated": result.input_truncated,
-                            "output_truncated": result.output_truncated,
-                            "segment_count": len(result.segments),
-                            "strategy": result.strategy,
-                            "initial_text": result.initial_text,
-                            "segments": [
-                                {
-                                    "source_text": segment.source_text,
-                                    "translated_text": segment.translated_text,
-                                    "source_tokens": segment.source_tokens,
-                                    "output_tokens": segment.output_tokens,
-                                    "output_source_token_ratio": (
-                                        segment.output_tokens
-                                        / segment.source_tokens
-                                        if segment.source_tokens
-                                        else None
-                                    ),
-                                    "input_truncated": segment.input_truncated,
-                                    "output_truncated": segment.output_truncated,
-                                }
-                                for segment in result.segments
-                            ],
-                        }
-                        for field, result in diagnostics.items()
-                    },
-                    "automatic_grounded_answer_alignment": automatic_alignment,
-                    "grounded_answer_alignment": alignment,
-                    "automatic_translation_warnings": automatic_warnings,
-                    "translation_warnings": warnings,
-                    "translation_review": applied_review or None,
-                }
+                _build_translation_cache_row(
+                    source=source,
+                    sample_id=sample_id,
+                    language_code=language_code,
+                    automatic_translated=automatic_translated,
+                    automatic_diagnostics=automatic_diagnostics,
+                    applied_review=applied_review,
+                    quality_cfg=quality_cfg,
+                )
             )
             if translator is not None and (position % 10 == 0 or position == len(source_samples)):
                 print(f"Translated {position}/{len(source_samples)} samples")
@@ -459,6 +382,253 @@ def prepare_language_dataset(
         cache_dir=cache_dir,
     )
     return _samples_from_cache_rows(rows)
+
+
+def _can_refresh_translation_cache(
+    cached_metadata: dict[str, Any],
+    expected_metadata: dict[str, Any],
+) -> bool:
+    if int(cached_metadata.get("schema_version", 0)) not in {5, 6}:
+        return False
+    if int(expected_metadata.get("schema_version", 0)) != 6:
+        return False
+    cached_comparable = dict(cached_metadata)
+    expected_comparable = dict(expected_metadata)
+    for metadata in (cached_comparable, expected_comparable):
+        metadata.pop("schema_version", None)
+        metadata.pop("review_manifest", None)
+    return cached_comparable == expected_comparable
+
+
+def _refresh_translation_cache_rows(
+    rows: list[dict[str, Any]],
+    source_samples: list[QASample],
+    language_code: str,
+    quality_cfg: dict[str, Any],
+    review_manifest: dict[str, Any],
+) -> list[dict[str, Any]]:
+    source_by_id = {
+        stable_sample_id(source): source
+        for source in source_samples
+    }
+    refreshed: list[dict[str, Any]] = []
+    for row in rows:
+        sample_id = str(row["sample_id"])
+        source = source_by_id.get(sample_id)
+        if source is None:
+            raise ValueError(
+                f"Cached sample {sample_id} is absent from the source dataset."
+            )
+        automatic_payload = row.get("automatic_translated") or row["translated"]
+        automatic_translated = QASample(
+            index=source.index,
+            question=str(automatic_payload["question"]),
+            context=str(automatic_payload["knowledge"]),
+            right_answer=str(automatic_payload["right_answer"]),
+            hallucinated_answer=str(
+                automatic_payload["hallucinated_answer"]
+            ),
+        )
+        automatic_diagnostics = _translation_results_from_cache(
+            row.get("translation_diagnostics", {}),
+            automatic_translated,
+        )
+        automatic_translated, automatic_diagnostics = (
+            _repair_sample_numeric_ranges(
+                source,
+                automatic_translated,
+                automatic_diagnostics,
+            )
+        )
+        applied_review = translation_review(
+            review_manifest,
+            sample_id,
+            language_code,
+        )
+        refreshed.append(
+            _build_translation_cache_row(
+                source=source,
+                sample_id=sample_id,
+                language_code=language_code,
+                automatic_translated=automatic_translated,
+                automatic_diagnostics=automatic_diagnostics,
+                applied_review=applied_review,
+                quality_cfg=quality_cfg,
+            )
+        )
+    return refreshed
+
+
+def _translation_results_from_cache(
+    cached: dict[str, Any],
+    automatic_translated: QASample,
+) -> dict[str, TranslationResult]:
+    automatic_fields = {
+        "question": automatic_translated.question,
+        "knowledge": automatic_translated.context,
+        "right_answer": automatic_translated.right_answer,
+        "hallucinated_answer": automatic_translated.hallucinated_answer,
+    }
+    results: dict[str, TranslationResult] = {}
+    for field, text in automatic_fields.items():
+        data = dict(cached.get(field, {}))
+        segments = tuple(
+            TranslationSegment(
+                source_text=str(segment.get("source_text", "")),
+                translated_text=str(segment.get("translated_text", "")),
+                source_tokens=int(segment.get("source_tokens", 0)),
+                output_tokens=int(segment.get("output_tokens", 0)),
+                input_truncated=bool(segment.get("input_truncated", False)),
+                output_truncated=bool(segment.get("output_truncated", False)),
+            )
+            for segment in data.get("segments", [])
+        )
+        strategy = str(data.get("strategy", "cached_automatic"))
+        if strategy == "review_override":
+            strategy = "cached_automatic"
+            segments = ()
+        results[field] = TranslationResult(
+            text=text,
+            source_tokens=int(data.get("source_tokens", 0)),
+            output_tokens=int(data.get("output_tokens", 0)),
+            input_truncated=bool(data.get("input_truncated", False)),
+            output_truncated=bool(data.get("output_truncated", False)),
+            segments=segments,
+            strategy=strategy,
+            initial_text=data.get("initial_text"),
+        )
+    return results
+
+
+def _build_translation_cache_row(
+    source: QASample,
+    sample_id: str,
+    language_code: str,
+    automatic_translated: QASample,
+    automatic_diagnostics: dict[str, TranslationResult],
+    applied_review: dict[str, Any],
+    quality_cfg: dict[str, Any],
+) -> dict[str, Any]:
+    warning_options = {
+        "language_code": language_code,
+        "require_grounded_answer_alignment": bool(
+            quality_cfg.get("require_grounded_answer_alignment", True)
+        ),
+        "min_segment_output_ratio": float(
+            quality_cfg.get("min_segment_output_ratio", 0.2)
+        ),
+        "min_segment_source_tokens": int(
+            quality_cfg.get("min_segment_source_tokens", 8)
+        ),
+    }
+    automatic_alignment = grounded_answer_alignment_status(
+        source,
+        automatic_translated,
+    )
+    automatic_warnings = translation_quality_warnings(
+        source=source,
+        translated=automatic_translated,
+        diagnostics=automatic_diagnostics,
+        **warning_options,
+    )
+    translated, diagnostics = _apply_translation_review(
+        automatic_translated,
+        automatic_diagnostics,
+        applied_review,
+    )
+    alignment = grounded_answer_alignment_status(source, translated)
+    warnings = translation_quality_warnings(
+        source=source,
+        translated=translated,
+        diagnostics=diagnostics,
+        **warning_options,
+    )
+    if (
+        applied_review.get("accept_grounded_alignment", False)
+        and alignment == "lost"
+    ):
+        warnings = [
+            warning
+            for warning in warnings
+            if warning != "right_answer:grounded_alignment_lost"
+        ]
+        alignment = "reviewed_semantic_alignment"
+    accepted_warnings = set(applied_review.get("accepted_warnings", []))
+    warnings = [
+        warning
+        for warning in warnings
+        if warning not in accepted_warnings
+    ]
+    return {
+        "sample_index": source.index,
+        "sample_id": sample_id,
+        "language": language_code,
+        "source": {
+            "question": source.question,
+            "knowledge": source.context,
+            "right_answer": source.right_answer,
+            "hallucinated_answer": source.hallucinated_answer,
+        },
+        "translated": {
+            "question": translated.question,
+            "knowledge": translated.context,
+            "right_answer": translated.right_answer,
+            "hallucinated_answer": translated.hallucinated_answer,
+        },
+        "automatic_translated": (
+            {
+                "question": automatic_translated.question,
+                "knowledge": automatic_translated.context,
+                "right_answer": automatic_translated.right_answer,
+                "hallucinated_answer": (
+                    automatic_translated.hallucinated_answer
+                ),
+            }
+            if applied_review
+            else None
+        ),
+        "translation_diagnostics": _serialize_translation_diagnostics(
+            diagnostics
+        ),
+        "automatic_grounded_answer_alignment": automatic_alignment,
+        "grounded_answer_alignment": alignment,
+        "automatic_translation_warnings": automatic_warnings,
+        "translation_warnings": warnings,
+        "translation_review": applied_review or None,
+    }
+
+
+def _serialize_translation_diagnostics(
+    diagnostics: dict[str, TranslationResult],
+) -> dict[str, Any]:
+    return {
+        field: {
+            "source_tokens": result.source_tokens,
+            "output_tokens": result.output_tokens,
+            "input_truncated": result.input_truncated,
+            "output_truncated": result.output_truncated,
+            "segment_count": len(result.segments),
+            "strategy": result.strategy,
+            "initial_text": result.initial_text,
+            "segments": [
+                {
+                    "source_text": segment.source_text,
+                    "translated_text": segment.translated_text,
+                    "source_tokens": segment.source_tokens,
+                    "output_tokens": segment.output_tokens,
+                    "output_source_token_ratio": (
+                        segment.output_tokens / segment.source_tokens
+                        if segment.source_tokens
+                        else None
+                    ),
+                    "input_truncated": segment.input_truncated,
+                    "output_truncated": segment.output_truncated,
+                }
+                for segment in result.segments
+            ],
+        }
+        for field, result in diagnostics.items()
+    }
 
 
 def _translate_sample(
@@ -546,7 +716,47 @@ def _translate_sample(
         right_answer=diagnostics["right_answer"].text,
         hallucinated_answer=diagnostics["hallucinated_answer"].text,
     )
-    return translated, diagnostics
+    return _repair_sample_numeric_ranges(source, translated, diagnostics)
+
+
+def _repair_sample_numeric_ranges(
+    source: QASample,
+    translated: QASample,
+    diagnostics: dict[str, TranslationResult],
+) -> tuple[QASample, dict[str, TranslationResult]]:
+    source_fields = {
+        "question": source.question,
+        "knowledge": source.context,
+        "right_answer": source.right_answer,
+        "hallucinated_answer": source.hallucinated_answer,
+    }
+    repaired_diagnostics = dict(diagnostics)
+    for field, source_text in source_fields.items():
+        result = repaired_diagnostics[field]
+        repaired_text = repair_concatenated_number_ranges(
+            source_text,
+            result.text,
+        )
+        if repaired_text == result.text:
+            continue
+        repaired_diagnostics[field] = TranslationResult(
+            text=repaired_text,
+            source_tokens=result.source_tokens,
+            output_tokens=result.output_tokens,
+            input_truncated=result.input_truncated,
+            output_truncated=result.output_truncated,
+            segments=result.segments,
+            strategy=f"{result.strategy}_numeric_range_repair",
+            initial_text=result.text,
+        )
+    repaired = QASample(
+        index=translated.index,
+        question=repaired_diagnostics["question"].text,
+        context=repaired_diagnostics["knowledge"].text,
+        right_answer=repaired_diagnostics["right_answer"].text,
+        hallucinated_answer=repaired_diagnostics["hallucinated_answer"].text,
+    )
+    return repaired, repaired_diagnostics
 
 
 def _apply_translation_review(
@@ -674,6 +884,9 @@ def _translation_audit_rows(
                 "accept_grounded_alignment": review.get(
                     "accept_grounded_alignment",
                     False,
+                ),
+                "accepted_warnings": "|".join(
+                    review.get("accepted_warnings", [])
                 ),
                 "knowledge_segment_count": len(segments),
                 "knowledge_translation_strategy": knowledge_diagnostics.get(

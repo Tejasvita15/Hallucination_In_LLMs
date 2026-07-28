@@ -73,10 +73,13 @@ matches such as `16` inside `2016`.
 Reviewed translation corrections and accepted semantic alignments are stored in
 `configs/halueval_reviews.json`. The original NLLB text remains in the dataset
 cache and audit CSV. Changing the review manifest changes its recorded hash and
-invalidates the translation cache. The same manifest records source pairs whose
-alleged hallucinated answer is actually supported by the evidence. Predictions
-are still generated and saved for those pairs, but they are excluded from
-primary metrics with the review reason attached.
+refreshes the reviewed cache rows without rerunning NLLB when the source and
+translator settings are unchanged. Exact accepted warnings are retained in the
+automatic-warning audit but removed from the unresolved gate only with a
+sample-specific reason. The same manifest records source pairs whose alleged
+hallucinated answer is actually supported by the evidence. Predictions are
+still generated and saved for those pairs, but they are excluded from primary
+metrics with the review reason attached.
 
 The runner evaluates both the grounded and hallucinated candidate for every
 source sample. The smoke test therefore produces 40 balanced decisions per
@@ -173,7 +176,11 @@ therefore rebuilds the Chinese cache automatically.
 lost question intent, low-coverage or empty sentence translations, truncation,
 empty output, and loss of grounded-answer alignment. It separates initial
 automatic warnings from unresolved warnings after recorded review decisions.
-Preserved English entity names and exact numeric values count as valid aliases.
+Preserved English entity names and numeric equivalents count as valid aliases.
+Numeric checks normalize thousands separators, common Chinese numerals, decade
+expressions, and Chinese large-number units. Concatenated translated ranges such
+as `19921998` are deterministically repaired to `1992-1998`. Punctuation-only
+outputs and newly repeated clauses are critical failures.
 `datasets/<language>.audit.csv` includes original machine translations, final
 reviewed translations, strategies, review reasons, and knowledge segments.
 Smoke configs record gate failures without aborting; the full config makes the

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 from collections import Counter
+from decimal import Decimal, InvalidOperation
 from difflib import SequenceMatcher
 from typing import Any, Mapping
 
@@ -12,6 +13,8 @@ from .text import is_language_neutral_number
 NUMBER_PATTERN = re.compile(r"\d+(?:[.,]\d+)?")
 REPEATED_WORD_PATTERN = re.compile(r"\b([\w-]{2,})\s+\1\b", re.IGNORECASE)
 REPEATED_CJK_PATTERN = re.compile(r"([\u4e00-\u9fff])\1{2,}")
+CLAUSE_BOUNDARY_PATTERN = re.compile(r"[.!?。！？]+")
+CONTENT_PATTERN = re.compile(r"[A-Za-z0-9\u3400-\u9fff]")
 EN_QUESTION_PREFIX = re.compile(
     r"^\s*(?:who|what|when|where|why|which|how|is|are|was|were|do|does|did|"
     r"can|could|will|would|should|has|have|had)\b",
@@ -25,6 +28,7 @@ CRITICAL_WARNING_CODES = {
     "input_truncated",
     "low_segment_coverage",
     "numbers_missing",
+    "non_content_output",
     "output_truncated",
     "question_intent_lost",
     "repeated_output",
@@ -81,10 +85,12 @@ def translation_quality_warnings(
 
     for field, source_text in source_fields.items():
         translated_text = translated_fields[field]
+        if source_text.strip() and not CONTENT_PATTERN.search(translated_text):
+            warnings.append(f"{field}:non_content_output")
         absent_numbers = missing_numbers(source_text, translated_text)
         if absent_numbers:
             warnings.append(f"{field}:numbers_missing:{','.join(absent_numbers)}")
-        if _has_immediate_repetition(translated_text):
+        if _has_unexpected_repetition(source_text, translated_text):
             warnings.append(f"{field}:repeated_output")
 
     if question_intent_lost(source.question, translated.question, language_code):
@@ -210,6 +216,11 @@ def grounded_answer_alignment_status(
         and _contains(translated.context, translated.right_answer)
     ):
         return "translated_numeric_answer"
+    if (
+        _is_numeric_dominant_answer(source.right_answer)
+        and not missing_numbers(source.right_answer, translated.context)
+    ):
+        return "translated_numeric_components"
     if _contains(translated.context, translated.right_answer):
         return "translated_answer"
     if _contains(translated.context, source.right_answer):
@@ -231,21 +242,153 @@ def grounded_answer_alignment_status(
 
 
 def missing_numbers(source: str, translated: str) -> list[str]:
-    source_numbers = Counter(NUMBER_PATTERN.findall(source))
-    translated_numbers = Counter(NUMBER_PATTERN.findall(translated))
-    missing: list[str] = []
-    for number, count in source_numbers.items():
-        deficit = count - translated_numbers[number]
-        if deficit > 0:
-            missing.extend([number] * deficit)
-    return missing
+    source_numbers = list(dict.fromkeys(NUMBER_PATTERN.findall(source)))
+    translated_keys = {
+        _canonical_number(number)
+        for number in NUMBER_PATTERN.findall(translated)
+    }
+    return [
+        number
+        for number in source_numbers
+        if not _number_is_preserved(
+            number,
+            source,
+            translated,
+            translated_keys,
+        )
+    ]
 
 
-def _has_immediate_repetition(text: str) -> bool:
-    return bool(
-        REPEATED_WORD_PATTERN.search(text)
-        or REPEATED_CJK_PATTERN.search(text)
+def _has_unexpected_repetition(source: str, translated: str) -> bool:
+    source_lower = source.lower()
+    for match in REPEATED_WORD_PATTERN.finditer(translated):
+        if match.group(0).lower() not in source_lower:
+            return True
+    if REPEATED_CJK_PATTERN.search(translated):
+        return True
+
+    clauses = [
+        re.sub(r"\s+", "", clause).lower()
+        for clause in CLAUSE_BOUNDARY_PATTERN.split(translated)
+        if len(CONTENT_PATTERN.findall(clause)) >= 4
+    ]
+    counts = Counter(clauses)
+    return any(count >= 3 for count in counts.values())
+
+
+def _number_is_preserved(
+    number: str,
+    source: str,
+    translated: str,
+    translated_keys: set[str],
+) -> bool:
+    canonical = _canonical_number(number)
+    if canonical in translated_keys:
+        return True
+    if _small_number_is_translated(canonical, translated):
+        return True
+    if _decade_is_translated(canonical, number, source, translated):
+        return True
+    return _scaled_number_is_translated(canonical, number, source, translated)
+
+
+def _canonical_number(number: str) -> str:
+    normalized = number.replace(",", "")
+    try:
+        value = Decimal(normalized)
+    except InvalidOperation:
+        return normalized
+    return format(value.normalize(), "f")
+
+
+def _small_number_is_translated(
+    canonical: str,
+    translated: str,
+) -> bool:
+    try:
+        value = int(canonical)
+    except ValueError:
+        return False
+    if not 0 <= value <= 99:
+        return False
+    chinese = _integer_to_chinese(value)
+    if not chinese:
+        return False
+    ordinal_or_counter = (
+        f"第{chinese}",
+        f"{chinese}个",
+        f"{chinese}名",
+        f"{chinese}号",
+        f"{chinese}位",
+        f"{chinese}次",
     )
+    if any(variant in translated for variant in ordinal_or_counter):
+        return True
+    return value >= 10 and chinese in translated
+
+
+def _integer_to_chinese(value: int) -> str:
+    digits = "零一二三四五六七八九"
+    if value < 10:
+        return digits[value]
+    tens, ones = divmod(value, 10)
+    prefix = "" if tens == 1 else digits[tens]
+    suffix = "" if ones == 0 else digits[ones]
+    return f"{prefix}十{suffix}"
+
+
+def _decade_is_translated(
+    canonical: str,
+    original: str,
+    source: str,
+    translated: str,
+) -> bool:
+    if not re.search(
+        rf"(?<!\d){re.escape(original)}s\b",
+        source,
+        flags=re.IGNORECASE,
+    ):
+        return False
+    try:
+        year = int(canonical)
+    except ValueError:
+        return False
+    if not 1000 <= year <= 2999:
+        return False
+    century = year // 100 + 1
+    decade = year % 100
+    return (
+        f"{century}世纪{decade}年代" in translated
+        or f"{decade}年代" in translated
+    )
+
+
+def _scaled_number_is_translated(
+    canonical: str,
+    original: str,
+    source: str,
+    translated: str,
+) -> bool:
+    scale_match = re.search(
+        rf"(?<!\d){re.escape(original)}\s+"
+        r"(billion|million|thousand)\b",
+        source,
+        flags=re.IGNORECASE,
+    )
+    if scale_match is None:
+        return False
+    try:
+        value = Decimal(canonical)
+    except InvalidOperation:
+        return False
+    unit = scale_match.group(1).lower()
+    multiplier, marker = {
+        "billion": (Decimal(10), "亿"),
+        "million": (Decimal(100), "万"),
+        "thousand": (Decimal(1), "千"),
+    }[unit]
+    converted = _canonical_number(str(value * multiplier))
+    return f"{converted}{marker}" in translated
 
 
 def question_intent_lost(
@@ -284,8 +427,8 @@ def _contains(container: str, value: str) -> bool:
         normalized_value = re.sub(r"[\W_]+", "", value).lower()
         return bool(normalized_value and normalized_value in normalized_container)
 
-    container_tokens = re.findall(r"\w+", container.lower())
-    value_tokens = re.findall(r"\w+", value.lower())
+    container_tokens = re.findall(r"[a-z0-9]+", container.lower())
+    value_tokens = re.findall(r"[a-z0-9]+", value.lower())
     if not value_tokens:
         return False
     width = len(value_tokens)
@@ -293,6 +436,30 @@ def _contains(container: str, value: str) -> bool:
         container_tokens[position : position + width] == value_tokens
         for position in range(len(container_tokens) - width + 1)
     )
+
+
+def _is_numeric_dominant_answer(text: str) -> bool:
+    if not NUMBER_PATTERN.search(text):
+        return False
+    words = {
+        word.lower()
+        for word in re.findall(r"[A-Za-z]+", text)
+    }
+    allowed_words = {
+        "and",
+        "from",
+        "km",
+        "long",
+        "m",
+        "mi",
+        "mile",
+        "miles",
+        "through",
+        "to",
+        "year",
+        "years",
+    }
+    return words <= allowed_words
 
 
 def _contains_source_name_components(

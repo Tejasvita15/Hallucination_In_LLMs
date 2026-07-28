@@ -19,6 +19,10 @@ from hallu_llm.reviews import (
 )
 from hallu_llm.translation import TranslationResult
 from scripts.run_halueval_detection import _apply_translation_review
+from scripts.run_halueval_detection import (
+    _build_translation_cache_row,
+    _can_refresh_translation_cache,
+)
 
 
 class ReviewManifestTests(unittest.TestCase):
@@ -123,6 +127,90 @@ class ReviewManifestTests(unittest.TestCase):
         self.assertEqual(
             reviewed_diagnostics["right_answer"].initial_text,
             "机器答案",
+        )
+
+    def test_review_can_accept_an_exact_audited_warning(self) -> None:
+        source = QASample(
+            0,
+            "Who died first?",
+            "The malformed source date is 194018.",
+            "Person A",
+            "Person B",
+        )
+        translated = QASample(
+            0,
+            "谁先去世？",
+            "修复后的日期是1940年和18日。",
+            "Person A",
+            "Person B",
+        )
+        diagnostics = {
+            field: TranslationResult(
+                text=text,
+                source_tokens=10,
+                output_tokens=10,
+                input_truncated=False,
+                output_truncated=False,
+            )
+            for field, text in {
+                "question": translated.question,
+                "knowledge": translated.context,
+                "right_answer": translated.right_answer,
+                "hallucinated_answer": translated.hallucinated_answer,
+            }.items()
+        }
+
+        row = _build_translation_cache_row(
+            source=source,
+            sample_id="sample-a",
+            language_code="zh",
+            automatic_translated=translated,
+            automatic_diagnostics=diagnostics,
+            applied_review={
+                "reason": "The source concatenated two date components.",
+                "accepted_warnings": [
+                    "knowledge:numbers_missing:194018"
+                ],
+            },
+            quality_cfg={"require_grounded_answer_alignment": True},
+        )
+
+        self.assertIn(
+            "knowledge:numbers_missing:194018",
+            row["automatic_translation_warnings"],
+        )
+        self.assertEqual(row["translation_warnings"], [])
+
+    def test_schema_five_cache_can_refresh_reviews_without_translation(self) -> None:
+        common = {
+            "language": "zh",
+            "source_fingerprint": "source-hash",
+            "num_samples": 150,
+            "translator": {"model": "nllb"},
+            "translation_max_length": 512,
+            "sentence_split_fields": ["knowledge"],
+            "translation_policy": {"preserve_numeric_answers": True},
+            "translation_quality_rules": {
+                "require_grounded_answer_alignment": True
+            },
+        }
+        cached = {
+            **common,
+            "schema_version": 5,
+            "review_manifest": {"sha256": "old"},
+        }
+        expected = {
+            **common,
+            "schema_version": 6,
+            "review_manifest": {"sha256": "new"},
+        }
+
+        self.assertTrue(
+            _can_refresh_translation_cache(cached, expected)
+        )
+        expected["translator"] = {"model": "different"}
+        self.assertFalse(
+            _can_refresh_translation_cache(cached, expected)
         )
 
 

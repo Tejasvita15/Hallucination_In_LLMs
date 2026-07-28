@@ -40,6 +40,490 @@
     "8fffb21b7331c3b2": {
       "exclude_from_primary_metrics": true,
       "reason": "The alleged hallucination that the arena is in Duluth near Atlanta is supported by the evidence."
+    },
+    "4c9caca13e1c31ac": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB repeated a shortened question and removed both identifying numbers.",
+          "fields": {
+            "question": "Jay-Z 于2001年发行、并被《滚石》列入史上最伟大500张专辑之一的专辑叫什么名字？"
+          }
+        }
+      }
+    },
+    "e7b0422f5fb79e6b": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB mistranslated gallows humor inconsistently in the evidence and answer.",
+          "fields": {
+            "knowledge": "《玫瑰战争》是一部1989年的美国黑色喜剧电影，改编自沃伦·阿德勒1981年的同名小说。黑色喜剧对应于早先的绞刑架幽默概念。",
+            "right_answer": "绞刑架幽默"
+          }
+        }
+      }
+    },
+    "6960c74c6697ec86": {
+      "translations": {
+        "zh": {
+          "reason": "The answer and evidence contain the same city and state in normal Chinese reverse order.",
+          "accept_grounded_alignment": true
+        }
+      }
+    },
+    "251c219bdf53fe4c": {
+      "translations": {
+        "zh": {
+          "reason": "The translated answer and evidence preserve the same 1957 to 1963 interval with different connectors.",
+          "accept_grounded_alignment": true
+        }
+      }
+    },
+    "738cfef7f0f2d211": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB dropped Suharto's complete tenure sentence and its dates.",
+          "fields": {
+            "knowledge": "彼得鲁斯杀戮是1983年至1985年间发生在印度尼西亚的一系列法外处决，发生于苏哈托总统的新秩序政权之下。陆军将军哈吉·苏哈托（亦拼作 Soeharto，或 Muhammad Soeharto；1921年6月8日－2008年1月27日）是印度尼西亚第二任总统，从1967年苏加诺下台后执政31年，直至1998年辞职。"
+          }
+        }
+      }
+    },
+    "11a9f00cd5e54a67": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB dropped the sentence linking Ernst Juenger to Storm of Steel.",
+          "fields": {
+            "knowledge": "《阿拉丁的问题》（德语：Aladins Problem）是德国作家 Ernst Jünger 于1983年创作的中篇小说。Ernst Jünger（1895年3月29日－1998年2月17日）是一位获多项荣誉的德国军人、作家和昆虫学家，并因第一次世界大战回忆录《钢铁风暴》而闻名。",
+            "right_answer": "钢铁风暴"
+          }
+        }
+      }
+    },
+    "04900f2ecebf1f45": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB translated the magazine name Time as the common noun 时间 rather than 《时代》杂志.",
+          "fields": {
+            "knowledge": "这首歌描写了克莱普顿在4岁儿子康纳去世后感受到的痛苦与失落。2009年，《时代》杂志还将他列入“十位最佳电吉他手”榜单，并排在第五位。",
+            "right_answer": "《时代》杂志"
+          }
+        }
+      }
+    },
+    "25fb186ab0d7fb13": {
+      "exclude_from_primary_metrics": true,
+      "reason": "The alleged hallucination that Tommy Duncan played with Bob Wills is explicitly supported by the evidence.",
+      "translations": {
+        "zh": {
+          "reason": "NLLB dropped the sentence connecting Tommy Duncan with Bob Wills.",
+          "fields": {
+            "knowledge": "他曾断断续续与乐队领队鲍勃·威尔斯一起录音和巡演，直至20世纪60年代初。詹姆斯·罗伯特·威尔斯（1905年3月6日－1975年5月13日）是美国西部摇摆乐音乐家、词曲作者和乐队领队。"
+          }
+        }
+      }
+    },
+    "8a1a899555db2186": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB removed Interstate 80 from the hallucinated candidate.",
+          "fields": {
+            "hallucinated_answer": "80号州际公路从加利福尼亚州旧金山延伸至埃塞克斯县。"
+          }
+        }
+      }
+    },
+    "a2ccccfd179ff2b7": {
+      "translations": {
+        "zh": {
+          "reason": "The source concatenates 1940 and 18 into malformed 194018; the translation correctly reconstructs the two dates.",
+          "accepted_warnings": [
+            "knowledge:numbers_missing:194018"
+          ]
+        }
+      }
+    },
+    "643bf7435eeb4d57": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB truncated the question before the requested book identity.",
+          "fields": {
+            "question": "英国作家 J. K. Rowling 于2001年创作的哪一本书介绍了《哈利·波特》宇宙中的神奇生物？"
+          }
+        }
+      }
+    },
+    "d80dc04773a4a419": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB produced inconsistent names for Downton Abbey and concatenated its year range.",
+          "fields": {
+            "knowledge": "电影的故事通过被收容的 Ann（Michelle Dockery）与 Fisher 医生（Dan Stevens）之间的会谈以闪回方式讲述。她最广为人知的角色是 ITV（英国）和 PBS（美国）年代剧《唐顿庄园》（2010－15）中的 Lady Mary Crawley；她凭此连续三次获得剧情类最佳女主角艾美奖提名，并获得一次金球奖提名。",
+            "right_answer": "唐顿庄园"
+          }
+        }
+      }
+    },
+    "d11a3865493c4e31": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB mistranslated board game as 板游戏 and corrupted both game titles.",
+          "fields": {
+            "knowledge": "《地产大亨少年版》是《地产大亨》的简化版本，面向年幼儿童。《行动代号》是一款由 Vlaada Chvátil 设计、于2015年推出的桌面游戏。",
+            "right_answer": "桌面游戏"
+          }
+        }
+      }
+    },
+    "8c6a4d2bb5449be6": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB mistranslated the film title Shame in the grounded answer.",
+          "fields": {
+            "knowledge": "她因在《American Violet》（2008）、《Shame》（2011）和《42》（2013）中的戏剧角色而闻名。影片中的露骨场景反映了主角的性成瘾，因此在美国被评为 NC-17。",
+            "right_answer": "Shame"
+          }
+        }
+      }
+    },
+    "a558c1599c79b9cf": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB returned punctuation only for the grounded song title.",
+          "fields": {
+            "right_answer": "Kum ba yah"
+          }
+        }
+      }
+    },
+    "19c302600f8cab1c": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB mistranslated the film title Cube and concatenated two date ranges.",
+          "fields": {
+            "knowledge": "《Christmas Town》是一部2008年直接发行录像的电影，由 Nicole de Boer 和 Patrick Muldoon 主演。Nicole de Boer（1970年12月20日出生）是加拿大女演员。她曾在邪典电影《Cube》中饰演 Joan Leaven，在一部剧集的最后一季（1998－1999）饰演 Ezri Dax，并在《The Dead Zone》（2002－2007）中饰演 Sarah Bannerman。",
+            "right_answer": "Cube"
+          }
+        }
+      }
+    },
+    "a2e61f27dec06ae6": {
+      "translations": {
+        "zh": {
+          "reason": "The answer and evidence preserve the same 7.46-mile distance with harmless wording differences.",
+          "accept_grounded_alignment": true
+        }
+      }
+    },
+    "589434b8b682775f": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB changed Jan into John in the grounded person's name.",
+          "fields": {
+            "right_answer": "詹·布库伊"
+          }
+        }
+      }
+    },
+    "3a378e0e6145e74b": {
+      "translations": {
+        "zh": {
+          "reason": "班吉 and 班乔 are common transliteration variants for banjo and preserve the same occupation.",
+          "accept_grounded_alignment": true
+        }
+      }
+    },
+    "15f7afaee963285b": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB removed the genus name Chelone from the evidence and mistransliterated the answer.",
+          "fields": {
+            "knowledge": "Gladiolus 是鸢尾科的一属多年生开花植物，其名称源自拉丁语中表示“小剑”的词。Chelone 是原产于北美东部的一属多年生草本植物，共有四个物种。",
+            "right_answer": "Chelone"
+          }
+        }
+      }
+    },
+    "16f6ef05ad2613fa": {
+      "translations": {
+        "zh": {
+          "reason": "The source concatenates Beethoven's 1770 baptism year and 26 March into malformed 177026; the translation reconstructs the dates.",
+          "accepted_warnings": [
+            "knowledge:numbers_missing:177026"
+          ]
+        }
+      }
+    },
+    "7c28299f6620a1ff": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB changed the relation being asked and removed the 30 km constraint.",
+          "fields": {
+            "question": "Robert Johann Maria König 出生的城市位于哪个地方以南约30公里处？"
+          }
+        }
+      }
+    },
+    "0c11cfa7571ac727": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB dropped Edward Stafford's death year and corrupted the first date.",
+          "fields": {
+            "knowledge": "第四代斯塔福德男爵 Edward Stafford（1572年－1625年9月16日）是第三代斯塔福德男爵 Edward Stafford 与 Mary Stanley 的儿子；Mary 是第三代德比伯爵 Edward Stanley 与 Dorothy Howard 的女儿。第三代德比伯爵 Edward Stanley KG（约1509年5月10日－1572年10月24日）是英国贵族和政治家。"
+          }
+        }
+      }
+    },
+    "9523b6a85eee259a": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB removed US Route 1 from the hallucinated candidate.",
+          "fields": {
+            "hallucinated_answer": "Acton Plaza 位于马萨诸塞州 Saugus 的美国1号国道（Broadway）沿线，介于 Main Street 与 Essex Street 之间。"
+          }
+        }
+      }
+    },
+    "aa8fcfabec07c369": {
+      "exclude_from_primary_metrics": true,
+      "reason": "The alleged hallucination states that Jim Johnston's WWE work started in 1985, which is equivalent to the grounded answer and supported by the evidence.",
+      "translations": {
+        "zh": {
+          "reason": "NLLB dropped the clause stating that Jim Johnston worked with WWE from 1985 onward.",
+          "fields": {
+            "knowledge": "《WWF The Music, Vol. 5》是 WWE（当时称 World Wrestling Federation，即 WWF）发行的原声专辑。该专辑由 Koch Records 于2001年2月20日发行，收录多位 WWE 明星的入场主题曲；除一首由 Motörhead 演奏外，其余均由 Jim Johnston 创作和演奏。James Alan “Jim” Johnston（1959年出生）是美国音乐作曲家，以自1985年起为 WWE（原 WWF）工作而闻名。"
+          }
+        }
+      }
+    },
+    "1c3e7fd78faa3444": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB converted Channel 4 to an ordinal and removed E4 from the hallucinated candidate.",
+          "fields": {
+            "right_answer": "4频道",
+            "hallucinated_answer": "Alisha Daniels 是英国科幻剧中一个虚构角色，该剧在 E4 播出。"
+          },
+          "accept_grounded_alignment": true
+        }
+      }
+    },
+    "d634ab831c504432": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB omitted unrelated show-year details, while preserving all evidence needed to judge comedian versus philosopher.",
+          "accepted_warnings": [
+            "knowledge:numbers_missing:1987,94,1993,99,2001,2010"
+          ]
+        }
+      }
+    },
+    "7209a309d0944a17": {
+      "exclude_from_primary_metrics": true,
+      "reason": "The alleged hallucination names Tim Flannery, which is the same person as the grounded answer Timothy Fridtjof Flannery.",
+      "translations": {
+        "zh": {
+          "reason": "NLLB rendered the question as a noun phrase rather than an interrogative.",
+          "fields": {
+            "question": "哪位澳大利亚哺乳动物学家写了《Chasing Kangaroos》？"
+          }
+        }
+      }
+    },
+    "0fc17fd5ca70f1d4": {
+      "exclude_from_primary_metrics": true,
+      "reason": "The alleged hallucination says the mines are in different towns, which is equivalent to the grounded answer no.",
+      "translations": {
+        "zh": {
+          "reason": "NLLB rendered the yes-no question as a statement.",
+          "fields": {
+            "question": "Leckie Mine 和 Giant Mine 位于同一个城镇吗？"
+          }
+        }
+      }
+    },
+    "435579e7e023224a": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB dropped Fairbanks Airport's location and 5 km distance.",
+          "fields": {
+            "knowledge": "Palm Beach International Airport（IATA：PBI，ICAO：KPBI，FAA LID：PBI）是一座公共机场，位于佛罗里达州 Palm Beach 以西3英里的 West Palm Beach。Fairbanks International Airport（IATA：FAI，ICAO：PAFA，FAA LID：FAI）是一座州政府所有的公共机场，位于阿拉斯加州 Fairbanks 市中心商业区西南3英里（5公里）处。"
+          }
+        }
+      }
+    },
+    "7a6ad8f9a4234693": {
+      "translations": {
+        "zh": {
+          "reason": "The evidence preserves Matt Olmstead in English while the answer used a different transliteration.",
+          "fields": {
+            "right_answer": "迪克·沃尔夫和 Matt Olmstead"
+          }
+        }
+      }
+    },
+    "b35cb7a156661ffc": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB translated de facto regent as governor and produced inconsistent evidence wording.",
+          "fields": {
+            "knowledge": "她是一名行政管理者，并于1748年至1754年担任印度事实上的摄政者。1748年，他在22岁时继承父亲，成为第15位莫卧儿皇帝。",
+            "right_answer": "印度事实上的摄政者"
+          }
+        }
+      }
+    },
+    "6b44cc8cac53864e": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB dropped the Bundestag U-Bahn station sentence and U55 identifier.",
+          "fields": {
+            "knowledge": "Bundestag 是柏林地铁 U55 线上的一座车站。Reichstag（德语：Reichstagsgebäude；正式名称：Deutscher Bundestag - Plenarbereich Reichstagsgebäude）是德国柏林的一座历史建筑，最初用于容纳德意志帝国的帝国议会。"
+          }
+        }
+      }
+    },
+    "18ee749d9218794f": {
+      "translations": {
+        "zh": {
+          "reason": "The comma in 7,000 was removed without changing the value.",
+          "fields": {
+            "hallucinated_answer": "该体育场最多可容纳7000名观众。"
+          }
+        }
+      }
+    },
+    "85031c6ca8a63362": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB removed 1570 from the hallucinated candidate.",
+          "fields": {
+            "hallucinated_answer": "1570年，也就是伊丽莎白时代开始后的几年。"
+          }
+        }
+      }
+    },
+    "900e6b5613cb0014": {
+      "exclude_from_primary_metrics": true,
+      "reason": "The grounded answer omits KPMG even though the question asks for all Big Four firms other than Ernst & Young.",
+      "translations": {
+        "zh": {
+          "reason": "NLLB produced inconsistent transliterations for the accounting firms.",
+          "fields": {
+            "right_answer": "普莱斯沃特豪斯库珀斯、德洛伊特·托赫·托哈马图斯"
+          }
+        }
+      }
+    },
+    "7e70667dc464b036": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB dropped the sentence establishing that Tom Winslow was a disciple of Reverend Gary Davis.",
+          "fields": {
+            "knowledge": "加里·戴维斯牧师，又名盲人加里·戴维斯（1896年4月30日－1972年5月5日），是一位蓝调和福音歌手，也擅长班卓琴、吉他与口琴。他的指弹吉他风格影响了许多艺术家。Thomas Griffin “Tom” Winslow（1940年11月13日－2010年10月23日）是美国民谣歌手和作家，以加里·戴维斯牧师的弟子身份以及曾加入 Pete Seeger 的乐队而闻名。",
+            "right_answer": "加里·戴维斯牧师"
+          }
+        }
+      }
+    },
+    "920f31c76bd24d51": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB translated Hitman inconsistently as a title and a generic killer.",
+          "fields": {
+            "knowledge": "《Hitman: Enemy Within》是《Hitman》系列的第一部小说。《Hitman》是由丹麦公司 IO Interactive 开发的潜行电子游戏系列。",
+            "right_answer": "Hitman: Enemy Within"
+          }
+        }
+      }
+    },
+    "a65170dd9bac3d27": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB repeated and corrupted Kerkor Kirk Kerkorian's name.",
+          "fields": {
+            "knowledge": "Joseph Michael Manganiello（1976年12月28日出生）是美国演员。Kerkor “Kirk” Kerkorian（1917年6月6日－2015年6月15日）是亚美尼亚裔美国商人、投资者和慈善家。",
+            "right_answer": "Kerkor “Kirk” Kerkorian"
+          }
+        }
+      }
+    },
+    "d3a9d84408cd8955": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB removed both building options from the question and omitted the marketed 90-story detail.",
+          "fields": {
+            "question": "哪座建筑被称为“亿万富翁大楼”，并在一座拥有210间客房的 Hyatt 酒店上方设有92套公寓：30 Hudson Yards 还是 One57？",
+            "knowledge": "30 Hudson Yards（又称 North Tower）是曼哈顿西区一座在建的超高层办公楼。One57 原名 Carnegie 57，昵称“亿万富翁大楼”，是一座75层（营销称90层）的超高层摩天大楼，位于纽约曼哈顿中城第六大道与第七大道之间的 West 57th Street 157号。大楼在一座拥有210间客房的新 Park Hyatt 酒店上方设有92套公寓。",
+            "right_answer": "One57"
+          }
+        }
+      }
+    },
+    "c041be9e641be1a2": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB produced an extra repeated 拉 in Santa Clara County.",
+          "fields": {
+            "knowledge": "第129救援联队（129 RQW）是加利福尼亚空军国民警卫队的一支部队，驻扎在加利福尼亚州 Mountain View 的 Moffett Federal Airfield。Moffett Federal Airfield（IATA：NUQ，ICAO：KNUQ，FAA LID：NUQ），又称 Moffett Field，是一座军民合用机场，位于加利福尼亚州 Santa Clara County 的非建制地区，地处 Mountain View 北部与 Sunnyvale 北部之间。"
+          }
+        }
+      }
+    },
+    "7c29a88dfb136fa8": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB corrupted Young Turk Revolution with a triple repeated 年 in both evidence and candidate.",
+          "fields": {
+            "knowledge": "1895年初，苏丹 Abdul Hamid II 下令消灭奥斯曼帝国的特定亚美尼亚地区。他从1876年8月31日起统治，直至1908年青年土耳其革命后不久，于1909年4月27日被废黜。",
+            "hallucinated_answer": "1895年下令消灭奥斯曼帝国特定亚美尼亚地区的苏丹，在1908年青年土耳其革命之后被废黜。"
+          }
+        }
+      }
+    },
+    "b93189eb56f9e464": {
+      "exclude_from_primary_metrics": true,
+      "reason": "The question falsely says a British film editor directed the film, while the evidence says David Yates directed it; both candidates repeat the same film answer.",
+      "translations": {
+        "zh": {
+          "reason": "NLLB mistranslated the film title inconsistently.",
+          "fields": {
+            "knowledge": "Mark Day 是英国电影剪辑师。《Harry Potter and the Deathly Hallows – Part 1》是一部2010年的英美奇幻电影，由 David Yates 执导、Warner Bros. 发行。",
+            "right_answer": "Harry Potter and the Deathly Hallows – Part 1"
+          }
+        }
+      }
+    },
+    "17fcafd89b8e2599": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB dropped the evidence about funk and mistranslated funk as a single unrelated character.",
+          "fields": {
+            "knowledge": "《Stand By Me (Whatcha See Is Whatcha Get)》是一张由爵士鼓手 Bernard Purdie 领衔的专辑，于1971年为 Mega 唱片录制。Bernard Lee “Pretty” Purdie（1941年6月11日出生）是美国鼓手，被认为是一位有影响力并富有创新精神的放克音乐家。",
+            "right_answer": "放克音乐"
+          }
+        }
+      }
+    },
+    "2998dbb4ed8136b6": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB translated the extinct breed name Chien-gris as the unrelated word fish.",
+          "fields": {
+            "knowledge": "中国冠毛犬是一种无毛犬。与多数无毛犬种一样，中国冠毛犬有有毛和无毛两个品种，可出生于同一窝。Chien-gris，又称 Gris de Saint-Louis（Grey St. Louis Hound），是一种起源于中世纪、现已灭绝的犬种。",
+            "right_answer": "Chien-gris"
+          }
+        }
+      }
+    },
+    "8c8909ac1175ce70": {
+      "translations": {
+        "zh": {
+          "reason": "NLLB removed the uncertainty claim that makes the hallucinated candidate unsupported.",
+          "fields": {
+            "hallucinated_answer": "Javier Mora 被一名拳击手击败，但无法根据所提供的知识确定该拳击手的国籍。"
+          }
+        }
+      }
     }
   }
 }

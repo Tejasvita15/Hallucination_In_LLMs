@@ -10,6 +10,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from hallu_llm.text import (
     is_language_neutral_number,
     join_translated_question_clauses,
+    repair_concatenated_number_ranges,
     split_english_question_clauses,
     split_english_sentences,
 )
@@ -83,6 +84,22 @@ class SentenceSplittingTests(unittest.TestCase):
                 ["学校在火灾中被烧毁,", "有多少人?"]
             ),
             "学校在火灾中被烧毁，有多少人?",
+        )
+
+    def test_repairs_concatenated_translated_number_ranges(self) -> None:
+        self.assertEqual(
+            repair_concatenated_number_ranges(
+                "The show ran from 1992–1998.",
+                "该节目播出于19921998年。",
+            ),
+            "该节目播出于1992–1998年。",
+        )
+        self.assertEqual(
+            repair_concatenated_number_ranges(
+                "The prize was $6,000.",
+                "奖金为6000美元。",
+            ),
+            "奖金为6000美元。",
         )
 
 
