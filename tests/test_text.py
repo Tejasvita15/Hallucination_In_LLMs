@@ -7,7 +7,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from hallu_llm.text import split_english_sentences
+from hallu_llm.text import (
+    is_language_neutral_number,
+    split_english_question_clauses,
+    split_english_sentences,
+)
 
 
 class SentenceSplittingTests(unittest.TestCase):
@@ -39,6 +43,38 @@ class SentenceSplittingTests(unittest.TestCase):
 
     def test_handles_empty_text(self) -> None:
         self.assertEqual(split_english_sentences("   "), [])
+
+    def test_splits_embedded_interrogative_for_retry(self) -> None:
+        question = (
+            "The school burned down during fires that killed how many people?"
+        )
+
+        self.assertEqual(
+            split_english_question_clauses(question),
+            [
+                "The school burned down during fires that killed",
+                "how many people?",
+            ],
+        )
+
+    def test_splits_question_at_existing_clause_boundary(self) -> None:
+        question = (
+            "Of the cities Abdiel has lived in, "
+            "which one was the capital?"
+        )
+
+        self.assertEqual(
+            split_english_question_clauses(question),
+            [
+                "Of the cities Abdiel has lived in",
+                "which one was the capital?",
+            ],
+        )
+
+    def test_identifies_only_language_neutral_numeric_answers(self) -> None:
+        self.assertTrue(is_language_neutral_number("16"))
+        self.assertTrue(is_language_neutral_number("1943-1944"))
+        self.assertFalse(is_language_neutral_number("16 people"))
 
 
 if __name__ == "__main__":

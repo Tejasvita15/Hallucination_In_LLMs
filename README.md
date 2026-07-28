@@ -7,8 +7,9 @@ and cross-lingual refusal calibration in open-weight LLMs.
 
 ```text
 configs/
-  detection.example.json       NLLB-1.3B paired HaluEval smoke test
-  detection.nllb-600m.json     Matched NLLB-600M ablation
+  detection.example.json       Selected NLLB-600M retry smoke test
+  detection.nllb-600m.json     Explicit NLLB-600M configuration
+  detection.nllb-1.3b.json     Optional matched NLLB-1.3B ablation
   experiment.example.json      Example experiment configuration
   models.example.json          Open-weight model list
   languages.example.json       Language list and prompt templates
@@ -52,12 +53,16 @@ Run the 20-source-sample HaluEval detection smoke test:
 python scripts/run_halueval_detection.py --config configs/detection.example.json
 ```
 
-The primary example uses `facebook/nllb-200-distilled-1.3B` for
+The primary example uses `facebook/nllb-200-distilled-600M` for
 English-to-Simplified-Chinese translation with the NLLB language codes
 `eng_Latn` and `zho_Hans`. Four-beam deterministic decoding is used. Knowledge
 passages are split into sentences before translation, including repair of
 missing HaluEval boundaries such as `Thun.FC Thun`, so NLLB cannot silently
 discard all later evidence sentences in one generation.
+
+Language-neutral numeric answers are preserved without translation. A question
+that loses its interrogative intent or a source number is retried as independent
+clauses, and the retry is accepted only when it reduces those errors.
 
 The runner evaluates both the grounded and hallucinated candidate for every
 source sample. The smoke test therefore produces 40 balanced decisions per
@@ -70,33 +75,32 @@ The paired runner requires HaluEval subset `qa`. Do not change it to
 than separate `right_answer` and `hallucinated_answer` fields. The loader rejects
 that incompatible schema before model inference.
 
-Prefetch the dataset, detector model, and both NLLB sizes from a login node
-before submitting offline compute jobs:
+Prefetch the selected model and dataset from a login node before submitting the
+offline compute job:
 
 ```bash
 HF_HUB_OFFLINE=0 TRANSFORMERS_OFFLINE=0 \
   python scripts/prefetch_hf_assets.py \
-    --config configs/detection.nllb-600m.json \
-    --config configs/detection.example.json
+    --config configs/detection.nllb-600m.json
 ```
 
-Run the controlled 600M-versus-1.3B smoke-test array on the NTU CCDS TC2
-partition:
+Run the selected NLLB-600M retry smoke test on the NTU CCDS TC2 partition:
 
 ```bash
-sbatch jobs/submit_nllb_ablation_tc2.sh
+sbatch --export=ALL,CONFIG=configs/detection.nllb-600m.json \
+  jobs/submit_detection_tc2.sh
 ```
 
-The two tasks use the same seed, 20 source pairs, detector, prompts, and
-decoding settings. Only the NLLB checkpoint differs. A single configuration
-can still be submitted with `jobs/submit_detection_tc2.sh`.
+`jobs/submit_nllb_ablation_tc2.sh` remains available when a matched
+600M-versus-1.3B comparison is needed. Its two tasks use the same seed, source
+pairs, detector, prompts, and decoding settings.
 
 Do not scale to 150 samples until the selected translation configuration passes
 its quality gate and its `datasets/zh.audit.csv` has been manually checked.
 For a full run, make the gate fatal and override the sample count:
 
 ```bash
-sbatch --export=ALL,CONFIG=configs/detection.example.json,NUM_SAMPLES=150,EXPERIMENT_NAME=crosslingual_halueval_detection_nllb_1.3b_150_v2,FAIL_ON_TRANSLATION_QUALITY=1 jobs/submit_detection_tc2.sh
+sbatch --export=ALL,CONFIG=configs/detection.nllb-600m.json,NUM_SAMPLES=150,EXPERIMENT_NAME=crosslingual_halueval_detection_nllb_600m_150_v3,FAIL_ON_TRANSLATION_QUALITY=1 jobs/submit_detection_tc2.sh
 ```
 
 Run the focused unit tests:
@@ -170,7 +174,7 @@ Both experiment runners accept a structured NLLB translator configuration:
 ```json
 {
   "translator": {
-    "model": "facebook/nllb-200-distilled-1.3B",
+    "model": "facebook/nllb-200-distilled-600M",
     "source_lang": "eng_Latn",
     "target_lang": "zho_Hans",
     "dtype": "float16",

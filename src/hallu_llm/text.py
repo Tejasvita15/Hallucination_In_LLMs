@@ -9,6 +9,12 @@ MISSING_BOUNDARY_SPACE = re.compile(
 SENTENCE_BOUNDARY = re.compile(
     r"(?P<punctuation>[.!?])\s+(?=[\"'(\[]?[A-Z0-9])"
 )
+QUESTION_CLAUSE_BOUNDARY = re.compile(r"\s*[,;]\s*")
+EMBEDDED_INTERROGATIVE = re.compile(
+    r"\b(?:how many|how much|which(?:\s+one)?|what|where|when|why)\b",
+    re.IGNORECASE,
+)
+LANGUAGE_NEUTRAL_NUMBER = re.compile(r"[\d\s.,:%+/\-–—()]+")
 PRECEDING_TOKEN = re.compile(r"([A-Za-z.]+)[.!?]$")
 PROTECTED_ABBREVIATIONS = {
     "dr",
@@ -45,6 +51,39 @@ def split_english_sentences(text: str) -> list[str]:
     if remainder:
         sentences.append(remainder)
     return sentences
+
+
+def split_english_question_clauses(text: str) -> list[str]:
+    clauses = [
+        clause.strip()
+        for clause in QUESTION_CLAUSE_BOUNDARY.split(text.strip())
+        if clause.strip()
+    ]
+    expanded: list[str] = []
+    for clause in clauses:
+        matches = list(EMBEDDED_INTERROGATIVE.finditer(clause))
+        split_match = next(
+            (
+                match
+                for match in reversed(matches)
+                if match.start() >= 8
+            ),
+            None,
+        )
+        if split_match is None:
+            expanded.append(clause)
+            continue
+        prefix = clause[: split_match.start()].strip()
+        question_tail = clause[split_match.start() :].strip()
+        if prefix:
+            expanded.append(prefix)
+        if question_tail:
+            expanded.append(question_tail)
+    return expanded
+
+
+def is_language_neutral_number(text: str) -> bool:
+    return bool(text.strip() and LANGUAGE_NEUTRAL_NUMBER.fullmatch(text.strip()))
 
 
 def _ends_with_protected_abbreviation(text: str) -> bool:

@@ -6,7 +6,10 @@ import torch
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 
 from .data import QASample
-from .text import split_english_sentences
+from .text import (
+    split_english_question_clauses,
+    split_english_sentences,
+)
 
 
 @dataclass(frozen=True)
@@ -27,6 +30,8 @@ class TranslationResult:
     input_truncated: bool
     output_truncated: bool
     segments: tuple[TranslationSegment, ...] = ()
+    strategy: str = "model"
+    initial_text: str | None = None
 
 
 class Translator:
@@ -86,12 +91,47 @@ class Translator:
             if split_sentences
             else [text.strip()]
         )
+        return self._translate_segments(
+            source_segments,
+            max_length=max_length,
+            separator=" ",
+            strategy=(
+                "sentence_segments"
+                if split_sentences and len(source_segments) > 1
+                else "model"
+            ),
+        )
+
+    def translate_question_clauses_with_metadata(
+        self,
+        text: str,
+        max_length: int = 512,
+        initial_text: str | None = None,
+    ) -> TranslationResult | None:
+        clauses = split_english_question_clauses(text)
+        if len(clauses) < 2:
+            return None
+        result = self._translate_segments(
+            clauses,
+            max_length=max_length,
+            separator="\uff0c",
+            strategy="question_clause_retry",
+        )
+        return replace(result, initial_text=initial_text)
+
+    def _translate_segments(
+        self,
+        source_segments: list[str],
+        max_length: int,
+        separator: str,
+        strategy: str,
+    ) -> TranslationResult:
         segments = tuple(
             self._translate_segment(segment, max_length=max_length)
             for segment in source_segments
         )
         return TranslationResult(
-            text=" ".join(
+            text=separator.join(
                 segment.translated_text
                 for segment in segments
                 if segment.translated_text
@@ -101,6 +141,7 @@ class Translator:
             input_truncated=any(segment.input_truncated for segment in segments),
             output_truncated=any(segment.output_truncated for segment in segments),
             segments=segments,
+            strategy=strategy,
         )
 
     def _translate_segment(

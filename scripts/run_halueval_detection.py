@@ -20,9 +20,12 @@ from hallu_llm.detection import (
     stable_sample_id,
 )
 from hallu_llm.models import HFGenerator
+from hallu_llm.text import is_language_neutral_number
 from hallu_llm.translation import TranslationResult, Translator
 from hallu_llm.translation_quality import (
     grounded_answer_alignment_status,
+    missing_numbers,
+    question_intent_lost,
     summarize_translation_quality,
     translation_quality_warnings,
 )
@@ -172,6 +175,12 @@ def prepare_language_dataset(
     language_code = language_cfg["code"]
     translator_spec = _normalize_translator_spec(language_cfg.get("translator"))
     quality_cfg = dict(language_cfg.get("translation_quality", {}))
+    preserve_numeric_answers = bool(
+        language_cfg.get("preserve_numeric_answers", True)
+    )
+    retry_failed_questions = bool(
+        language_cfg.get("retry_failed_questions", True)
+    )
     sentence_split_fields = sorted(
         {
             str(field)
@@ -193,13 +202,17 @@ def prepare_language_dataset(
     cache_path = cache_dir / f"{language_code}.jsonl"
     metadata_path = cache_dir / f"{language_code}.meta.json"
     expected_metadata = {
-        "schema_version": 3,
+        "schema_version": 4,
         "language": language_code,
         "source_fingerprint": source_fingerprint,
         "num_samples": len(source_samples),
         "translator": translator_spec,
         "translation_max_length": int(language_cfg.get("translation_max_length", 512)),
         "sentence_split_fields": sentence_split_fields,
+        "translation_policy": {
+            "preserve_numeric_answers": preserve_numeric_answers,
+            "retry_failed_questions": retry_failed_questions,
+        },
         "translation_quality_rules": {
             "require_grounded_answer_alignment": bool(
                 quality_cfg.get("require_grounded_answer_alignment", True)
@@ -244,7 +257,10 @@ def prepare_language_dataset(
                 source,
                 translator,
                 max_length,
+                language_code=language_code,
                 sentence_split_fields=set(sentence_split_fields),
+                preserve_numeric_answers=preserve_numeric_answers,
+                retry_failed_questions=retry_failed_questions,
             )
             sample_id = stable_sample_id(source)
             warnings = translation_quality_warnings(
@@ -286,6 +302,8 @@ def prepare_language_dataset(
                             "input_truncated": result.input_truncated,
                             "output_truncated": result.output_truncated,
                             "segment_count": len(result.segments),
+                            "strategy": result.strategy,
+                            "initial_text": result.initial_text,
                             "segments": [
                                 {
                                     "source_text": segment.source_text,
@@ -336,7 +354,10 @@ def _translate_sample(
     source: QASample,
     translator: Translator | None,
     max_length: int,
+    language_code: str,
     sentence_split_fields: set[str] | None = None,
+    preserve_numeric_answers: bool = True,
+    retry_failed_questions: bool = True,
 ) -> tuple[QASample, dict[str, TranslationResult]]:
     source_fields = {
         "question": source.question,
@@ -352,19 +373,60 @@ def _translate_sample(
                 output_tokens=0,
                 input_truncated=False,
                 output_truncated=False,
+                strategy="identity",
             )
             for field, text in source_fields.items()
         }
     else:
         split_fields = sentence_split_fields or set()
-        diagnostics = {
-            field: translator.translate_with_metadata(
+        diagnostics = {}
+        for field, text in source_fields.items():
+            if (
+                preserve_numeric_answers
+                and field in {"right_answer", "hallucinated_answer"}
+                and is_language_neutral_number(text)
+            ):
+                diagnostics[field] = TranslationResult(
+                    text=text.strip(),
+                    source_tokens=0,
+                    output_tokens=0,
+                    input_truncated=False,
+                    output_truncated=False,
+                    strategy="preserved_numeric",
+                )
+                continue
+            diagnostics[field] = translator.translate_with_metadata(
                 text,
                 max_length=max_length,
                 split_sentences=field in split_fields,
             )
-            for field, text in source_fields.items()
-        }
+
+        if retry_failed_questions:
+            initial_question = diagnostics["question"]
+            initial_score = _question_issue_score(
+                source.question,
+                initial_question.text,
+                language_code,
+            )
+            retry = (
+                translator.translate_question_clauses_with_metadata(
+                    source.question,
+                    max_length=max_length,
+                    initial_text=initial_question.text,
+                )
+                if initial_score
+                else None
+            )
+            if (
+                retry is not None
+                and _question_issue_score(
+                    source.question,
+                    retry.text,
+                    language_code,
+                )
+                < initial_score
+            ):
+                diagnostics["question"] = retry
 
     translated = QASample(
         index=source.index,
@@ -374,6 +436,24 @@ def _translate_sample(
         hallucinated_answer=diagnostics["hallucinated_answer"].text,
     )
     return translated, diagnostics
+
+
+def _question_issue_score(
+    source_question: str,
+    translated_question: str,
+    language_code: str,
+) -> int:
+    return (
+        10
+        * int(
+            question_intent_lost(
+                source_question,
+                translated_question,
+                language_code,
+            )
+        )
+        + len(missing_numbers(source_question, translated_question))
+    )
 
 
 def _validate_translation_quality(
@@ -434,6 +514,12 @@ def _translation_audit_rows(
                     "unknown",
                 ),
                 "knowledge_segment_count": len(segments),
+                "question_translation_strategy": row[
+                    "translation_diagnostics"
+                ]["question"].get("strategy", "unknown"),
+                "initial_question_translation": row[
+                    "translation_diagnostics"
+                ]["question"].get("initial_text"),
                 "minimum_segment_output_ratio": (
                     min(segment_ratios) if segment_ratios else None
                 ),

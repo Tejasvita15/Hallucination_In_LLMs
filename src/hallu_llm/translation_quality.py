@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 from collections import Counter
+from difflib import SequenceMatcher
 from typing import Any, Mapping
 
 from .data import QASample
@@ -16,6 +17,7 @@ EN_QUESTION_PREFIX = re.compile(
     re.IGNORECASE,
 )
 ZH_QUESTION_MARKERS = ("什么", "哪个", "哪一", "谁", "多少", "是否", "几", "何时", "哪里", "为什么")
+PROPER_NAME_CONNECTORS = {"and", "of", "or", "the"}
 CRITICAL_WARNING_CODES = {
     "empty_output",
     "empty_segment",
@@ -78,13 +80,13 @@ def translation_quality_warnings(
 
     for field, source_text in source_fields.items():
         translated_text = translated_fields[field]
-        missing_numbers = _missing_numbers(source_text, translated_text)
-        if missing_numbers:
-            warnings.append(f"{field}:numbers_missing:{','.join(missing_numbers)}")
+        absent_numbers = missing_numbers(source_text, translated_text)
+        if absent_numbers:
+            warnings.append(f"{field}:numbers_missing:{','.join(absent_numbers)}")
         if _has_immediate_repetition(translated_text):
             warnings.append(f"{field}:repeated_output")
 
-    if _question_intent_lost(source.question, translated.question, language_code):
+    if question_intent_lost(source.question, translated.question, language_code):
         warnings.append("question:question_intent_lost")
 
     if (
@@ -106,11 +108,18 @@ def summarize_translation_quality(
     critical_samples = 0
     alignment_loss_samples = 0
     alignment_status_counts: Counter[str] = Counter()
+    strategy_counts: Counter[str] = Counter()
 
     for row in rows:
         alignment_status_counts[
             str(row.get("grounded_answer_alignment", "unknown"))
         ] += 1
+        for field, diagnostics in row.get(
+            "translation_diagnostics",
+            {},
+        ).items():
+            strategy = str(diagnostics.get("strategy", "unknown"))
+            strategy_counts[f"{field}:{strategy}"] += 1
         warnings = list(row.get("translation_warnings", []))
         if warnings:
             warning_samples += 1
@@ -152,6 +161,7 @@ def summarize_translation_quality(
         "grounded_answer_alignment_counts": dict(
             sorted(alignment_status_counts.items())
         ),
+        "translation_strategy_counts": dict(sorted(strategy_counts.items())),
         "warning_counts": dict(sorted(warning_counts.items())),
     }
 
@@ -166,10 +176,23 @@ def grounded_answer_alignment_status(
         return "translated_answer"
     if _contains(translated.context, source.right_answer):
         return "source_answer_alias"
+    if _contains_source_name_components(
+        translated.context,
+        source.right_answer,
+    ):
+        return "source_answer_components"
+    if (
+        _is_short_proper_name(source.right_answer)
+        and _approximately_contains_cjk(
+            translated.context,
+            translated.right_answer,
+        )
+    ):
+        return "translated_answer_alias"
     return "lost"
 
 
-def _missing_numbers(source: str, translated: str) -> list[str]:
+def missing_numbers(source: str, translated: str) -> list[str]:
     source_numbers = Counter(NUMBER_PATTERN.findall(source))
     translated_numbers = Counter(NUMBER_PATTERN.findall(translated))
     missing: list[str] = []
@@ -187,7 +210,11 @@ def _has_immediate_repetition(text: str) -> bool:
     )
 
 
-def _question_intent_lost(source: str, translated: str, language_code: str) -> bool:
+def question_intent_lost(
+    source: str,
+    translated: str,
+    language_code: str,
+) -> bool:
     source_is_question = (
         "?" in source
         or "？" in source
@@ -217,6 +244,78 @@ def _contains(container: str, value: str) -> bool:
         container_tokens[position : position + width] == value_tokens
         for position in range(len(container_tokens) - width + 1)
     )
+
+
+def _contains_source_name_components(
+    container: str,
+    source_answer: str,
+) -> bool:
+    tokens = _proper_name_tokens(source_answer)
+    if not tokens:
+        return False
+    return all(
+        re.search(
+            rf"(?<![A-Za-z]){re.escape(token)}(?![A-Za-z])",
+            container,
+            flags=re.IGNORECASE,
+        )
+        is not None
+        for token in tokens
+    )
+
+
+def _is_short_proper_name(text: str) -> bool:
+    return bool(_proper_name_tokens(text))
+
+
+def _proper_name_tokens(text: str) -> list[str]:
+    raw_tokens = re.findall(r"[A-Za-z]+(?:'[A-Za-z]+)?", text)
+    tokens = [
+        token
+        for token in raw_tokens
+        if token.lower() not in PROPER_NAME_CONNECTORS
+        and len(token.replace("'", "")) > 1
+    ]
+    if not 1 <= len(tokens) <= 4:
+        return []
+    if not all(token[0].isupper() for token in tokens):
+        return []
+    return tokens
+
+
+def _approximately_contains_cjk(
+    container: str,
+    value: str,
+    threshold: float = 0.72,
+) -> bool:
+    normalized_container = "".join(
+        character
+        for character in container
+        if "\u3400" <= character <= "\u9fff"
+    )
+    normalized_value = "".join(
+        character
+        for character in value
+        if "\u3400" <= character <= "\u9fff"
+    )
+    if not normalized_value or not normalized_container:
+        return False
+    minimum_width = max(1, len(normalized_value) - 2)
+    maximum_width = min(
+        len(normalized_container),
+        len(normalized_value) + 2,
+    )
+    for width in range(minimum_width, maximum_width + 1):
+        for start in range(len(normalized_container) - width + 1):
+            candidate = normalized_container[start : start + width]
+            similarity = SequenceMatcher(
+                None,
+                normalized_value,
+                candidate,
+            ).ratio()
+            if similarity >= threshold:
+                return True
+    return False
 
 
 def _warning_code(warning: str) -> str:

@@ -1,5 +1,5 @@
 {
-  "experiment_name": "crosslingual_halueval_detection_nllb_600m_chunked_smoke_v2",
+  "experiment_name": "crosslingual_halueval_detection_nllb_600m_retry_smoke_v3",
   "output_dir": "results/detection",
   "seed": 42,
   "num_samples": 20,
@@ -34,6 +34,8 @@
       "sentence_split_fields": [
         "knowledge"
       ],
+      "preserve_numeric_answers": true,
+      "retry_failed_questions": true,
       "translation_quality": {
         "require_grounded_answer_alignment": true,
         "min_segment_output_ratio": 0.2,

@@ -29,7 +29,7 @@ export TRANSFORMERS_OFFLINE="${TRANSFORMERS_OFFLINE:-1}"
 
 CONFIGS=(
   "configs/detection.nllb-600m.json"
-  "configs/detection.example.json"
+  "configs/detection.nllb-1.3b.json"
 )
 CONFIG="${CONFIGS[$SLURM_ARRAY_TASK_ID]}"
 
