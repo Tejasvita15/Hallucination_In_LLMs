@@ -12,6 +12,8 @@ configs/
   detection.nllb-600m.full.json
                                Strict 150-sample full-study configuration
   detection.nllb-1.3b.json     Optional matched NLLB-1.3B ablation
+  detection_analysis.example.json
+                               Held-out calibration and statistics protocol
   halueval_reviews.json        Versioned translation and label review decisions
   experiment.example.json      Example experiment configuration
   models.example.json          Open-weight model list
@@ -21,6 +23,7 @@ jobs/
   submit_nllb_ablation_tc2.sh  Two-task NLLB model-size ablation
   submit_experiment_ntu.sh     Slurm entrypoint for NTU GPU cluster
 scripts/
+  analyze_detection_results.py Held-out calibration and statistical analysis
   prefetch_hf_assets.py        Downloads configured models and datasets
   run_halueval_detection.py    Paired multilingual hallucination detector
   run_crosslingual.py          Main cross-lingual experiment runner
@@ -29,6 +32,7 @@ scripts/
 src/hallu_llm/
   data.py                      Dataset loading and sample normalization
   detection.py                 Detection instances, scoring, and metrics
+  detection_analysis.py        Calibration, bootstrap, and length controls
   evaluation.py                Core scoring loops
   metrics.py                   Metrics and confidence helpers
   models.py                    HF model loading and generation
@@ -142,6 +146,80 @@ Run the focused unit tests:
 ```bash
 python -m unittest discover -s tests -v
 ```
+
+## Held-out Statistical Analysis
+
+The detector probabilities can be analyzed without loading Qwen, NLLB, or
+PyTorch. The analysis assigns complete source pairs to a deterministic
+development/test split, fits every threshold or probability calibrator on the
+development split only, and reports test-only results:
+
+```bash
+python scripts/analyze_detection_results.py \
+  --results-dir results/detection/crosslingual_halueval_detection_nllb_600m_full_150_v4
+```
+
+The equivalent tracked configuration is:
+
+```bash
+python scripts/analyze_detection_results.py \
+  --config configs/detection_analysis.example.json
+```
+
+The default protocol uses 30% of source pairs for development, 70% for test,
+2,000 source-pair bootstrap replicates, English as the reference language, and
+a fixed seed of 42. It compares:
+
+- the saved generated `YES`/`NO` decision
+- the uncalibrated decision-token probability at threshold 0.5
+- thresholds fitted on pooled languages, English, or each target language
+- language-specific temperature scaling
+- pooled, English-transfer, and language-specific Platt scaling
+- a candidate-length-only logistic baseline
+- a model-plus-length logistic diagnostic
+
+Temperature scaling changes probability calibration but cannot move a 0.5
+decision boundary. Platt scaling can correct both scale and intercept drift.
+The model-plus-length probe estimates whether the model probability adds signal
+after candidate length is included; it is a diagnostic association rather than
+a causal correction.
+
+Analysis outputs are written to `<results-dir>/analysis/`:
+
+```text
+analysis.json
+analysis_config.json
+calibration_parameters.json
+split_manifest.csv
+metrics_all.csv
+table_main.csv
+table_crosslingual.csv
+report.md
+```
+
+`table_main.csv` includes conditional source-pair bootstrap intervals for
+accuracy, balanced accuracy, recall, specificity, ROC AUC, Brier score,
+negative log likelihood, calibration error, and paired ranking. Cross-language
+deltas use the same resampled source IDs in both languages. Exact McNemar tests
+are included as descriptive instance-level checks, while the source-pair
+bootstrap is the primary uncertainty estimate.
+
+The calibrator-fit uncertainty is not included in these intervals. For a final
+paper, freeze the split and hypotheses before evaluating additional models,
+then confirm important findings across model families and languages. Analysis
+performed after inspecting a run must be described as exploratory.
+
+To reuse a frozen split, pass the manifest produced by the first analysis:
+
+```bash
+python scripts/analyze_detection_results.py \
+  --results-dir results/detection/<experiment_name> \
+  --split-manifest results/detection/<frozen_run>/analysis/split_manifest.csv
+```
+
+The analyzer rejects manifests with missing, extra, duplicate, or invalid
+sample assignments. Cross-language McNemar p-values also include Holm
+adjustments across the reported analysis methods.
 
 ## Detection Outputs
 
