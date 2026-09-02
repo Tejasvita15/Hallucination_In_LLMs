@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import random
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 
@@ -13,6 +14,7 @@ class QASample:
     context: str
     right_answer: str
     hallucinated_answer: str
+    sample_id: str | None = None
 
 
 def _clean(value: Any) -> str:
@@ -68,24 +70,35 @@ def load_halueval_qa(
     seed: int,
     dataset_cfg: dict[str, Any],
 ) -> list[QASample]:
-    from datasets import load_dataset
-
     if num_samples is not None and num_samples < 1:
         raise ValueError("num_samples must be at least 1 or null for all samples.")
+    local_path = dataset_cfg.get("path")
     subset = dataset_cfg.get("subset", "qa")
-    ds = load_dataset(
-        dataset_cfg.get("name", "pminervini/HaluEval"),
-        subset,
-        split=dataset_cfg.get("split", "data"),
-    )
-    rows = list(ds)
+    if local_path:
+        rows = _read_local_rows(Path(str(local_path)))
+        subset = str(dataset_cfg.get("format", "paired_jsonl"))
+    else:
+        from datasets import load_dataset
+
+        ds = load_dataset(
+            dataset_cfg.get("name", "pminervini/HaluEval"),
+            subset,
+            split=dataset_cfg.get("split", "data"),
+        )
+        rows = list(ds)
     validate_paired_qa_schema(rows, subset)
-    random.Random(seed).shuffle(rows)
+    if bool(dataset_cfg.get("shuffle", not bool(local_path))):
+        random.Random(seed).shuffle(rows)
 
     samples: list[QASample] = []
     rejected = 0
     for row in rows:
         row = _maybe_expand_row(row)
+        sample_id = _first_present(row, ("sample_id", "source_id")) or None
+        if local_path and sample_id is None:
+            raise ValueError(
+                "Every local paired-dataset row must contain sample_id or source_id."
+            )
         question = _first_present(row, ("question", "query", "prompt"))
         context = _first_present(row, ("knowledge", "context", "document", "passage"))
         right_answer = _first_present(row, ("right_answer", "correct_answer", "gold_answer", "answer"))
@@ -109,6 +122,7 @@ def load_halueval_qa(
                 context=context,
                 right_answer=right_answer,
                 hallucinated_answer=hallucinated_answer,
+                sample_id=sample_id,
             )
         )
         if num_samples is not None and len(samples) >= num_samples:
@@ -118,6 +132,9 @@ def load_halueval_qa(
         sample.hallucinated_answer.strip().lower() in {"yes", "no", "true", "false", "0", "1"}
         for sample in samples
     )
+    sample_ids = [sample.sample_id for sample in samples if sample.sample_id]
+    if len(sample_ids) != len(set(sample_ids)):
+        raise ValueError("Local paired dataset contains duplicate sample IDs.")
     if samples and label_like_answers >= max(5, int(0.8 * len(samples))):
         raise ValueError(
             "Most loaded hallucinated answers are binary labels rather than answer text. "
@@ -141,3 +158,27 @@ def load_halueval_qa(
 
     print(f"Accepted {len(samples)} HaluEval samples; rejected {rejected} rows with missing fields.")
     return samples
+
+
+def _read_local_rows(path: Path) -> list[dict[str, Any]]:
+    if not path.exists():
+        raise FileNotFoundError(f"Local paired dataset does not exist: {path}")
+    if path.suffix.lower() != ".jsonl":
+        raise ValueError("Local paired datasets must use JSONL format.")
+    rows: list[dict[str, Any]] = []
+    with path.open("r", encoding="utf-8") as handle:
+        for line_number, line in enumerate(handle, start=1):
+            if not line.strip():
+                continue
+            try:
+                row = json.loads(line)
+            except json.JSONDecodeError as error:
+                raise ValueError(
+                    f"Invalid JSON on line {line_number} of {path}: {error}"
+                ) from error
+            if not isinstance(row, dict):
+                raise ValueError(
+                    f"Line {line_number} of {path} must contain a JSON object."
+                )
+            rows.append(row)
+    return rows

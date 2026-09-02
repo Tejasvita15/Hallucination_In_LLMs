@@ -1,0 +1,14 @@
+{
+  "results_dir": "results/detection/controlled_halueval_confirmatory_qwen25_v1",
+  "output_dir": null,
+  "split_manifest": "results/benchmark/length_controlled_halueval_500_v1/split_manifest.csv",
+  "reference_language": "en",
+  "dev_fraction": 0.2,
+  "seed": 20260901,
+  "bootstrap_replicates": 5000,
+  "confidence_level": 0.95,
+  "ece_bins": 10,
+  "high_confidence_threshold": 0.75,
+  "length_match_max_relative_difference": 0.25,
+  "logistic_l2": 0.001
+}

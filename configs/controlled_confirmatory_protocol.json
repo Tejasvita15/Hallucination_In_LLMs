@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "protocol_frozen_date": "2026-09-01",
+  "study_title": "Cross-lingual hallucination detection on a dual-reviewed length-controlled HaluEval benchmark",
+  "study_status": "freeze_before_confirmatory_detector_inference",
+  "research_question": "Does evidence-conditioned hallucination detection and calibration differ between English and simplified Chinese after candidate-length and answer-style artifacts are controlled?",
+  "primary_hypothesis": "Held-out Matthews correlation coefficient differs between English and simplified Chinese for Qwen2.5-7B-Instruct on the controlled benchmark.",
+  "primary_metric": "mcc",
+  "primary_comparison": {
+    "model": "Qwen/Qwen2.5-7B-Instruct",
+    "reference_language": "en",
+    "target_language": "zh",
+    "decision_method": "generated_binary_decision",
+    "test": "paired_source_bootstrap_cross_language_delta",
+    "alternative": "two_sided"
+  },
+  "secondary_metrics": [
+    "balanced_accuracy",
+    "roc_auc",
+    "pairwise_ranking_accuracy",
+    "brier_score",
+    "negative_log_likelihood",
+    "expected_calibration_error",
+    "high_confidence_error_rate"
+  ],
+  "benchmark": {
+    "construction_config": "configs/controlled_benchmark.full.json",
+    "minimum_approved_source_pairs": 500,
+    "independent_reviewers_per_pair": 2,
+    "adjudicate_disagreements": true,
+    "maximum_relative_length_difference": 0.25,
+    "maximum_sentence_count_difference": 0,
+    "maximum_named_entity_count_difference": 0,
+    "require_answer_style_match": true
+  },
+  "evaluation": {
+    "detection_config": "configs/detection.controlled.confirmatory.json",
+    "analysis_config": "configs/detection_analysis.controlled.json",
+    "development_fraction": 0.2,
+    "split_seed": 20260901,
+    "bootstrap_replicates": 5000,
+    "confidence_level": 0.95,
+    "high_confidence_threshold": 0.75
+  },
+  "test_set_policy": [
+    "Freeze source-pair split before detector inference.",
+    "Do not inspect test labels while changing prompts, thresholds, or calibration methods.",
+    "Fit thresholds and calibrators on development pairs only.",
+    "Report the length-only baseline in every primary result table.",
+    "Describe any analysis added after result inspection as exploratory."
+  ],
+  "replication_policy": "A cross-lingual claim should be replicated on at least one additional open-weight model family before submission or described as Qwen-specific."
+}

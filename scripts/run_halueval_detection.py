@@ -87,6 +87,9 @@ def main() -> None:
     args = parse_args()
     config_path = Path(args.config).resolve()
     cfg = read_json(config_path)
+    dataset_cfg = dict(cfg.get("dataset", {}))
+    if dataset_cfg.get("path"):
+        dataset_cfg["path"] = str(_resolve_repo_path(dataset_cfg["path"]))
     seed = int(cfg.get("seed", 42))
     set_seed(seed)
     configured_num_samples = cfg.get("num_samples", 20)
@@ -125,7 +128,7 @@ def main() -> None:
     source_samples = load_halueval_qa(
         num_samples=num_samples,
         seed=seed,
-        dataset_cfg=cfg.get("dataset", {}),
+        dataset_cfg=dataset_cfg,
     )
     source_fingerprint = _samples_fingerprint(source_samples)
     write_json(output_root / "config.json", effective_cfg)
@@ -428,6 +431,7 @@ def _refresh_translation_cache_rows(
             hallucinated_answer=str(
                 automatic_payload["hallucinated_answer"]
             ),
+            sample_id=sample_id,
         )
         automatic_diagnostics = _translation_results_from_cache(
             row.get("translation_diagnostics", {}),
@@ -715,6 +719,7 @@ def _translate_sample(
         context=diagnostics["knowledge"].text,
         right_answer=diagnostics["right_answer"].text,
         hallucinated_answer=diagnostics["hallucinated_answer"].text,
+        sample_id=source.sample_id,
     )
     return _repair_sample_numeric_ranges(source, translated, diagnostics)
 
@@ -755,6 +760,7 @@ def _repair_sample_numeric_ranges(
         context=repaired_diagnostics["knowledge"].text,
         right_answer=repaired_diagnostics["right_answer"].text,
         hallucinated_answer=repaired_diagnostics["hallucinated_answer"].text,
+        sample_id=translated.sample_id,
     )
     return repaired, repaired_diagnostics
 
@@ -788,6 +794,7 @@ def _apply_translation_review(
         context=reviewed_diagnostics["knowledge"].text,
         right_answer=reviewed_diagnostics["right_answer"].text,
         hallucinated_answer=reviewed_diagnostics["hallucinated_answer"].text,
+        sample_id=translated.sample_id,
     )
     return reviewed, reviewed_diagnostics
 
@@ -955,6 +962,7 @@ def _samples_from_cache_rows(
                 context=translated["knowledge"],
                 right_answer=translated["right_answer"],
                 hallucinated_answer=translated["hallucinated_answer"],
+                sample_id=str(row["sample_id"]),
             )
         )
         sample_ids[sample_index] = row["sample_id"]
@@ -1002,6 +1010,7 @@ def _samples_fingerprint(samples: list[QASample]) -> str:
     payload = [
         {
             "index": sample.index,
+            "sample_id": sample.sample_id,
             "question": sample.question,
             "knowledge": sample.context,
             "right_answer": sample.right_answer,
@@ -1027,6 +1036,13 @@ def _resolve_optional_path(
     path = Path(str(value))
     if not path.is_absolute():
         path = base_dir / path
+    return path.resolve()
+
+
+def _resolve_repo_path(value: Any) -> Path:
+    path = Path(str(value))
+    if not path.is_absolute():
+        path = ROOT / path
     return path.resolve()
 
 

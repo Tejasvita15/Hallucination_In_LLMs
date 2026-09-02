@@ -1,0 +1,33 @@
+{
+  "experiment_name": "halueval_qa_full_qwen25_v1",
+  "output_dir": "results/detection",
+  "seed": 20260902,
+  "num_samples": null,
+  "dataset": {
+    "path": "data/benchmarks/prepared/halueval_qa.jsonl",
+    "format": "paired_jsonl",
+    "shuffle": false
+  },
+  "models": [
+    {
+      "name": "qwen2.5-7b",
+      "path": "Qwen/Qwen2.5-7B-Instruct"
+    }
+  ],
+  "languages": [
+    {
+      "code": "en",
+      "name": "English",
+      "translator": null
+    }
+  ],
+  "model_loading": {
+    "dtype": "bfloat16",
+    "device_map": "auto"
+  },
+  "detection": {
+    "max_new_tokens": 4,
+    "high_confidence_threshold": 0.75,
+    "length_match_max_relative_difference": 0.25
+  }
+}

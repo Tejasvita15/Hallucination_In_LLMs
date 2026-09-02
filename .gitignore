@@ -22,6 +22,7 @@ logs/*
 models/
 data/raw/
 data/cache/
+data/benchmarks/
 .cache/
 
 # OS/editor

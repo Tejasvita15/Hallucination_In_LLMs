@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "experiment_name": "length_controlled_halueval_smoke_v1",
+  "output_dir": "results/benchmark",
+  "seed": 20260901,
+  "source": {
+    "cache_path": "results/detection/crosslingual_halueval_detection_nllb_600m_full_150_v4/datasets/en.jsonl",
+    "num_samples": 20,
+    "review_manifest": "configs/halueval_reviews.json"
+  },
+  "generator": {
+    "name": "qwen2.5-7b",
+    "path": "Qwen/Qwen2.5-7B-Instruct",
+    "dtype": "bfloat16",
+    "device_map": "auto"
+  },
+  "generation": {
+    "max_attempts": 4,
+    "max_new_tokens": 128,
+    "temperature": 0.8,
+    "top_p": 0.9
+  },
+  "constraints": {
+    "max_relative_length_difference": 0.25,
+    "max_sentence_count_difference": 0,
+    "max_named_entity_count_difference": 0,
+    "require_answer_style_match": true,
+    "forbid_newlines": true
+  },
+  "review": {
+    "files": [
+      "proposal_review_reviewer_1.csv",
+      "proposal_review_reviewer_2.csv"
+    ],
+    "adjudication_file": "proposal_adjudication.csv",
+    "require_distinct_reviewers": true,
+    "minimum_approved_samples": 15,
+    "require_all_reviewed": true
+  },
+  "split": {
+    "dev_fraction": 0.2,
+    "seed": 20260901
+  }
+}

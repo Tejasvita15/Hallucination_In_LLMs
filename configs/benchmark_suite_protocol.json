@@ -1,0 +1,67 @@
+{
+  "protocol_name": "Full hallucination benchmark suite",
+  "version": "2026-09-02",
+  "status": "prospectively_frozen_before_full_suite_runs",
+  "research_question": "How reliably do open-weight instruction-tuned LLMs detect or avoid hallucination across response types and languages?",
+  "core_benchmarks": [
+    {
+      "name": "HaluEval-QA",
+      "unit": "paired grounded and hallucinated candidate answers",
+      "primary_metrics": [
+        "balanced_accuracy",
+        "hallucination_f1",
+        "mcc",
+        "roc_auc"
+      ],
+      "scope": "all examples in the official QA split"
+    },
+    {
+      "name": "HalluLens",
+      "unit": "fresh model generations on all official dynamic tasks",
+      "primary_metrics": [
+        "correct_answer_rate",
+        "hallucination_rate_when_answered",
+        "false_acceptance_rate",
+        "claim_precision"
+      ],
+      "scope": "all generated prompts for all official task scripts"
+    },
+    {
+      "name": "RAGTruth",
+      "unit": "annotated RAG response",
+      "primary_metrics": [
+        "balanced_accuracy",
+        "hallucination_f1",
+        "mcc",
+        "hard_span_iou"
+      ],
+      "scope": "all good-quality examples in the official test split"
+    },
+    {
+      "name": "Mu-SHROOM",
+      "unit": "multilingual model response with hallucinated spans",
+      "primary_metrics": [
+        "hard_span_iou",
+        "response_level_balanced_accuracy",
+        "response_level_f1"
+      ],
+      "scope": "all test examples in all official languages; validation is reserved for development"
+    }
+  ],
+  "factuality_control": {
+    "name": "TruthfulQA",
+    "unit": "binary multiple-choice question",
+    "primary_metric": "accuracy",
+    "scope": "all official questions",
+    "interpretation": "Reported separately because factual accuracy is related to, but not identical with, hallucination."
+  },
+  "analysis_rules": [
+    "Never average task-specific headline metrics into one suite score.",
+    "Report every benchmark separately with its sample count and source revision.",
+    "Report Mu-SHROOM by language as well as macro and micro aggregates.",
+    "Treat command-line sample limits as smoke tests and never as confirmatory results.",
+    "Use deterministic decoding and the same model checkpoint across benchmarks.",
+    "Do not pool Mu-SHROOM validation examples into the final test metrics.",
+    "Record all exclusions and retain row-level predictions for audit."
+  ]
+}

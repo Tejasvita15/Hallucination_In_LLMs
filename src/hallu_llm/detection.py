@@ -28,6 +28,8 @@ class DetectionInstance:
 
 
 def stable_sample_id(sample: QASample) -> str:
+    if sample.sample_id:
+        return sample.sample_id
     content = "\n".join(
         (sample.question, sample.context, sample.right_answer, sample.hallucinated_answer)
     )
