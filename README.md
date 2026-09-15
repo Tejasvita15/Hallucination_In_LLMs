@@ -78,6 +78,43 @@ Use the `scripts/` entrypoints for new experiments.
 
 ## Full Benchmark Suite
 
+### Enabled production models
+
+The full suite, full HaluEval-QA, controlled confirmatory detector, and 150-pair
+translation-study configurations enable these three evaluation checkpoints:
+
+| Configured name | Hugging Face checkpoint |
+| --- | --- |
+| `qwen2.5-7b` | `Qwen/Qwen2.5-7B-Instruct` |
+| `llama3.1-8b` | `meta-llama/Llama-3.1-8B-Instruct` |
+| `deepseek-r1-7b` | `deepseek-ai/DeepSeek-R1-Distill-Qwen-7B` |
+
+The paired HaluEval runner iterates over all configured models. External
+benchmark jobs run one model per submission; select either added model with
+`MODEL_NAME`, for example:
+
+```bash
+sbatch --export=ALL,BENCHMARK=ragtruth,MODEL_NAME=llama3.1-8b jobs/submit_external_benchmark_tc2.sh
+sbatch --export=ALL,BENCHMARK=ragtruth,MODEL_NAME=deepseek-r1-7b jobs/submit_external_benchmark_tc2.sh
+```
+
+Repeat for `mu_shroom` and `truthfulqa`. Prefetch the full suite config to cache
+all three checkpoints; Llama requires an account with approved model access.
+Enabling a checkpoint does not download weights or submit GPU jobs.
+
+This model-list expansion adds replication comparisons; the frozen primary
+Qwen hypothesis and Qwen proposal generator remain as recorded. Existing
+experiment directory names are retained for compatibility. DeepSeek's 7B
+checkpoint is the Qwen-based R1 distillation. The existing four-token binary
+decision protocol is a constrained-output evaluation, not a full reasoning
+evaluation; inspect its generated decisions and invalid-output rate in a smoke
+run before full inference.
+
+The official HalluLens endpoint must be configured separately for each model.
+The current suite aggregator selects the first configured model (Qwen); it
+does not yet produce a three-model comparison table. Per-model prediction and
+summary files from the evaluation runners remain separate.
+
 The production suite uses four core hallucination benchmarks and one separate
 factuality control. These are not interchangeable tasks, so their metrics are
 reported in separate rows rather than averaged into a synthetic overall score.

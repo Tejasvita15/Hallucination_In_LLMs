@@ -8,6 +8,7 @@ __pycache__/
 # Environments
 .env
 .venv/
+.dataset-deps/
 venv/
 env/
 

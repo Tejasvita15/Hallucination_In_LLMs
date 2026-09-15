@@ -268,7 +268,21 @@ def prepare_hallulens(
             check=True,
         )
     data_dir = checkout / "data"
+    required_assets = [
+        data_dir / "wiki_data/doc_goodwiki_h_score.jsonl",
+        data_dir / "wiki_data/.cache/enwiki-20230401.db",
+        data_dir / "wiki_data/title_db.jsonl",
+        data_dir / "nonexistent_refusal/medicine_dataset.csv",
+        data_dir / "nonexistent_refusal/itis_animals/hierarchy",
+        data_dir / "nonexistent_refusal/itis_animals/longnames",
+    ]
+    missing_assets = [
+        _display_path(path) for path in required_assets
+        if not path.is_file() or path.stat().st_size == 0
+    ]
     return {
+        "status": "missing_assets" if missing_assets else "ready",
+        "missing_assets": missing_assets,
         "source_revision": _git_revision(checkout),
         "checkout_dir": _display_path(checkout),
         "data_dir": _display_path(data_dir),
