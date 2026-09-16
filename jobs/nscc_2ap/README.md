@@ -16,9 +16,12 @@ nano jobs/nscc_2ap/settings.local.sh
 source jobs/nscc_2ap/settings.local.sh
 ```
 
-Enter your actual NSCC project ID, existing Conda environment name or absolute
-path, available Miniforge module, and allocated shared storage cache path.
-No username, allocation, or storage path is assumed. Local settings are ignored
+Defaults follow your supplied PBS example: project `13014407`, module
+`miniforge3/24.3.0`, and cache `/scratch/users/ntu/tejasvit/huggingface`.
+The LLM environment is `/scratch/users/ntu/tejasvit/conda_envs/hallucination`.
+Check that the cache destination has sufficient quota. The SimVP environment is
+not selected automatically. Existing `settings.local.sh` files are not updated
+by Git; edit them to match these settings. Local settings are ignored
 by Git. Do not put tokens in them. Do not modify settings while jobs are queued.
 
 The Conda environment must contain the project requirements and GPU-enabled

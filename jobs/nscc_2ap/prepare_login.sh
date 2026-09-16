@@ -9,8 +9,8 @@ source jobs/nscc_2ap/settings.local.sh
 module purge
 unset PYTHONPATH PYTHONHOME
 export PYTHONNOUSERSITE=1
-module load "${CONDA_MODULE:-miniforge3}"
-eval "$(conda shell.bash hook)"
+module load "${CONDA_MODULE:-miniforge3/24.3.0}"
+source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate "$CONDA_ENV"
 export HF_HUB_CACHE="$HF_HOME/hub" HF_DATASETS_CACHE="$HF_HOME/datasets"
 export TRANSFORMERS_CACHE="$HF_HUB_CACHE"
