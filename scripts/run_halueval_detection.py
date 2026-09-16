@@ -219,7 +219,8 @@ def main() -> None:
             if model_cfg.get("require_protocol_quality", False) and not summary["protocol_quality_passed"]:
                 raise RuntimeError(
                     "Decision protocol quality gate failed; inspect saved predictions "
-                    "for truncated reasoning or unparseable answers before full evaluation."
+                    "for truncated reasoning, invalid reviews, unsupported quotations, "
+                    "verdict conflicts or unparseable answers before full evaluation."
                 )
 
         del generator

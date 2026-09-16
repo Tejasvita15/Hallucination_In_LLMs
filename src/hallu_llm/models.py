@@ -30,6 +30,7 @@ class BinaryGeneration:
     reasoning: str = ""
     reasoning_truncated: bool = False
     reasoning_tokens: int = 0
+    final_decision_prompt: str = ""
 
 
 @dataclass
@@ -162,6 +163,7 @@ class HFGenerator:
 
     def generate_reasoned_binary(
         self, prompt: str, max_reasoning_tokens: int = 2048,
+        evidence_context: dict[str, str] | None = None,
     ) -> BinaryGeneration:
         """Exploratory two-stage protocol: reasoning followed by forced choice.
 
@@ -170,9 +172,8 @@ class HFGenerator:
         """
         if max_reasoning_tokens < 1:
             raise ValueError("max_reasoning_tokens must be positive")
-        formatted = self.format_prompt(
-            prompt + "\nAnalyze the evidence carefully before deciding."
-        )
+        formatted = self.format_prompt(prompt if evidence_context is not None else
+                                      prompt + "\nAnalyze the evidence carefully before deciding.")
         inputs = self.tokenizer(formatted, return_tensors="pt").to(self.model.device)
         prompt_len = inputs["input_ids"].shape[1]
         with torch.no_grad():
@@ -191,9 +192,13 @@ class HFGenerator:
         truncated = len(ids) >= max_reasoning_tokens and int(ids[-1]) not in eos_ids
 
         # Score one-token labels at a new, explicit final-decision position.
-        final_prompt = formatted + reasoning
-        if "</think>" not in reasoning:
-            final_prompt += "\n</think>"
+        if evidence_context is not None:
+            from .reasoned_protocol import decision_prompt
+            final_prompt = self.format_prompt(decision_prompt(**evidence_context, review_text=reasoning))
+        else:
+            final_prompt = formatted + reasoning
+            if "</think>" not in reasoning:
+                final_prompt += "\n</think>"
         final_prompt += "\nFinal decision (YES = hallucinated; NO = grounded):"
         final_inputs = self.tokenizer(final_prompt, return_tensors="pt").to(self.model.device)
         label_ids = [self.tokenizer.encode(label, add_special_tokens=False)
@@ -215,6 +220,7 @@ class HFGenerator:
             label_probability_mass=raw_mass, first_generated_token_id=None,
             decision_method="reason_then_forced_choice", reasoning=reasoning,
             reasoning_truncated=truncated, reasoning_tokens=len(ids),
+            final_decision_prompt=final_prompt,
         )
 
     def _label_first_token_ids(self, label: str) -> set[int]:

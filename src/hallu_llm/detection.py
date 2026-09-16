@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING, Any, Mapping
 
 from .data import QASample
 from .prompts import halueval_detection_prompt
+from .reasoned_protocol import review_prompt, audit_review, consistency_flags
 
 if TYPE_CHECKING:
     from .models import HFGenerator
@@ -112,7 +113,7 @@ def evaluate_detection_instances(
     decision_mode: str = "direct",
     max_reasoning_tokens: int = 2048,
 ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
-    if decision_mode not in {"direct", "reason_then_forced_choice"}:
+    if decision_mode not in {"direct", "reason_then_forced_choice", "evidence_review_v2"}:
         raise ValueError(f"Unknown decision mode: {decision_mode}")
     rows: list[dict[str, Any]] = []
     warnings = translation_warnings or {}
@@ -125,7 +126,18 @@ def evaluate_detection_instances(
             language_code=language_code,
             instruction=prompt_instruction,
         )
-        if decision_mode == "reason_then_forced_choice":
+        review = None
+        review_flags = []
+        if decision_mode == "evidence_review_v2":
+            context = dict(knowledge=instance.knowledge, question=instance.question,
+                           candidate=instance.candidate_answer)
+            prompt = review_prompt(**context)
+            decision = generator.generate_reasoned_binary(
+                prompt, max_reasoning_tokens, evidence_context=context,
+            )
+            review, review_flags = audit_review(decision.reasoning, instance.knowledge)
+            review_flags += consistency_flags(review, decision.predicted_positive)
+        elif decision_mode == "reason_then_forced_choice":
             decision = generator.generate_reasoned_binary(prompt, max_reasoning_tokens)
         else:
             decision = generator.generate_binary(
@@ -191,6 +203,9 @@ def evaluate_detection_instances(
                 "reasoning": getattr(decision, "reasoning", ""),
                 "reasoning_truncated": getattr(decision, "reasoning_truncated", False),
                 "reasoning_tokens": getattr(decision, "reasoning_tokens", 0),
+                "evidence_review": review,
+                "review_quality_flags": review_flags,
+                "final_decision_prompt": getattr(decision, "final_decision_prompt", ""),
             }
         )
 
@@ -208,7 +223,10 @@ def evaluate_detection_instances(
     summary["protocol_quality_passed"] = (
         summary["reasoning_truncated_instances"] == 0
         and all(row["output_parseable"] for row in rows)
+        and not any(row["review_quality_flags"] for row in rows)
     )
+    summary["review_flagged_instances"] = sum(bool(row["review_quality_flags"]) for row in rows)
+    summary["semantic_review_still_required"] = decision_mode == "evidence_review_v2"
     summary["output_parseability_is_constrained"] = decision_mode != "direct"
     return summary, rows
 

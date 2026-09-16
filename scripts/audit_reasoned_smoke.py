@@ -22,9 +22,11 @@ def audit_rows(rows):
         "empty_reasoning": empty, "bare_yes_no": sum(bare),
         "reasoning_under_10_words": sum(len(text.split()) < 10 for text in stripped),
         "truncated": truncated, "median_tokens": statistics.median(lengths),
+        "review_flagged_instances": sum(bool(row.get("review_quality_flags")) for row in rows),
         "max_tokens": max(lengths),
         "needs_manual_review": True,
-        "automatic_checks_passed": not (missing or empty or truncated or any(bare)),
+        "automatic_checks_passed": not (missing or empty or truncated or any(bare)
+                                          or any(row.get("review_quality_flags") for row in rows)),
         "source_pairs": sorted({str(row["sample_id"]) for row in rows}),
     }
 
@@ -33,12 +35,15 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--results-root", default="results/detection")
     parser.add_argument("--output", default="results/detection/reasoned_smoke_audit.txt")
+    parser.add_argument("--version", choices=["v1", "v2"], default="v1")
     args = parser.parse_args()
     report = []
     pair_sets = []
     for short, model in [("qwen", "qwen2.5-7b"), ("llama", "llama3.1-8b"),
                          ("deepseek", "deepseek-r1-7b")]:
-        path = Path(args.results_root) / f"nscc_{short}_reasoned_smoke_v1" / model / "en/predictions.jsonl"
+        experiment = (f"nscc_{short}_reasoned_smoke_v1" if args.version == "v1"
+                      else f"nscc_{short}_evidence_review_smoke_v2")
+        path = Path(args.results_root) / experiment / model / "en/predictions.jsonl"
         if not path.is_file():
             report.append(f"MISSING: {path}\n")
             continue
@@ -55,6 +60,7 @@ def main():
                 f"Candidate: {row.get('candidate_answer', '')}\n"
                 f"Reasoning ({row.get('reasoning_tokens')} tokens):\n{row.get('reasoning', '')}\n"
                 f"Final choice: {row.get('generation')}\n"
+                f"Review flags: {row.get('review_quality_flags', [])}\n"
             )
     matched = len(pair_sets) == 3 and all(ids == pair_sets[0] for ids in pair_sets)
     report.insert(0, f"All three source-pair sets match: {matched}\n"

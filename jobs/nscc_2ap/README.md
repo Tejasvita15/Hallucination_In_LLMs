@@ -1,5 +1,44 @@
 # NSCC ASPIRE 2A+ (2ap)
 
+## Current next step: evidence review v2 smoke tests
+
+The v1 audit found bare YES/NO responses for all Qwen/Llama examples and label
+confusion in DeepSeek explanations. Those runs are diagnostic, not a validated
+reasoning comparison. Run these replacement smoke jobs from the repository root:
+
+```bash
+qsub jobs/nscc_2ap/qwen_review_v2.pbs
+qsub jobs/nscc_2ap/llama_review_v2.pbs
+qsub jobs/nscc_2ap/deepseek_review_v2.pbs
+```
+
+After all three jobs finish (including any quality-gate failures), run on the login node:
+
+```bash
+python scripts/audit_reasoned_smoke.py --version v2 --output results/detection/evidence_review_v2_audit.txt
+```
+
+Share that audit and the job logs before starting full runs.
+
+Stage one requests a short evidence review with an exact source quotation and
+SUPPORTED/UNSUPPORTED verdict, without the previous no-explanation instruction.
+Stage two uses a fresh prompt containing the evidence and review, explicitly
+maps UNSUPPORTED to YES and SUPPORTED to NO, and scores those two choices.
+No synthetic closing think tag is added in v2. Raw label mass is retained;
+constrained answer probabilities are not unconditional calibrated confidence.
+
+Results are isolated in `results/detection/nscc_<model>_evidence_review_smoke_v2/`.
+Predictions retain both prompts, the generated review, parsed review, final
+decision, and `review_quality_flags`. Missing/short explanations, invalid JSON,
+quotes absent from the evidence, invalid verdicts, verdict/decision disagreements,
+and truncation fail the gate after saving predictions. These are mechanical
+checks, not proof that the explanation is semantically correct. Manual review
+is still necessary. Flagged rows remain in diagnostic metrics rather than being
+silently dropped. A failed gate is not a GPU/environment failure.
+
+Keep full jobs on hold. The v1 full drafts and frozen production configurations
+are unchanged; v2 is exploratory and must pass this new smoke test first.
+
 Submit from the repository root. These scripts request one GPU through the
 `normal` routing queue for up to 24 hours. CPU and memory allocation follow
 the site's GPU ratios. They target ASPIRE 2A+, not the TC2 Slurm cluster.
