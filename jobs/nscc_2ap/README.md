@@ -166,6 +166,31 @@ The suite aggregator still selects Qwen only.
 
 ## Monitor
 
+## Audit before full reasoning runs
+
+Run on the login node from the repository root:
+
+```bash
+python scripts/audit_reasoned_smoke.py
+```
+
+It writes `results/detection/reasoned_smoke_audit.txt` with token lengths,
+bare YES/NO counts, missing/empty reasoning, truncation, matched pair IDs and
+all saved evidence/reasoning responses for review. Upload this report for review.
+The existing v1 prompt contains both a no-explanation instruction and an appended
+request to analyze; the previous quality gate did not test this conflict.
+Do not interpret the previous gate as evidence that reasoning was elicited.
+
+Draft `qwen_full.pbs`, `llama_full.pbs`, and `deepseek_full.pbs` use separate
+`detection.*-reasoned.full.json` configs, all 10,000 pairs and distinct outputs.
+They preserve the v1 smoke protocol for traceability, but are not yet approved
+for scientific full runs: review the reasoning first and revise/version the
+prompt if required. DeepSeek's roughly 4-minute inference smoke suggests a full
+run may exceed the 24-hour allocation. This paired runner has no resumable
+checkpoint support; implement checkpointing or partitioning before that full run.
+Do not submit these draft full jobs yet. The original production configs and
+frozen confirmatory hypothesis have not been changed.
+
 ```bash
 qstat -u "$USER"
 qstat -f JOB_ID
