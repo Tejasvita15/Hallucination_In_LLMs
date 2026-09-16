@@ -1,0 +1,16 @@
+#!/bin/bash
+#PBS -N hallu-external
+#PBS -q normal
+#PBS -l select=1:ngpus=1
+#PBS -l walltime=24:00:00
+#PBS -j oe
+
+# Project supplied at submission: qsub -P "$NSCC_PROJECT_ID" ...
+source "${PBS_O_WORKDIR:?}/jobs/nscc_2ap/common.sh"
+
+: "${BENCHMARK:?Set BENCHMARK to ragtruth, mu_shroom or truthfulqa}"
+: "${MODEL_NAME:?Set MODEL_NAME to a configured model name}"
+CMD=(python scripts/run_external_benchmark.py --config "${CONFIG:-configs/benchmark_suite.full.json}" --benchmark "$BENCHMARK" --model-name "$MODEL_NAME")
+[[ -n "${MAX_SAMPLES:-}" ]] && CMD+=(--max-samples "$MAX_SAMPLES")
+[[ "${RESTART:-0}" == 1 ]] && CMD+=(--restart)
+"${CMD[@]}"

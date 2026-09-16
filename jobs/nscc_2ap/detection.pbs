@@ -1,0 +1,16 @@
+#!/bin/bash
+#PBS -N hallu-detection
+#PBS -q normal
+#PBS -l select=1:ngpus=1
+#PBS -l walltime=24:00:00
+#PBS -j oe
+
+# Project supplied at submission: qsub -P "$NSCC_PROJECT_ID" ...
+source "${PBS_O_WORKDIR:?}/jobs/nscc_2ap/common.sh"
+
+CMD=(python scripts/run_halueval_detection.py --config "${CONFIG:-configs/detection.halueval-qa.full.json}")
+[[ -n "${NUM_SAMPLES:-}" ]] && CMD+=(--num-samples "$NUM_SAMPLES")
+[[ -n "${EXPERIMENT_NAME:-}" ]] && CMD+=(--experiment-name "$EXPERIMENT_NAME")
+[[ "${PREPARE_ONLY:-0}" == 1 ]] && CMD+=(--prepare-only)
+[[ "${FAIL_ON_TRANSLATION_QUALITY:-0}" == 1 ]] && CMD+=(--fail-on-translation-quality)
+"${CMD[@]}"

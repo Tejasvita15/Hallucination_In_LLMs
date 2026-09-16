@@ -1,0 +1,139 @@
+# NSCC ASPIRE 2A+ (2ap)
+
+Submit from the repository root. These scripts request one GPU through the
+`normal` routing queue for up to 24 hours. CPU and memory allocation follow
+the site's GPU ratios. They target ASPIRE 2A+, not the TC2 Slurm cluster.
+
+Official references:
+- https://help.nscc.sg/aspire2aplus/faqs/
+- https://help.nscc.sg/aspire2aplus/urgent-scheduled-maintenance-for-aspire-2a-on-22-january-2025-9am-to-6-30pm-2-2-2-2-2-3-3-2/
+
+## 1. Configure once
+
+```bash
+cp jobs/nscc_2ap/settings.example.sh jobs/nscc_2ap/settings.local.sh
+nano jobs/nscc_2ap/settings.local.sh
+source jobs/nscc_2ap/settings.local.sh
+```
+
+Enter your actual NSCC project ID, existing Conda environment name or absolute
+path, available Miniforge module, and allocated shared storage cache path.
+No username, allocation, or storage path is assumed. Local settings are ignored
+by Git. Do not put tokens in them. Do not modify settings while jobs are queued.
+
+The Conda environment must contain the project requirements and GPU-enabled
+PyTorch compatible with the H100 nodes. The scripts do not install or replace
+PyTorch. They clear Python path overrides, disable user-site packages, and test
+an actual CUDA operation before running inference.
+
+## 2. Prepare on the login node
+
+Activate the selected environment and authenticate with `hf auth login`, using
+the same HF_HOME as in local settings. Llama requires approved model access.
+Then run:
+
+```bash
+bash jobs/nscc_2ap/prepare_login.sh
+```
+
+This fetches three evaluation models, NLLB, controlled-generation inputs and
+four static datasets. Keep the cache on shared storage with sufficient quota.
+HalluLens's large external assets and endpoint setup are separate prerequisites;
+see the main README. GPU jobs use the same cache in offline mode.
+
+## 3. Smoke tests
+
+```bash
+source jobs/nscc_2ap/settings.local.sh
+qsub -P "$NSCC_PROJECT_ID" -l walltime=02:00:00 \
+  -v NUM_SAMPLES=20,EXPERIMENT_NAME=nscc_halueval_smoke \
+  jobs/nscc_2ap/detection.pbs
+
+for MODEL in qwen2.5-7b llama3.1-8b deepseek-r1-7b; do
+  for BENCH in ragtruth mu_shroom truthfulqa; do
+    qsub -P "$NSCC_PROJECT_ID" -l walltime=02:00:00 \
+      -v BENCHMARK="$BENCH",MODEL_NAME="$MODEL",MAX_SAMPLES=20 \
+      jobs/nscc_2ap/external_benchmark.pbs
+  done
+done
+```
+
+Inspect predictions, parsing failures and DeepSeek's short-output behavior before
+full runs. Smoke tests are not final results.
+
+## 4. Full benchmarks (after smoke completion)
+
+```bash
+qsub -P "$NSCC_PROJECT_ID" jobs/nscc_2ap/detection.pbs
+
+for MODEL in qwen2.5-7b llama3.1-8b deepseek-r1-7b; do
+  for BENCH in ragtruth mu_shroom truthfulqa; do
+    qsub -P "$NSCC_PROJECT_ID" \
+      -v BENCHMARK="$BENCH",MODEL_NAME="$MODEL" \
+      jobs/nscc_2ap/external_benchmark.pbs
+  done
+done
+```
+
+HaluEval evaluates all three models sequentially; external jobs run one model
+each. The 24-hour request is a scheduling limit, not a runtime estimate.
+External runs can resume compatible checkpoints. The paired detector does not
+provide the same checkpoint-resume guarantee; inspect job completion before
+relaunching. Avoid concurrent runs writing the same experiment output.
+
+## 5. Controlled English/Chinese study
+
+```bash
+qsub -P "$NSCC_PROJECT_ID" jobs/nscc_2ap/controlled_generation.pbs
+```
+
+Wait for generation, complete both independent reviews and any adjudication,
+then finalize on the login node in the configured environment:
+
+```bash
+python scripts/build_length_controlled_halueval.py \
+  --config configs/controlled_benchmark.full.json --finalize-only
+qsub -P "$NSCC_PROJECT_ID" \
+  -v CONFIG=configs/detection.controlled.confirmatory.json,PREPARE_ONLY=1,FAIL_ON_TRANSLATION_QUALITY=1 \
+  jobs/nscc_2ap/detection.pbs
+```
+
+After translation quality passes:
+
+```bash
+qsub -P "$NSCC_PROJECT_ID" jobs/nscc_2ap/controlled_detection.pbs
+```
+
+After that job finishes:
+
+```bash
+python scripts/analyze_detection_results.py --config configs/detection_analysis.controlled.json
+```
+
+## 6. HalluLens
+
+Install upstream dependencies in a suitable environment and configure its model
+endpoint and required search/judge credentials first. Download its data using
+the upstream preparation workflow on the login node. Then, for each task:
+
+```bash
+qsub -P "$NSCC_PROJECT_ID" -v TASK=precisewikiqa jobs/nscc_2ap/hallulens.pbs
+```
+
+Other TASK values: `longwiki`, `mixedentities`, `generatedentities`. These jobs
+use the configured endpoint, not an automatic three-model loop. Save outputs
+separately for each model; do not change a shared endpoint while jobs run.
+The suite aggregator still selects Qwen only.
+
+## Monitor
+
+```bash
+qstat -u "$USER"
+qstat -f JOB_ID
+ls -lt logs/nscc_2ap/
+```
+
+Application logs are under `logs/nscc_2ap/`; PBS also writes its merged output
+in the submission directory. Setup failures before logging are in PBS output.
+Scripts have LF line endings. Local syntax checks do not validate your account,
+queue access, installed modules, GPU environment, or cluster runtime.

@@ -1,0 +1,20 @@
+#!/bin/bash
+#PBS -N hallulens
+#PBS -q normal
+#PBS -l select=1:ngpus=1
+#PBS -l walltime=24:00:00
+#PBS -j oe
+
+# Project supplied at submission: qsub -P "$NSCC_PROJECT_ID" ...
+source "${PBS_O_WORKDIR:?}/jobs/nscc_2ap/common.sh"
+
+case "${TASK:-}" in
+  precisewikiqa) SCRIPT=scripts/task1_precisewikiqa.sh ;;
+  longwiki) SCRIPT=scripts/task2_longwiki.sh ;;
+  mixedentities) SCRIPT=scripts/task3-1_mixedentities.sh ;;
+  generatedentities) SCRIPT=scripts/task3-2_generatedentities.sh ;;
+  *) echo "Set TASK to precisewikiqa, longwiki, mixedentities or generatedentities" >&2; exit 2 ;;
+esac
+cd "${HALLULENS_DIR:-data/benchmarks/raw/HalluLens}"
+echo "Using the endpoint configured in this checkout's utils/lm.py"
+bash "$SCRIPT"
