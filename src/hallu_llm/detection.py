@@ -112,13 +112,22 @@ def evaluate_detection_instances(
     length_match_max_relative_difference: float = 0.25,
     decision_mode: str = "direct",
     max_reasoning_tokens: int = 2048,
+    checkpoint: Any = None,
 ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     if decision_mode not in {"direct", "reason_then_forced_choice", "evidence_review_v2"}:
         raise ValueError(f"Unknown decision mode: {decision_mode}")
     rows: list[dict[str, Any]] = []
     warnings = translation_warnings or {}
+    resumed = 0
 
     for instance in instances:
+        checkpoint_key = [str(instance.sample_id), instance.candidate_type]
+        if checkpoint is not None:
+            cached = checkpoint.load(checkpoint_key)
+            if cached is not None:
+                rows.append(cached)
+                resumed += 1
+                continue
         prompt = halueval_detection_prompt(
             knowledge=instance.knowledge,
             question=instance.question,
@@ -209,6 +218,9 @@ def evaluate_detection_instances(
             }
         )
 
+        if checkpoint is not None:
+            checkpoint.save(checkpoint_key, rows[-1])
+
     summary = summarize_detection(
         rows=rows,
         language_code=language_code,
@@ -219,6 +231,7 @@ def evaluate_detection_instances(
         ),
     )
     summary["decision_mode"] = decision_mode
+    summary["resumed_instances"] = resumed
     summary["reasoning_truncated_instances"] = sum(row["reasoning_truncated"] for row in rows)
     summary["protocol_quality_passed"] = (
         summary["reasoning_truncated_instances"] == 0

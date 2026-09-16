@@ -1,5 +1,34 @@
 # NSCC ASPIRE 2A+ (2ap)
 
+## Resource-limited validation: use this job next
+
+The three 20-pair v2 tests were cancelled. Instead submit one sequential job:
+
+```bash
+qsub jobs/nscc_2ap/validate_micro.pbs
+```
+
+It uses three pairs per model (18 decisions total) and a 30-minute walltime.
+This is only a functional check, not a performance estimate. No downloads are
+needed. Outputs are `results/detection/nscc_<model>_review_v2_micro/`.
+The job continues to the next model if a quality gate fails and exits nonzero
+if any model fails. Inspect the saved review flags, not just the final exit code.
+
+### Checkpoint/resume
+
+The paired detector now writes an atomic checkpoint after every decision, under
+each model/language output directory. Repeating the same command reuses these
+rows; model weights still load. A partial source pair is safe to resume. Dataset
+content, prompts/code, settings, model path and resolved checkpoint revision
+are checked before reuse. Changing them requires a new experiment name.
+Older runs without these checkpoints cannot automatically resume from summaries.
+
+An interrupted process may leave `checkpoints/writer.lock`. The file records its
+job ID. Only after confirming that job has ended, remove that specific stale
+lock and resubmit; do not delete checkpoint JSON files. Concurrent writers are
+rejected. Full runs still require review of the v2 protocol; checkpointing alone
+does not establish scientific validity.
+
 ## Current next step: evidence review v2 smoke tests
 
 The v1 audit found bare YES/NO responses for all Qwen/Llama examples and label

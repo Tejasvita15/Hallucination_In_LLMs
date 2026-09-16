@@ -34,6 +34,9 @@ from hallu_llm.translation import (
     TranslationSegment,
     Translator,
 )
+from dataclasses import asdict
+from hallu_llm.detection_checkpoint import DetectionCheckpoint
+import hashlib
 from hallu_llm.translation_quality import (
     grounded_answer_alignment_status,
     missing_numbers,
@@ -192,24 +195,39 @@ def main() -> None:
                 f"\n--- Detecting hallucinations: {model_name} / {language_code} "
                 f"({len(instances)} balanced instances) ---"
             )
-            summary, rows = evaluate_detection_instances(
-                generator=generator,
-                instances=instances,
-                model_name=model_name,
-                language_code=language_code,
-                max_new_tokens=max_new_tokens,
-                decision_mode=model_cfg.get("decision_mode", "direct"),
-                max_reasoning_tokens=int(model_cfg.get("max_reasoning_tokens", 2048)),
-                high_confidence_threshold=confidence_threshold,
-                prompt_instruction=language_cfg.get("detection_instruction"),
-                translation_warnings=translation_warnings,
-                length_match_max_relative_difference=float(
-                    detection_cfg.get(
-                        "length_match_max_relative_difference",
-                        0.25,
-                    )
-                ),
-            )
+            run_dir = ensure_dir(output_root / model_name / language_code)
+            checkpoint_context = {
+                "model": model_cfg, "loading": model_cfg_defaults,
+                "detection": detection_cfg, "language": language_cfg,
+                "instances": [asdict(instance) for instance in instances],
+                "translation_warnings": translation_warnings,
+                "implementation": {
+                    name: hashlib.sha256((Path(__file__).resolve().parents[1] / "src/hallu_llm" / name).read_bytes()).hexdigest()
+                    for name in ("models.py", "detection.py", "prompts.py", "reasoned_protocol.py")
+                },
+                "resolved_model_commit": getattr(generator.model.config, "_commit_hash", None),
+                "resolved_tokenizer_commit": generator.tokenizer.init_kwargs.get("_commit_hash"),
+            }
+            with DetectionCheckpoint(run_dir / "checkpoints", checkpoint_context) as checkpoint:
+                summary, rows = evaluate_detection_instances(
+                    checkpoint=checkpoint,
+                    generator=generator,
+                    instances=instances,
+                    model_name=model_name,
+                    language_code=language_code,
+                    max_new_tokens=max_new_tokens,
+                    decision_mode=model_cfg.get("decision_mode", "direct"),
+                    max_reasoning_tokens=int(model_cfg.get("max_reasoning_tokens", 2048)),
+                    high_confidence_threshold=confidence_threshold,
+                    prompt_instruction=language_cfg.get("detection_instruction"),
+                    translation_warnings=translation_warnings,
+                    length_match_max_relative_difference=float(
+                        detection_cfg.get(
+                            "length_match_max_relative_difference",
+                            0.25,
+                        )
+                    ),
+                )
             all_summaries.append(summary)
             run_dir = ensure_dir(output_root / model_name / language_code)
             write_json(run_dir / "summary.json", summary)
