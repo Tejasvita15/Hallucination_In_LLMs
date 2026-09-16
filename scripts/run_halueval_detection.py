@@ -198,6 +198,8 @@ def main() -> None:
                 model_name=model_name,
                 language_code=language_code,
                 max_new_tokens=max_new_tokens,
+                decision_mode=model_cfg.get("decision_mode", "direct"),
+                max_reasoning_tokens=int(model_cfg.get("max_reasoning_tokens", 2048)),
                 high_confidence_threshold=confidence_threshold,
                 prompt_instruction=language_cfg.get("detection_instruction"),
                 translation_warnings=translation_warnings,
@@ -214,6 +216,11 @@ def main() -> None:
             write_jsonl(run_dir / "predictions.jsonl", rows)
             write_csv(run_dir / "paired_audit.csv", build_paired_audit_rows(rows))
             print(json.dumps(summary, indent=2, ensure_ascii=False))
+            if model_cfg.get("require_protocol_quality", False) and not summary["protocol_quality_passed"]:
+                raise RuntimeError(
+                    "Decision protocol quality gate failed; inspect saved predictions "
+                    "for truncated reasoning or unparseable answers before full evaluation."
+                )
 
         del generator
         if torch.cuda.is_available():

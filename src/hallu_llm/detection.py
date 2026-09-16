@@ -109,7 +109,11 @@ def evaluate_detection_instances(
     prompt_instruction: str | None = None,
     translation_warnings: dict[int, list[str]] | None = None,
     length_match_max_relative_difference: float = 0.25,
+    decision_mode: str = "direct",
+    max_reasoning_tokens: int = 2048,
 ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    if decision_mode not in {"direct", "reason_then_forced_choice"}:
+        raise ValueError(f"Unknown decision mode: {decision_mode}")
     rows: list[dict[str, Any]] = []
     warnings = translation_warnings or {}
 
@@ -121,12 +125,13 @@ def evaluate_detection_instances(
             language_code=language_code,
             instruction=prompt_instruction,
         )
-        decision = generator.generate_binary(
-            prompt,
-            positive_label="YES",
-            negative_label="NO",
-            max_new_tokens=max_new_tokens,
-        )
+        if decision_mode == "reason_then_forced_choice":
+            decision = generator.generate_reasoned_binary(prompt, max_reasoning_tokens)
+        else:
+            decision = generator.generate_binary(
+                prompt, positive_label="YES", negative_label="NO",
+                max_new_tokens=max_new_tokens,
+            )
         parsed_prediction = parse_binary_response(decision.text)
         primary_prediction = (
             parsed_prediction
@@ -143,7 +148,7 @@ def evaluate_detection_instances(
                 "actual_label": "hallucinated" if instance.is_hallucinated else "grounded",
                 "predicted_label": "hallucinated" if primary_prediction else "grounded",
                 "prediction_source": (
-                    "generated_response"
+                    "reason_then_forced_choice" if decision_mode != "direct" else "generated_response"
                     if parsed_prediction is not None
                     else "logit_fallback"
                 ),
@@ -182,6 +187,10 @@ def evaluate_detection_instances(
                 ),
                 "prompt": prompt,
                 "generation": decision.text,
+                "decision_mode": decision_mode,
+                "reasoning": getattr(decision, "reasoning", ""),
+                "reasoning_truncated": getattr(decision, "reasoning_truncated", False),
+                "reasoning_tokens": getattr(decision, "reasoning_tokens", 0),
             }
         )
 
@@ -194,6 +203,13 @@ def evaluate_detection_instances(
             length_match_max_relative_difference
         ),
     )
+    summary["decision_mode"] = decision_mode
+    summary["reasoning_truncated_instances"] = sum(row["reasoning_truncated"] for row in rows)
+    summary["protocol_quality_passed"] = (
+        summary["reasoning_truncated_instances"] == 0
+        and all(row["output_parseable"] for row in rows)
+    )
+    summary["output_parseability_is_constrained"] = decision_mode != "direct"
     return summary, rows
 
 

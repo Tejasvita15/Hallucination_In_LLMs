@@ -66,6 +66,28 @@ full runs. Smoke tests are not final results.
 
 ## 4. Full benchmarks (after smoke completion)
 
+### DeepSeek reasoning diagnostic
+
+If DeepSeek produces only `Okay, so I` in the four-token smoke test, run:
+
+```bash
+qsub jobs/nscc_2ap/deepseek_smoke.pbs
+```
+
+This runs only DeepSeek on the same 20 English source pairs, with a 2,048-token
+reasoning budget followed by explicitly constrained YES/NO scoring. Confidence
+comes from the final decision position, not the first reasoning token. Reasoning
+text, length, truncation, and raw label probability mass are saved. Forced-choice
+parseability is guaranteed by construction and is not free-generation compliance.
+Any truncated reasoning fails the quality gate after saving that language's
+predictions. Inspect the audit before increasing the budget or running full data.
+
+Results go to `results/detection/nscc_deepseek_reasoned_smoke_v1/`. This is an
+exploratory protocol change; the frozen production configurations still use
+direct generation. Do not interpret the original DeepSeek fallback metrics as
+valid generated-answer performance or pool the two protocols. A fair comparison
+of the new mode requires applying it consistently to the comparison models.
+
 ```bash
 qsub -P "$NSCC_PROJECT_ID" jobs/nscc_2ap/detection.pbs
 
