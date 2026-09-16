@@ -74,6 +74,20 @@ If DeepSeek produces only `Okay, so I` in the four-token smoke test, run:
 qsub jobs/nscc_2ap/deepseek_smoke.pbs
 ```
 
+After that diagnostic passes, run the matched Qwen and Llama diagnostics:
+
+```bash
+qsub jobs/nscc_2ap/qwen_smoke.pbs
+qsub jobs/nscc_2ap/llama_smoke.pbs
+```
+
+Each job uses the same 20 source pairs, seed, 2,048-token budget and forced-choice
+method as the DeepSeek diagnostic. Their separate output directories are
+`results/detection/nscc_qwen_reasoned_smoke_v1/` and
+`results/detection/nscc_llama_reasoned_smoke_v1/`. An already-completed DeepSeek
+diagnostic does not need to be repeated. Compare saved reasoning and quality
+flags as well as scores; this matched diagnostic does not change production configs.
+
 This runs only DeepSeek on the same 20 English source pairs, with a 2,048-token
 reasoning budget followed by explicitly constrained YES/NO scoring. Confidence
 comes from the final decision position, not the first reasoning token. Reasoning
