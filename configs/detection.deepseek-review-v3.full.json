@@ -1,0 +1,36 @@
+{
+  "experiment_name": "nscc_deepseek_single_stage_review_full_v3",
+  "output_dir": "results/detection",
+  "seed": 20260902,
+  "num_samples": null,
+  "dataset": {
+    "path": "data/benchmarks/prepared/halueval_qa.jsonl",
+    "format": "paired_jsonl",
+    "shuffle": false
+  },
+  "models": [
+    {
+      "name": "deepseek-r1-7b",
+      "path": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+      "decision_mode": "single_stage_evidence_review_v3",
+      "max_reasoning_tokens": 2048,
+      "require_protocol_quality": false,
+      "max_runtime_seconds": 82800
+    }
+  ],
+  "languages": [
+    {
+      "code": "en",
+      "name": "English",
+      "translator": null
+    }
+  ],
+  "model_loading": {
+    "dtype": "bfloat16",
+    "device_map": "auto"
+  },
+  "detection": {
+    "length_match_max_relative_difference": 0.25
+  },
+  "protocol_version": "single_stage_evidence_review_v3"
+}

@@ -1,5 +1,45 @@
 # NSCC ASPIRE 2A+ (2ap)
 
+## Finalized single-stage review runs (v3)
+
+The accepted v3 protocol uses the structured review's verdict directly; it does
+not ask the model to classify again. It retains the v2 evidence-review prompt
+and 2,048-token budget. This is an exploratory response-classification experiment,
+separate from the frozen direct-answer/calibration protocol.
+
+From the repository root, submit these full HaluEval English jobs:
+
+```bash
+qsub jobs/nscc_2ap/qwen_review_v3_full.pbs
+qsub jobs/nscc_2ap/llama_review_v3_full.pbs
+qsub jobs/nscc_2ap/deepseek_review_v3_full.pbs
+```
+
+Each model evaluates all 10,000 pairs (20,000 decisions), with separate output in
+`results/detection/nscc_<model>_single_stage_review_full_v3/`. No further smoke
+round or downloads are required. These jobs do not run the other benchmarks.
+Use these filenames, not the v1 drafts or the default direct detection job.
+
+Every decision is checkpointed. Evaluation pauses after 23 hours between
+decisions, writes a partial summary and releases its lock; resubmit the same
+PBS file to continue. Model loading is outside that evaluation timer. If PBS
+kills a job abruptly, confirm it has ended before removing its stale writer.lock.
+Keep code/config/data unchanged while resuming. Completed rows are reused.
+
+Invalid or truncated verdicts count as incorrect in all-instance accuracy;
+coverage and valid-only accuracy are also reported. Evidence quote/format defects
+remain audit flags and do not remove rows or stop the full run. Confidence,
+ROC AUC, Brier and calibration metrics are unavailable for these verdicts.
+The original second-stage probabilities are not reused. An exit code of zero
+means execution completed; inspect `run_complete`, invalid counts and evidence
+flags for interpretation. Three-pair diagnostics do not establish model rankings.
+
+Official dataset labels remain unchanged, even where evidence appears incomplete
+(for example the magazine comparison). Any independently reviewed exclusions
+belong in a separately documented sensitivity analysis, not silent relabeling.
+The existing suite aggregator and calibration-analysis scripts target the old
+schema and must not be used to interpret v3 summaries.
+
 ## Current action: reanalyze saved micro reviews on CPU
 
 The v2 micro run revealed prose before DeepSeek's valid JSON code blocks and

@@ -36,6 +36,7 @@ from hallu_llm.translation import (
 )
 from dataclasses import asdict
 from hallu_llm.detection_checkpoint import DetectionCheckpoint
+from hallu_llm.single_stage_review import evaluate_reviews
 import hashlib
 from hallu_llm.translation_quality import (
     grounded_answer_alignment_status,
@@ -203,37 +204,47 @@ def main() -> None:
                 "translation_warnings": translation_warnings,
                 "implementation": {
                     name: hashlib.sha256((Path(__file__).resolve().parents[1] / "src/hallu_llm" / name).read_bytes()).hexdigest()
-                    for name in ("models.py", "detection.py", "prompts.py", "reasoned_protocol.py")
+                    for name in ("models.py", "detection.py", "prompts.py", "reasoned_protocol.py", "single_stage_review.py")
                 },
                 "resolved_model_commit": getattr(generator.model.config, "_commit_hash", None),
                 "resolved_tokenizer_commit": generator.tokenizer.init_kwargs.get("_commit_hash"),
             }
             with DetectionCheckpoint(run_dir / "checkpoints", checkpoint_context) as checkpoint:
-                summary, rows = evaluate_detection_instances(
-                    checkpoint=checkpoint,
-                    generator=generator,
-                    instances=instances,
-                    model_name=model_name,
-                    language_code=language_code,
-                    max_new_tokens=max_new_tokens,
-                    decision_mode=model_cfg.get("decision_mode", "direct"),
-                    max_reasoning_tokens=int(model_cfg.get("max_reasoning_tokens", 2048)),
-                    high_confidence_threshold=confidence_threshold,
-                    prompt_instruction=language_cfg.get("detection_instruction"),
-                    translation_warnings=translation_warnings,
-                    length_match_max_relative_difference=float(
-                        detection_cfg.get(
-                            "length_match_max_relative_difference",
-                            0.25,
-                        )
-                    ),
-                )
+                if model_cfg.get("decision_mode") == "single_stage_evidence_review_v3":
+                    summary, rows = evaluate_reviews(
+                        generator, instances, model_name, language_code,
+                        int(model_cfg.get("max_reasoning_tokens", 2048)), checkpoint,
+                        max_runtime_seconds=int(model_cfg.get("max_runtime_seconds", 82800)),
+                    )
+                else:
+                    summary, rows = evaluate_detection_instances(
+                        checkpoint=checkpoint,
+                        generator=generator,
+                        instances=instances,
+                        model_name=model_name,
+                        language_code=language_code,
+                        max_new_tokens=max_new_tokens,
+                        decision_mode=model_cfg.get("decision_mode", "direct"),
+                        max_reasoning_tokens=int(model_cfg.get("max_reasoning_tokens", 2048)),
+                        high_confidence_threshold=confidence_threshold,
+                        prompt_instruction=language_cfg.get("detection_instruction"),
+                        translation_warnings=translation_warnings,
+                        length_match_max_relative_difference=float(
+                            detection_cfg.get(
+                                "length_match_max_relative_difference",
+                                0.25,
+                            )
+                        ),
+                    )
             all_summaries.append(summary)
             run_dir = ensure_dir(output_root / model_name / language_code)
             write_json(run_dir / "summary.json", summary)
             write_jsonl(run_dir / "predictions.jsonl", rows)
-            write_csv(run_dir / "paired_audit.csv", build_paired_audit_rows(rows))
+            if model_cfg.get("decision_mode") != "single_stage_evidence_review_v3":
+                write_csv(run_dir / "paired_audit.csv", build_paired_audit_rows(rows))
             print(json.dumps(summary, indent=2, ensure_ascii=False))
+            if summary.get("run_complete") is False:
+                raise RuntimeError("Run paused before walltime; predictions are checkpointed. Resubmit the same job to resume.")
             if model_cfg.get("require_protocol_quality", False) and not summary["protocol_quality_passed"]:
                 raise RuntimeError(
                     "Decision protocol quality gate failed; inspect saved predictions "

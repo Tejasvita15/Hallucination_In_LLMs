@@ -223,6 +223,32 @@ class HFGenerator:
             final_decision_prompt=final_prompt,
         )
 
+    def generate_review(self, prompt: str, max_reasoning_tokens: int = 2048):
+        """Generate only the evidence review, without a second scoring pass."""
+        if max_reasoning_tokens < 1:
+            raise ValueError("max_reasoning_tokens must be positive")
+        evidence_context = {}
+        formatted = self.format_prompt(prompt if evidence_context is not None else
+                                      prompt + "\nAnalyze the evidence carefully before deciding.")
+        inputs = self.tokenizer(formatted, return_tensors="pt").to(self.model.device)
+        prompt_len = inputs["input_ids"].shape[1]
+        with torch.no_grad():
+            sequences = self.model.generate(
+                **inputs, max_new_tokens=max_reasoning_tokens, do_sample=False,
+                pad_token_id=self.tokenizer.pad_token_id,
+                eos_token_id=self.tokenizer.eos_token_id,
+                return_dict_in_generate=False, output_scores=False,
+            )
+        ids = sequences[0][prompt_len:]
+        reasoning = self.tokenizer.decode(ids, skip_special_tokens=True).strip()
+        eos_ids = getattr(self.model.generation_config, "eos_token_id", None)
+        if eos_ids is None:
+            eos_ids = self.tokenizer.eos_token_id
+        eos_ids = eos_ids if isinstance(eos_ids, (list, tuple)) else [eos_ids]
+        truncated = len(ids) >= max_reasoning_tokens and int(ids[-1]) not in eos_ids
+
+        return {"text": reasoning, "truncated": truncated, "tokens": len(ids)}
+
     def _label_first_token_ids(self, label: str) -> set[int]:
         casings = {label, label.lower(), label.title()}
         variants = casings | {f" {variant}" for variant in casings}
