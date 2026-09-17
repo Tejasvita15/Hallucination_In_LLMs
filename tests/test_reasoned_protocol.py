@@ -8,6 +8,24 @@ from hallu_llm.reasoned_protocol import review_prompt, audit_review, consistency
 
 
 class EvidenceReviewTests(unittest.TestCase):
+    def test_prose_before_fenced_json_is_accepted(self):
+        obj = dict(explanation="Delhi is explicitly given as the office location.",
+                   evidence_quote="head office in Delhi", verdict="UNSUPPORTED")
+        review, flags = audit_review(
+            'Reasoning</think>\nThe candidate contradicts the source.\n```json\n'
+            + json.dumps(obj) + '\n```', 'The company has its head office in Delhi.')
+        self.assertEqual(review, obj)
+        self.assertFalse(flags)
+        self.assertTrue(consistency_flags(review, False))
+
+    def test_ambiguous_and_truncated_json_remain_invalid(self):
+        for text in ['```json\n{}\n```\n```json\n{}\n```',
+                     '{} {}', '```json\n{}', '{"verdict":',
+                     '{}\n```json\n{}\n```']:
+            review, flags = audit_review(text, 'Evidence')
+            self.assertIsNone(review)
+            self.assertIn('missing_or_invalid_review_json', flags)
+
     def test_prompt_has_no_direct_answer_conflict(self):
         prompt = review_prompt("Music originated in the US.", "Where?", "UK")
         self.assertNotIn("no explanation", prompt)

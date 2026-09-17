@@ -1,5 +1,26 @@
 # NSCC ASPIRE 2A+ (2ap)
 
+## Current action: reanalyze saved micro reviews on CPU
+
+The v2 micro run revealed prose before DeepSeek's valid JSON code blocks and
+disagreement between review verdicts and the separate forced-choice decision.
+The parser now accepts a single complete fenced JSON object after prose, while
+rejecting ambiguous multiple objects and truncated JSON. Exact quote checks
+remain strict. No new model inference is needed:
+
+```bash
+python scripts/reanalyze_saved_reviews.py
+```
+
+Share `results/detection/saved_review_reanalysis.json`. This preserves original
+predictions, records their hashes, and reports a separate post-hoc mapping of
+SUPPORTED to grounded and UNSUPPORTED to hallucinated. It does not transfer the
+second-stage confidence to the review verdict or drop evidence-flagged examples.
+Do not rerun GPU jobs to repair these parsing errors. The changed parser alters
+checkpoint provenance, so existing GPU checkpoints deliberately cannot be resumed
+with the new code under the old experiment name. Use the CPU reanalysis above.
+Full jobs remain drafts until the evaluation protocol is settled.
+
 ## Resource-limited validation: use this job next
 
 The three 20-pair v2 tests were cancelled. Instead submit one sequential job:

@@ -1,5 +1,34 @@
 """Versioned evidence-review prompts and conservative, auditable checks."""
 import json
+import re
+
+
+def extract_review_json(text):
+    """Accept one complete final JSON object, including prose + a code fence.
+
+    Never choose between multiple objects or repair invalid/truncated JSON.
+    """
+    final = text.rsplit("</think>", 1)[-1].strip()
+    try:
+        return json.loads(final)
+    except ValueError:
+        pass
+    fences = re.findall(r"```(?:json)?\s*\n?(.*?)```", final, re.DOTALL | re.IGNORECASE)
+    if fences:
+        if len(fences) != 1:
+            raise ValueError("Ambiguous review: multiple code blocks")
+        start = final.index("```")
+        end = final.index("```", start + 3) + 3
+        if "{" in final[:start] + final[end:] or "}" in final[:start] + final[end:]:
+            raise ValueError("Ambiguous review outside code block")
+        return json.loads(fences[0].strip())
+    # Also allow a prose prefix followed by a single bare object.
+    if "```" in final:
+        raise ValueError("Incomplete code fence")
+    start = final.find("{")
+    if start < 0:
+        raise ValueError("No JSON object")
+    return json.loads(final[start:])
 
 
 def review_prompt(knowledge, question, candidate):
@@ -17,15 +46,8 @@ def review_prompt(knowledge, question, candidate):
 
 def audit_review(text, knowledge):
     # Ignore a model's internal preamble; validate its final structured response.
-    final = text.rsplit("</think>", 1)[-1].strip()
-    if final.startswith("```json"):
-        final = final[7:]
-    elif final.startswith("```"):
-        final = final[3:]
-    if final.rstrip().endswith("```"):
-        final = final.rstrip()[:-3]
     try:
-        review = json.loads(final.strip())
+        review = extract_review_json(text)
     except (ValueError, TypeError):
         return None, ["missing_or_invalid_review_json"]
     if not isinstance(review, dict):
