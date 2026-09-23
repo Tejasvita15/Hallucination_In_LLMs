@@ -1,0 +1,17 @@
+#!/bin/bash
+#PBS -N qwen_crosslingu
+#PBS -P 13014407
+#PBS -q normal
+#PBS -l select=1:ngpus=1
+#PBS -l walltime=24:00:00
+#PBS -j oe
+
+source "${PBS_O_WORKDIR:?}/jobs/nscc_2ap/common.sh"
+CONFIG=configs/detection.review-v3.qwen-en-zh.150.json
+python scripts/run_halueval_detection.py --config "$CONFIG" --prepare-only --fail-on-translation-quality
+DATASET_DIR=results/detection/qwen_crosslingual_review_v3_en_zh_150_exploratory_20260921/datasets
+for language in en zh; do
+  python scripts/run_token_confidence.py --model-name qwen2.5-7b --language "$language" \
+    --data "$DATASET_DIR/$language.jsonl" --output-root results/token_confidence_qwen_paired150_v1
+done
+python scripts/run_halueval_detection.py --config "$CONFIG" --fail-on-translation-quality

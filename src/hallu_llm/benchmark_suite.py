@@ -216,7 +216,11 @@ def normalize_mushroom(
                 "language": language,
                 "task": "multilingual_span_detection",
                 "model_input": str(example.get("model_input", "")),
-                "context": str(example.get("wikipedia_url", "")),
+                "context": "",
+                "reference_url": example.get("wikipedia_url"),
+                "model_output_tokens": _jsonable(example.get("model_output_tokens")),
+                "model_output_logits": _jsonable(example.get("model_output_logits")),
+                "original_logits_are_normalized_probabilities": False,
                 "model_output_text": output,
                 "generator_model": str(example.get("model_id", "")),
                 "gold_hallucinated": bool(spans),
@@ -357,18 +361,22 @@ def parse_span_generation_details(
                 start = int(span["start"])
                 end = int(span["end"])
             except (TypeError, ValueError):
-                continue
+                return [], False
             if 0 <= start < end <= len(model_output):
                 direct.append((start, end))
+            else:
+                return [], False
         elif isinstance(span, str) and span:
             substrings.append(span)
+        else:
+            return [], False
     occupied = set(index for start, end in direct for index in range(start, end))
     for substring in substrings:
         search_from = 0
         while True:
             start = model_output.find(substring, search_from)
             if start < 0:
-                break
+                return [], False
             end = start + len(substring)
             if not any(index in occupied for index in range(start, end)):
                 direct.append((start, end))
@@ -390,27 +398,32 @@ def span_iou(
     return len(gold & predicted) / len(union)
 
 
-def binary_metrics(actual: list[bool], predicted: list[bool]) -> dict[str, Any]:
+def binary_metrics(actual: list[bool], predicted: list[bool | None]) -> dict[str, Any]:
     if not actual or len(actual) != len(predicted):
         raise ValueError("Binary metrics require equal non-empty label lists.")
-    tp = sum(a and p for a, p in zip(actual, predicted))
-    fp = sum((not a) and p for a, p in zip(actual, predicted))
-    tn = sum((not a) and (not p) for a, p in zip(actual, predicted))
-    fn = sum(a and (not p) for a, p in zip(actual, predicted))
+    tp = sum(a and p is True for a, p in zip(actual, predicted))
+    fp = sum((not a) and p is True for a, p in zip(actual, predicted))
+    tn = sum((not a) and p is False for a, p in zip(actual, predicted))
+    fn = sum(a and p is False for a, p in zip(actual, predicted))
+    invalid_positive = sum(a and p is None for a, p in zip(actual, predicted))
+    invalid_negative = sum((not a) and p is None for a, p in zip(actual, predicted))
     precision = _safe_div(tp, tp + fp)
-    recall = _safe_div(tp, tp + fn)
-    specificity = _safe_div(tn, tn + fp)
+    recall = _safe_div(tp, tp + fn + invalid_positive)
+    specificity = _safe_div(tn, tn + fp + invalid_negative)
     f1 = _safe_div(2 * precision * recall, precision + recall)
     denominator = math.sqrt((tp + fp) * (tp + fn) * (tn + fp) * (tn + fn))
     return {
         "num_samples": len(actual),
+        "invalid_instances": invalid_positive + invalid_negative,
+        "coverage": 1 - (invalid_positive + invalid_negative) / len(actual),
+        "invalid_by_gold_label": {"positive": invalid_positive, "negative": invalid_negative},
         "accuracy": (tp + tn) / len(actual),
         "balanced_accuracy": (recall + specificity) / 2,
         "precision": precision,
         "recall": recall,
         "specificity": specificity,
         "f1": f1,
-        "mcc": ((tp * tn - fp * fn) / denominator) if denominator else 0.0,
+        "mcc": None if invalid_positive + invalid_negative else (((tp * tn - fp * fn) / denominator) if denominator else 0.0),
         "confusion_matrix": {"tp": tp, "fp": fp, "tn": tn, "fn": fn},
     }
 
@@ -485,19 +498,21 @@ def span_metrics(rows: Iterable[Mapping[str, Any]]) -> dict[str, Any]:
     for row_index, row in enumerate(materialized):
         gold = [tuple(span) for span in row.get("gold_spans", [])]
         predicted = [tuple(span) for span in row.get("predicted_spans", [])]
-        ious.append(span_iou(gold, predicted))
+        valid = row.get("span_output_parseable", True)
+        ious.append(span_iou(gold, predicted) if valid else 0.0)
         gold_indices = _span_indices(gold)
         predicted_indices = _span_indices(predicted)
         gold_characters.update((row_index, index) for index in gold_indices)
         predicted_characters.update((row_index, index) for index in predicted_indices)
         actual_binary.append(bool(gold))
-        predicted_binary.append(bool(predicted))
-        exact += int(merge_spans(gold) == merge_spans(predicted))
+        predicted_binary.append(bool(predicted) if valid else None)
+        exact += int(valid and merge_spans(gold) == merge_spans(predicted))
     overlap = len(gold_characters & predicted_characters)
     char_precision = _safe_div(overlap, len(predicted_characters))
     char_recall = _safe_div(overlap, len(gold_characters))
     return {
         "num_samples": len(materialized),
+        "invalid_instances": sum(not r.get("span_output_parseable", True) for r in materialized),
         "mean_hard_span_iou": sum(ious) / len(ious),
         "exact_span_match_rate": exact / len(materialized),
         "hallucinated_character_precision": char_precision,

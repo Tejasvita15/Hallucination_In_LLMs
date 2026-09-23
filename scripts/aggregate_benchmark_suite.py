@@ -28,13 +28,25 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Write partial tables rather than failing the completeness gate.",
     )
+    parser.add_argument("--model-name", help="Select a model; default aggregates every configured model")
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
     config = read_json(_root_path(args.config))
-    model_name = config["models"][0]["name"]
+    selected = [m["name"] for m in config["models"] if args.model_name is None or m["name"] == args.model_name]
+    if not selected:
+        raise SystemExit("Unknown model name")
+    incomplete = []
+    for model_name in selected:
+        if not aggregate_model(config, model_name):
+            incomplete.append(model_name)
+    if incomplete and not args.allow_incomplete:
+        raise SystemExit("Full-suite completeness gate failed for: " + ", ".join(incomplete))
+
+
+def aggregate_model(config, model_name):
     output_dir = _root_path(config["output_dir"])
     preparation_manifest = _read_optional(
         _root_path(config["prepared_dir"]) / "manifest.json"
@@ -50,6 +62,8 @@ def main() -> None:
         / "summary_all.json"
     )
     halueval = _read_optional(halueval_path)
+    if isinstance(halueval, list):
+        halueval = [r for r in halueval if r.get("model") == model_name]
     expected_halueval_rows = _manifest_row_count(preparation_manifest, "halueval_qa")
     halueval_full = _halueval_is_full(halueval, expected_halueval_rows)
     records["halueval_qa"] = {
@@ -72,7 +86,7 @@ def main() -> None:
 
     hallulens_path = output_dir / "hallulens" / "completion.json"
     hallulens = _read_optional(hallulens_path)
-    hallulens_full = bool(hallulens and hallulens.get("is_full_split_run"))
+    hallulens_full = bool(hallulens and hallulens.get("is_full_split_run") and hallulens.get("model") == model_name)
     records["hallulens"] = {
         "status": "complete" if hallulens_full else "missing_or_partial",
         "is_full_split_run": hallulens_full,
@@ -96,13 +110,10 @@ def main() -> None:
         "results": records,
     }
     output_dir.mkdir(parents=True, exist_ok=True)
-    write_json(output_dir / "suite_summary.json", aggregate)
-    write_csv(output_dir / "suite_table.csv", _table_rows(records))
+    write_json(output_dir / f"suite_summary_{model_name}.json", aggregate)
+    write_csv(output_dir / f"suite_table_{model_name}.csv", _table_rows(records))
     print(json.dumps(aggregate, indent=2, ensure_ascii=False))
-    if missing_core and not args.allow_incomplete:
-        raise SystemExit(
-            "Full-suite completeness gate failed: " + ", ".join(missing_core)
-        )
+    return not missing_core
 
 
 def _table_rows(records: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:

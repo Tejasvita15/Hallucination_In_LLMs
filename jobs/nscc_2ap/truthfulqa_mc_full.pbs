@@ -1,0 +1,11 @@
+#!/bin/bash
+#PBS -N truthfulqa_mc_f
+#PBS -P 13014407
+#PBS -q normal
+#PBS -l select=1:ngpus=1
+#PBS -l walltime=24:00:00
+#PBS -j oe
+
+source "${PBS_O_WORKDIR:?}/jobs/nscc_2ap/common.sh"
+: "${MODEL_NAME:?Set MODEL_NAME}"
+python scripts/run_truthfulqa_mc.py --model-name "$MODEL_NAME"

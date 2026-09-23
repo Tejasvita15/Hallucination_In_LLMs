@@ -1,0 +1,101 @@
+{
+  "suite_name": "thesis_expansion_v2",
+  "protocol_version": "2026-09-23-invalid-aware",
+  "seed": 20260902,
+  "prepared_dir": "data/benchmarks/prepared",
+  "raw_dir": "data/benchmarks/raw",
+  "output_dir": "results/benchmark_suite_v2",
+  "model_loading": {
+    "dtype": "bfloat16",
+    "device_map": "auto"
+  },
+  "models": [
+    {
+      "name": "qwen2.5-7b",
+      "path": "Qwen/Qwen2.5-7B-Instruct"
+    },
+    {
+      "name": "llama3.1-8b",
+      "path": "meta-llama/Llama-3.1-8B-Instruct"
+    },
+    {
+      "name": "deepseek-r1-7b",
+      "path": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B"
+    }
+  ],
+  "benchmarks": {
+    "halueval_qa": {
+      "role": "core_hallucination",
+      "mode": "paired_response_detection",
+      "repository": "https://github.com/RUCAIBox/HaluEval.git",
+      "revision": "main",
+      "checkout_dir": "HaluEval",
+      "qa_file": "data/qa_data.json",
+      "languages": [
+        "en"
+      ],
+      "full_split": true,
+      "runner_config": "configs/detection.halueval-qa.full.json",
+      "citation_url": "https://github.com/RUCAIBox/HaluEval"
+    },
+    "hallulens": {
+      "role": "core_hallucination",
+      "mode": "dynamic_generation",
+      "repository": "https://github.com/facebookresearch/HalluLens.git",
+      "revision": "main",
+      "checkout_dir": "HalluLens",
+      "tasks": [
+        "PreciseWikiQA",
+        "LongWiki",
+        "NonExistentRefusal/MixedEntities",
+        "NonExistentRefusal/GeneratedEntities"
+      ],
+      "full_split": true,
+      "citation_url": "https://github.com/facebookresearch/HalluLens"
+    },
+    "ragtruth": {
+      "role": "core_hallucination",
+      "mode": "response_and_span_detection",
+      "repository": "https://github.com/ParticleMedia/RAGTruth.git",
+      "revision": "main",
+      "checkout_dir": "RAGTruth",
+      "responses_file": "dataset/response.jsonl",
+      "sources_file": "dataset/source_info.jsonl",
+      "split": "test",
+      "include_quality_issues": false,
+      "full_split": true,
+      "citation_url": "https://github.com/ParticleMedia/RAGTruth"
+    },
+    "mu_shroom": {
+      "role": "core_crosslingual_hallucination",
+      "mode": "multilingual_span_detection",
+      "source": "Helsinki-NLP/mu-shroom",
+      "source_config": "all",
+      "prepare_splits": [
+        "validation",
+        "test"
+      ],
+      "evaluation_split": "test",
+      "languages": "all",
+      "full_split": true,
+      "citation_url": "https://huggingface.co/datasets/Helsinki-NLP/mu-shroom"
+    },
+    "truthfulqa": {
+      "role": "factuality_control",
+      "mode": "binary_multiple_choice",
+      "repository": "https://github.com/sylinrl/TruthfulQA.git",
+      "revision": "main",
+      "checkout_dir": "TruthfulQA",
+      "csv_file": "TruthfulQA.csv",
+      "full_split": true,
+      "citation_url": "https://github.com/sylinrl/TruthfulQA"
+    }
+  },
+  "generation": {
+    "binary_max_new_tokens": 2048,
+    "span_max_new_tokens": 2048,
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "checkpoint_every": 25
+  }
+}

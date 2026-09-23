@@ -7,4 +7,4 @@
 #PBS -j oe
 
 source "${PBS_O_WORKDIR:?}/jobs/nscc_2ap/common.sh"
-python scripts/run_halueval_detection.py --config configs/detection.qwen-review-v3.smoke.json
+python scripts/run_halueval_detection.py --config configs/detection.qwen-review-v3.full.json
