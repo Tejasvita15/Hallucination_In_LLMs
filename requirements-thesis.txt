@@ -1,3 +1,5 @@
 # Install on the login node inside the existing CUDA-compatible environment.
 -r requirements.txt
 lm-eval==0.4.9.1
+# Harness 0.4.9.1 requires datasets<4; keep its Arrow cache separate from v5.
+datasets==3.6.0

@@ -10,7 +10,7 @@ export PYTHONNOUSERSITE=1
 module load "${CONDA_MODULE:-miniforge3/24.3.0}"
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate "$CONDA_ENV"
-export HF_HOME HF_HUB_CACHE="$HF_HOME/hub" HF_DATASETS_CACHE="$HF_HOME/datasets"
+source jobs/nscc_2ap/thesis_cache.sh
 export HF_HUB_OFFLINE=0 TRANSFORMERS_OFFLINE=0
 python -m pip install -r requirements-thesis.txt
 python scripts/prefetch_hf_assets.py --config configs/benchmark_suite.thesis.json \
@@ -27,7 +27,8 @@ data = load_dataset('truthfulqa/truthful_qa', 'multiple_choice', split='validati
 get_task_dict(['truthfulqa_mc1', 'truthfulqa_mc2'], TaskManager())
 manifest = {'truthfulqa_questions': len(data), 'packages': {
     p: importlib.metadata.version(p) for p in ['torch', 'transformers', 'datasets', 'lm_eval']}}
-Path(os.environ['HF_HOME'], 'thesis_prepared.json').write_text(json.dumps(manifest, indent=2))
+manifest['datasets_cache'] = os.environ['HF_DATASETS_CACHE']
+Path(os.environ['HF_DATASETS_CACHE'], 'thesis_prepared.json').write_text(json.dumps(manifest, indent=2))
 print(json.dumps(manifest, indent=2))
 PY
 python -m pip freeze > jobs/nscc_2ap/thesis_environment.lock.txt

@@ -6,6 +6,7 @@
 #PBS -l walltime=24:00:00
 #PBS -j oe
 
+export THESIS_DATA_CACHE=1
 source "${PBS_O_WORKDIR:?}/jobs/nscc_2ap/common.sh"
 CONFIG=configs/detection.review-v3.qwen-en-zh.150.json
 python scripts/run_halueval_detection.py --config "$CONFIG" --prepare-only --fail-on-translation-quality

@@ -78,6 +78,19 @@ has not been verified in this workspace. Do not describe HalluLens as completed.
 
 ## Checkpoints and recovery
 
+### Preparation error: `Feature type 'List' not found`
+
+Harness 0.4.9.1 requires `datasets<4`; the preparation requirements explicitly
+pin `datasets==3.6.0`. A cache built with datasets 5 can contain feature metadata
+that this older reader cannot load. Thesis preparation and all five thesis PBS
+launchers now use `$HF_HOME/datasets-thesis-3.6.0`, while model weights continue
+to use `$HF_HOME/hub`. The existing `$HF_HOME/datasets` cache is left untouched.
+Pull the fix and rerun `bash jobs/nscc_2ap/prepare_thesis_login.sh`; submit jobs
+only after it prints `Preparation complete`. Use `bash`, not `ash`.
+
+The preparation marker is stored inside the versioned dataset cache, so a marker
+from the earlier shared-cache setup cannot bypass preparation for the new jobs.
+
 The new generation, external-benchmark and MC runners lock their output and
 check provenance before resuming. Generation/external results are saved after
 every instance; TruthfulQA caches likelihood requests. Submit the same individual

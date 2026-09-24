@@ -19,6 +19,9 @@ source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate "$CONDA_ENV"
 export HF_HUB_CACHE="$HF_HOME/hub"
 export HF_DATASETS_CACHE="$HF_HOME/datasets"
+if [[ "${THESIS_DATA_CACHE:-0}" == 1 ]]; then
+  source jobs/nscc_2ap/thesis_cache.sh
+fi
 export TRANSFORMERS_CACHE="$HF_HUB_CACHE"
 export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 TOKENIZERS_PARALLELISM=false
 mkdir -p "$HF_HUB_CACHE" "$HF_DATASETS_CACHE"

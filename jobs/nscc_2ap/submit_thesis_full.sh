@@ -9,7 +9,7 @@ source jobs/nscc_2ap/settings.local.sh
 GROUP=${1:-all}
 case "$GROUP" in all|core|expansion|crosslingual) ;; *) echo 'Usage: bash jobs/nscc_2ap/submit_thesis_full.sh [all|core|expansion|crosslingual]' >&2; exit 2;; esac
 command -v qsub >/dev/null
-[[ -f "$HF_HOME/thesis_prepared.json" ]] || { echo 'Run bash jobs/nscc_2ap/prepare_thesis_login.sh first.' >&2; exit 2; }
+[[ -f "$HF_HOME/datasets-thesis-3.6.0/thesis_prepared.json" ]] || { echo 'Run bash jobs/nscc_2ap/prepare_thesis_login.sh first.' >&2; exit 2; }
 if [[ "$GROUP" == all || "$GROUP" == core ]]; then
   [[ -s data/benchmarks/prepared/halueval_qa.jsonl ]] || { echo 'Missing prepared HaluEval data' >&2; exit 2; }
 fi
