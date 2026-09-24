@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from hallu_llm.benchmark_suite import file_sha256
 from hallu_llm.detection_checkpoint import DetectionCheckpoint
+from hallu_llm.truthfulqa_tasks import DATASET_PATH, TASK_NAMES, task_configs
 
 
 def main():
@@ -25,10 +26,11 @@ def main():
     from lm_eval import evaluator
     from lm_eval.utils import handle_non_serializable
     snapshot = snapshot_download(model["path"], local_files_only=True)
-    dataset = load_dataset("truthfulqa/truthful_qa", "multiple_choice", split="validation")
+    dataset = load_dataset(DATASET_PATH, "multiple_choice", split="validation")
     out = ROOT / "results/truthfulqa_mc_v1" / args.model_name
     context = {"model": model, "snapshot": snapshot, "dataset_fingerprint": dataset._fingerprint,
-               "num_questions": len(dataset), "tasks": ["truthfulqa_mc1", "truthfulqa_mc2"],
+               "num_questions": len(dataset), "tasks": list(TASK_NAMES),
+               "task_overrides": task_configs(),
                "apply_chat_template": False, "seed": config["seed"], "dtype": "bfloat16",
                "code_sha256": file_sha256(Path(__file__)),
                "versions": {p: importlib.metadata.version(p) for p in ["lm_eval", "torch", "transformers", "datasets"]}}
@@ -39,7 +41,7 @@ def main():
             print("This compatible run is already complete.")
             return
         result = evaluator.simple_evaluate(model="hf", model_args={"pretrained": snapshot, "dtype": "bfloat16"},
-            tasks=context["tasks"], batch_size=1, device="cuda", num_fewshot=0,
+            tasks=task_configs(), batch_size=1, device="cuda", num_fewshot=0,
             apply_chat_template=False, limit=None, log_samples=True,
             use_cache=str(out / "likelihood_cache"), bootstrap_iters=1000,
             random_seed=config["seed"], numpy_random_seed=config["seed"],

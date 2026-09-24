@@ -18,16 +18,19 @@ python scripts/prefetch_hf_assets.py --config configs/benchmark_suite.thesis.jso
 python scripts/prepare_benchmark_suite.py --config configs/benchmark_suite.thesis.json --download \
   --benchmark halueval_qa --benchmark ragtruth --benchmark mu_shroom
 python - <<'PY'
-import importlib.metadata, json, os
+import importlib.metadata, json, os, sys
 from pathlib import Path
+sys.path.insert(0, str(Path.cwd() / 'src'))
+from hallu_llm.truthfulqa_tasks import DATASET_PATH, task_configs
 from datasets import load_dataset
 from lm_eval.tasks import TaskManager, get_task_dict
-data = load_dataset('truthfulqa/truthful_qa', 'multiple_choice', split='validation')
+data = load_dataset(DATASET_PATH, 'multiple_choice', split='validation')
 # Instantiate task datasets now: GPU nodes run with networking disabled.
-get_task_dict(['truthfulqa_mc1', 'truthfulqa_mc2'], TaskManager())
+get_task_dict(task_configs(), TaskManager())
 manifest = {'truthfulqa_questions': len(data), 'packages': {
     p: importlib.metadata.version(p) for p in ['torch', 'transformers', 'datasets', 'lm_eval']}}
 manifest['datasets_cache'] = os.environ['HF_DATASETS_CACHE']
+manifest['truthfulqa_task_overrides'] = task_configs()
 Path(os.environ['HF_DATASETS_CACHE'], 'thesis_prepared.json').write_text(json.dumps(manifest, indent=2))
 print(json.dumps(manifest, indent=2))
 PY

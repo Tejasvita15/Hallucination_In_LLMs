@@ -78,6 +78,14 @@ has not been verified in this workspace. Do not describe HalluLens as completed.
 
 ## Checkpoints and recovery
 
+### Preparation error: `Repository id must be 'namespace/name'`
+
+The pinned harness's official TruthfulQA tasks use the historical `truthful_qa`
+alias, which newer Hugging Face clients reject. Both preparation and evaluation
+now pass a task override selecting `truthfulqa/truthful_qa`. Official task prompts,
+answer choices, and MC1/MC2 scoring remain unchanged. Pull the update and rerun
+preparation; successfully cached datasets and weights are reused.
+
 ### Preparation error: `Feature type 'List' not found`
 
 Harness 0.4.9.1 requires `datasets<4`; the preparation requirements explicitly
