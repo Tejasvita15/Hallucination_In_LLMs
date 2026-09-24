@@ -7,6 +7,7 @@
 #PBS -j oe
 
 export THESIS_DATA_CACHE=1
+export USE_TRUTHFULQA_VENV=1
 source "${PBS_O_WORKDIR:?}/jobs/nscc_2ap/common.sh"
 : "${MODEL_NAME:?Set MODEL_NAME}"
 python scripts/run_truthfulqa_mc.py --model-name "$MODEL_NAME"

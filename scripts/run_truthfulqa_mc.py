@@ -19,6 +19,8 @@ def main():
     args = parser.parse_args()
     if importlib.metadata.version("lm_eval") != "0.4.9.1":
         raise SystemExit("Install requirements-thesis.txt in the ASPIRE environment first")
+    if importlib.metadata.version("transformers") != "4.51.3":
+        raise SystemExit("Use the dedicated TruthfulQA environment: run bash jobs/nscc_2ap/prepare_truthfulqa_login.sh, then submit truthfulqa_mc_full.pbs")
     config = json.loads((ROOT / args.config).read_text(encoding="utf-8"))
     model = next(m for m in config["models"] if m["name"] == args.model_name)
     from huggingface_hub import snapshot_download
@@ -33,7 +35,7 @@ def main():
                "task_overrides": task_configs(),
                "apply_chat_template": False, "seed": config["seed"], "dtype": "bfloat16",
                "code_sha256": file_sha256(Path(__file__)),
-               "versions": {p: importlib.metadata.version(p) for p in ["lm_eval", "torch", "transformers", "datasets"]}}
+               "versions": {p: importlib.metadata.version(p) for p in ["lm_eval", "torch", "transformers", "datasets", "peft", "accelerate", "huggingface-hub", "tokenizers"]}}
     with DetectionCheckpoint(out / "checkpoint", context):
         metadata = out / "run_metadata.json"
         metadata.write_text(json.dumps(context, indent=2), encoding="utf-8")

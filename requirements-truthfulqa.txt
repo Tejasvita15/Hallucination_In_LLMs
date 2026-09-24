@@ -1,0 +1,8 @@
+# Installed only in the dedicated TruthfulQA virtual environment.
+lm-eval==0.4.9.1
+transformers==4.51.3
+tokenizers==0.21.1
+peft==0.15.2
+accelerate==1.6.0
+huggingface-hub==0.30.2
+datasets==3.6.0

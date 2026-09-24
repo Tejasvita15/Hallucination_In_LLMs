@@ -35,4 +35,5 @@ Path(os.environ['HF_DATASETS_CACHE'], 'thesis_prepared.json').write_text(json.du
 print(json.dumps(manifest, indent=2))
 PY
 python -m pip freeze > jobs/nscc_2ap/thesis_environment.lock.txt
+bash jobs/nscc_2ap/prepare_truthfulqa_login.sh
 echo 'Preparation complete. Next: bash jobs/nscc_2ap/submit_thesis_full.sh'

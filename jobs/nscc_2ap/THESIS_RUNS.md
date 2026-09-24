@@ -78,6 +78,34 @@ has not been verified in this workspace. Do not describe HalluLens as completed.
 
 ## Checkpoints and recovery
 
+### TruthfulQA import error: `AutoModelForVision2Seq`
+
+The pinned harness imports an API absent from Transformers 5, even for text-only
+evaluation. TruthfulQA now uses a separate virtual environment (default:
+`${CONDA_ENV}-truthfulqa-v1`) with the compatibility versions in
+`requirements-truthfulqa.txt`. It inherits the existing CUDA PyTorch installation
+and installs its overrides locally; the base environment used by other jobs is
+not modified by this repair. Do not rerun the general preparation script while
+repairing this failure with other experiments active. Instead, run:
+
+```bash
+git pull origin main
+bash jobs/nscc_2ap/prepare_truthfulqa_login.sh
+```
+
+After `TruthfulQA preparation complete`, resubmit only failed TruthfulQA jobs:
+
+```bash
+qsub -v MODEL_NAME=llama3.1-8b jobs/nscc_2ap/truthfulqa_mc_full.pbs
+qsub -v MODEL_NAME=qwen2.5-7b jobs/nscc_2ap/truthfulqa_mc_full.pbs
+qsub -v MODEL_NAME=deepseek-r1-7b jobs/nscc_2ap/truthfulqa_mc_full.pbs
+```
+
+Preparation imports the actual evaluator/model registry and loads both task
+datasets on the login node. It performs no model inference. Other PBS files keep
+using the existing conda environment. The cluster import check must pass before
+this environment is marked ready; local syntax checks alone cannot verify it.
+
 ### Preparation error: `Repository id must be 'namespace/name'`
 
 The pinned harness's official TruthfulQA tasks use the historical `truthful_qa`

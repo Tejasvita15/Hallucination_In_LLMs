@@ -17,6 +17,13 @@ export PYTHONNOUSERSITE=1
 module load "${CONDA_MODULE:-miniforge3/24.3.0}"
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate "$CONDA_ENV"
+if [[ "${USE_TRUTHFULQA_VENV:-0}" == 1 ]]; then
+  TRUTHFULQA_VENV="${TRUTHFULQA_VENV:-${CONDA_ENV}-truthfulqa-v1}"
+  [[ -f "$TRUTHFULQA_VENV/truthfulqa_ready.json" ]] || {
+    echo 'Run bash jobs/nscc_2ap/prepare_truthfulqa_login.sh first' >&2; exit 2;
+  }
+  source "$TRUTHFULQA_VENV/bin/activate"
+fi
 export HF_HUB_CACHE="$HF_HOME/hub"
 export HF_DATASETS_CACHE="$HF_HOME/datasets"
 if [[ "${THESIS_DATA_CACHE:-0}" == 1 ]]; then
