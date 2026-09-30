@@ -1,0 +1,16 @@
+{
+  "protocol": "mitigation_suite_en_v2",
+  "seed": 20260930,
+  "data_dir": "data/mitigation_suite_en_v2",
+  "output_dir": "results/mitigation_suite_en_v2",
+  "models": {
+    "qwen2.5-7b": "Qwen/Qwen2.5-7B-Instruct",
+    "llama3.1-8b": "meta-llama/Llama-3.1-8B-Instruct",
+    "deepseek-r1-7b": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B"
+  },
+  "model_loading": {"dtype": "bfloat16", "device_map": "auto", "trust_remote_code": false},
+  "max_new_tokens": 2048,
+  "cad_alpha": 1.0,
+  "shard_size": 1000,
+  "max_runtime_seconds": 79200
+}

@@ -1,0 +1,39 @@
+{
+  "protocol": "mitigation_suite_en_v2",
+  "language": "en",
+  "datasets": {
+    "halueval_qa": {
+      "n": 10000,
+      "task": "grounded_generation",
+      "content_sha256": "f6e29d17b4226d41e28d5b691109c019c1650cfb2d0082521dae6cfa638f5b18",
+      "file": "halueval_qa.jsonl"
+    },
+    "ragtruth": {
+      "n": 450,
+      "task": "grounded_generation",
+      "content_sha256": "0f9489c3ee38fee028704c17fc0734b9d216c0e97bcfce51b05e0e2cd10bdaea",
+      "file": "ragtruth.jsonl"
+    },
+    "truthfulqa": {
+      "n": 817,
+      "task": "prompted_choice",
+      "content_sha256": "25c8f13b36cbc652ea208fe7746f0612759e1695adfaea539a6dcba8f7943946",
+      "file": "truthfulqa.jsonl"
+    },
+    "mu_shroom": {
+      "n": 154,
+      "task": "closed_book_span_detection",
+      "content_sha256": "7643112bf73fac65bd0154fd11d63b1b323a69c1182640d65fe37f83616253eb",
+      "file": "mu_shroom.jsonl"
+    }
+  },
+  "blocked": {
+    "hallulens": "Excluded at user request; the current suite covers the other four datasets only."
+  },
+  "provenance": {
+    "halueval_qa": "fd2bb8ab9382faff68fc78dd4313dc86bf58fef7ccbe993f6f421c4b2922a54b",
+    "ragtruth": "953af19ce182d7126e5f3827920d48b3163783f9ced1f506cfd76e22e6d4da6f",
+    "truthfulqa": "fc87edcaee83c7f4a6622470fee9df9795082845afeb1955d25c257129f06389",
+    "mu_shroom": "c1cd26400d63270024e9864f1ecf63e487b0f83c15a15ccc083aa0a7ae63177b"
+  }
+}
