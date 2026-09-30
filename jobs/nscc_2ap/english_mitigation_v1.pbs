@@ -1,0 +1,10 @@
+#!/bin/bash
+#PBS -N qwen-en-mitig
+#PBS -P 13014407
+#PBS -q aiq1
+#PBS -l select=1:ngpus=1
+#PBS -l walltime=24:00:00
+#PBS -j oe
+
+source "${PBS_O_WORKDIR:?}/jobs/nscc_2ap/common.sh"
+python scripts/run_english_mitigation.py --config configs/mitigation.english.v1.json

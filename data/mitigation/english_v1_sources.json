@@ -1,0 +1,1802 @@
+[
+  {
+    "sample_id": "7f442136d349e1a3",
+    "split": "evaluation",
+    "source": {
+      "question": "Which wildlife sanctuary is located in the town in which the Hollis/Brookline High School services?",
+      "knowledge": "Hollis/Brookline High School is a public school located in Hollis, New Hampshire, serving the towns of Hollis and Brookline.Brookline is a town in Hillsborough County, New Hampshire, United States. Brookline is home to the Talbot-Taylor Wildlife Sanctuary, Potanipo Pond, and the Brookline Covered Bridge.",
+      "right_answer": "Talbot-Taylor Wildlife Sanctuary"
+    },
+    "source_sha256": "8994eb19a68030f9fd683a4e28835b1cdc54f40e3402ce4993812733f60b8383"
+  },
+  {
+    "sample_id": "9d6f8143dd10d2c6",
+    "split": "evaluation",
+    "source": {
+      "question": "What American songwriter, born in 1932, wrote a pop hit single released by Nancy Sinatra?",
+      "knowledge": "It is best known from two 1967 releases: a pop hit single by Nancy Sinatra and Lee Hazlewood, which reached number 14 on the \"Billboard\" Hot 100 chart, and a country hit single by Johnny Cash and June Carter, which reached number two on the \"Billboard\" Country Singles chart and has become more appreciated by non-country audiences in recent years as a result of Cash's continued popularity and its use in the 2011 film \"The Help\".Billy Edward \"Edd\" Wheeler (born December 9, 1932, Boone County, West Virginia) is an American songwriter, performer, writer, and visual artist.",
+      "right_answer": "Billy Edward \"Edd\" Wheeler"
+    },
+    "source_sha256": "724546cea61222b4c7806a9440ae742f1473092b384993d23306670364f62f66"
+  },
+  {
+    "sample_id": "98cc533e74788cf9",
+    "split": "evaluation",
+    "source": {
+      "question": "What award did Deepika Pedukone win for the film where Kirron Kher had a supporting role?",
+      "knowledge": "Her first Hindi film release came the following year with Farah Khan's melodrama \"Om Shanti Om\", in which she played dual roles opposite Shah Rukh Khan. For her performance, she won the Filmfare Award for Best Female Debut and also received a Best Actress nomination at the ceremony. It stars Shah Rukh Khan and debutant Deepika Padukone in the lead roles while Arjun Rampal, Shreyas Talpade, and Kirron Kher feature in supporting roles.",
+      "right_answer": "Filmfare Award for Best Female Debut"
+    },
+    "source_sha256": "67aacebc18f873e77e68456b17f6308832d5945b0e33bc1021fbae184016e0a2"
+  },
+  {
+    "sample_id": "fdc685e1e61bd62d",
+    "split": "evaluation",
+    "source": {
+      "question": "Reagan and Give Us Our Skeletons were both which kind of films?",
+      "knowledge": "Reagan is a 2011 American documentary film, written and directed by Eugene Jarecki, covering the presidency of Ronald Reagan. (Antakaa Meille Luurankomme in Finnish, Oaivveskaldjut in North Sami) is a 1999 documentary film directed by Paul-Anders Simma about Niillas Somby, a Sami man who retraces his family ancestry as he searches for the head of his ancestor, Mons Somby.",
+      "right_answer": "film"
+    },
+    "source_sha256": "a42632a206009b5130ebc826375364c12a1dc9659fbbaf06986272fc23d006bf"
+  },
+  {
+    "sample_id": "cebb100562624f67",
+    "split": "evaluation",
+    "source": {
+      "question": "Mexican Claudia Rivas represents her country in competitions including the Pan-American Games. What kind of athlete is she?",
+      "knowledge": "Claudia Rivas Vega (born 15 June 1989) is a Mexican triathlete.The 2015 Pan American Games, officially the XVII Pan American Games and commonly known as the Toronto 2015 Pan-Am Games (French: \"Jeux panaméricains de 2015 à Toronto\" ), were a major international multi-sport event celebrated in the tradition of the Pan American Games, as governed by Pan American Sports Organization (PASO).",
+      "right_answer": "triathlete"
+    },
+    "source_sha256": "8197f03b5780ecbc085fb443f0add2d9bd74c691d760c005489bd3f28330d678"
+  },
+  {
+    "sample_id": "059eb7733d5b8f9d",
+    "split": "evaluation",
+    "source": {
+      "question": "The Man with the Iron Fists is a 2012 American martial arts film directed by RZA, the film stars RZA, and which actor, film producer and musician, and although a New Zealand citizen, he has lived most of his life in Australia?",
+      "knowledge": "The film stars RZA, Russell Crowe, Cung Le, Lucy Liu, Byron Mann, Rick Yune, Dave Bautista, and Jamie Chung.Russell Ira Crowe (born 7 April 1964) is an actor, film producer and musician.",
+      "right_answer": "Russell Crowe"
+    },
+    "source_sha256": "df35f7cfeb13f5a725969aaef62cb168a517f8a3f630197bafe2d8e415259476"
+  },
+  {
+    "sample_id": "4e1acff593bd78ed",
+    "split": "evaluation",
+    "source": {
+      "question": "Which American worldwide automotive industry components and parts supplier had a division that manufactured the Norge brand of appliances?",
+      "knowledge": "The Norge brand of appliances were originally manufactured by the Norge Appliance Company, which was once a division of BorgWarner and later a division of Fedders.BorgWarner Inc. is an American worldwide automotive industry components and parts supplier.",
+      "right_answer": "BorgWarner"
+    },
+    "source_sha256": "8fd461f46ebf2a8e88ba97ad9234390c1e9e6058e7912fbb24b57b3a7d0cf99e"
+  },
+  {
+    "sample_id": "bb7a78e1fdf104cc",
+    "split": "evaluation",
+    "source": {
+      "question": "In what year was the last novel of the author who wrote Revolutionary Road published?",
+      "knowledge": "Cold Spring Harbor (1986) is a novel by American writer Richard Yates. His first novel, \"Revolutionary Road\", was a finalist for the 1962 National Book Award.",
+      "right_answer": "1986"
+    },
+    "source_sha256": "6568fc34b38832aba889ddcdee7009470739e464b1eda8abb51b5c72e73b9b21"
+  },
+  {
+    "sample_id": "b1a88111a841d301",
+    "split": "evaluation",
+    "source": {
+      "question": "The O'Hara Watercolor School was burned down during fires that killed how many people?",
+      "knowledge": "Goose Rocks Beach was the site of the O'Hara Watercolor School run by American watercolor painter Eliot O'Hara from 1930 to 1947. The school and many other buildings burned down in the Great Fires of 1947. Collectively, the fires killed a total of 16 people.",
+      "right_answer": "16"
+    },
+    "source_sha256": "ef5c322dd347b66a98ffe36a232111b83fbd13dbc27a7d84a0fbc70bc76cd676"
+  },
+  {
+    "sample_id": "41b34a049706eef8",
+    "split": "evaluation",
+    "source": {
+      "question": "What is the name of the actress that has, since 2006, used a different name and has appeared in Ride Along 2?",
+      "knowledge": "Ride Along 2 is a 2016 American action comedy film directed by Tim Story and written by Phil Hay and Matt Manfredi. The film stars Kevin Hart, Ice Cube, Ken Jeong, Benjamin Bratt, Olivia Munn, Bruce McGill and Tika Sumpter.Lisa Olivia Munn (born July 3, 1980) is an American actress and model. She was credited as Lisa Munn in her early career, but since 2006, she has used the name Olivia Munn.",
+      "right_answer": "Olivia Munn"
+    },
+    "source_sha256": "ab9db0ff0f50180cbe90ae3d34a46840c439c2de8005a8399e39f0fb5386da6a"
+  },
+  {
+    "sample_id": "fab357c99cb4dabe",
+    "split": "evaluation",
+    "source": {
+      "question": "Who is a Swiss professional footballer who currently plays as a midfielder for a Swiss football team from the Bernese Oberland town of Thun ?",
+      "knowledge": "Nicola Sutter (born 5 May 1995) is a Swiss professional footballer who currently plays as a midfielder for FC Thun.FC Thun (\"Fussballclub Thun 1898\") is a Swiss football team from the Bernese Oberland town of Thun.",
+      "right_answer": "Nicola Sutter"
+    },
+    "source_sha256": "fb740d44f562255e84688d853b5decd61b92aa0aba7494a4202b68a805d8081c"
+  },
+  {
+    "sample_id": "0bb3d163ff10be2d",
+    "split": "evaluation",
+    "source": {
+      "question": "In which country Hermann Neubacher held a diplomatic post as an Austrian Nazi politician when it was under the control of the Kingdom of Italy?",
+      "knowledge": "During the Second World War, he was appointed as the leading German foreign ministry official for the Balkans (including Greece, Serbia, Albania and Montenegro).The Albanian Kingdom (Albanian: \"Mbretëria Shqiptare\", German: \"Königreich Albanien\") existed as a \"de jure\" independent country, between 1943 and 1944. Before the armistice between Italy and the Allied armed forces on 8 September 1943, Albania had been in a de jure personal union with and was de facto under the control of the Kingdom of Italy.",
+      "right_answer": "Albanian Kingdom"
+    },
+    "source_sha256": "20afc05ebb63e7d3e23674a8fd059b08fed3f97cfbbe25212626d813c07abc70"
+  },
+  {
+    "sample_id": "8e5b5627110450d7",
+    "split": "evaluation",
+    "source": {
+      "question": "In which year was the author of Clara S, musikalische Tragödie born?",
+      "knowledge": "Clara S, musikalische Tragödie is a play by Austrian playwright Elfriede Jelinek.Elfriede Jelinek (] ; born 20 October 1946) is an Austrian playwright and novelist.",
+      "right_answer": "1946"
+    },
+    "source_sha256": "51b350438d3e196e57ff40bcf9cc6d94605d1451016a6e32ca0ef422a0bb27e8"
+  },
+  {
+    "sample_id": "562c038776df428b",
+    "split": "evaluation",
+    "source": {
+      "question": "Are the magazines, Nat Mags and Plaza Kvinna published in the same country?",
+      "knowledge": "Nat Mags (short for National Magazine Company) was a British magazine publisher based in London.Plaza Kvinna (meaning \"Plaza Woman\" in English) is a Swedish language monthly women's magazine published in Stockholm, Sweden.",
+      "right_answer": "no"
+    },
+    "source_sha256": "f922cb304704fd7b93b68a13ae6c3124074d215d4532c772624324be1ce4c66c"
+  },
+  {
+    "sample_id": "461e120f60f0cfd1",
+    "split": "evaluation",
+    "source": {
+      "question": "Which band is from Glastonbury, Reef or Simple Plan?",
+      "knowledge": "Reef are an English band from Glastonbury, England.Simple Plan is a Canadian rock band from Montreal, Quebec.",
+      "right_answer": "Reef"
+    },
+    "source_sha256": "610ad07f6032ca6191c180cfd0cad809dca56eab34938684cd7440fedfa7455d"
+  },
+  {
+    "sample_id": "8fffb21b7331c3b2",
+    "split": "evaluation",
+    "source": {
+      "question": "In what Atlanta city is the Infinite Energy Arena located?",
+      "knowledge": "Infinite Energy Arena (formerly The Arena at Gwinnett Center, Gwinnett Civic Center Arena and commonly known as the Gwinnett Arena) is an indoor arena outside the city limits of Duluth, Georgia, within the Atlanta metropolitan area.Duluth is a city in Gwinnett County, Georgia, United States.",
+      "right_answer": "Duluth, Georgia"
+    },
+    "source_sha256": "c96a19d9136e2dd4f81539eaf878bfac31acddfabe353105dfb16858f8eed307"
+  },
+  {
+    "sample_id": "f48dc2438d0dd977",
+    "split": "evaluation",
+    "source": {
+      "question": "Of the cities Abdiel Vázquez has lived in, which one was the capital of Nuevo Leon?",
+      "knowledge": "Vazquez grew up just outside the city of Monterrey to a doctor and an engineer.Monterrey (] ), is the capital and largest city of the northeastern state of Nuevo León, in Mexico.",
+      "right_answer": "Monterrey"
+    },
+    "source_sha256": "ad68d8da974f9240a3b62ea82d57f6b7743bb29211cd49e8bd613195f333401a"
+  },
+  {
+    "sample_id": "96dd391d0569e2b8",
+    "split": "evaluation",
+    "source": {
+      "question": "Which opera was performed first The Midsummer Marriage or The Beggar's Opera ?",
+      "knowledge": "The work's first performance was at Covent Garden, 27 January 1955, conducted by John Pritchard.The Beggar's Opera is a ballad opera in three acts written in 1728 by John Gay with music arranged by Johann Christoph Pepusch.",
+      "right_answer": "The Beggar's Opera"
+    },
+    "source_sha256": "f95c1fec5be443ba022a3da84625e1825fca2bdc52fba9691cfd289c1cd2b11d"
+  },
+  {
+    "sample_id": "d8a1ee3f510b70d3",
+    "split": "evaluation",
+    "source": {
+      "question": "Who wrote Doomquest which establishes Doctor Doom as a member of his rogues gallery?",
+      "knowledge": "\"Doomquest\" is a two-issue Iron Man story arc written by David Michelinie and Bob Layton with art by John Romita Jr. and published by Marvel Comics. One of the most popular stories of the title character, it establishes Doctor Doom as a member of his rogues gallery, a villainous counterpart who mirrors the superhero with his wealth, power armor and engineering skill. The son of Romani witch Cynthia Von Doom, Doctor Doom traditionally has been the archenemy of the Fantastic Four, and the leader of the fictional nation of Latveria.",
+      "right_answer": "David Michelinie and Bob Layton"
+    },
+    "source_sha256": "cfaec6644cdc410d1bcbba6fbddd27f9d3c807eb594b8c087e64d096158537ee"
+  },
+  {
+    "sample_id": "0c903338d2f12cec",
+    "split": "evaluation",
+    "source": {
+      "question": "Light Chasers is the tenth studio album, released in stores on September 14, 2010, by the American indie rock group Cloud Cult, an experimental indie rock band from Duluth, Minnesota led by which singer/songwriter?",
+      "knowledge": "Light Chasers is the tenth studio album by the American indie rock group Cloud Cult that was released in stores on September 14, 2010.Cloud Cult is an experimental indie rock band from Duluth, Minnesota led by singer/songwriter Craig Minowa.",
+      "right_answer": "Craig Minowa"
+    },
+    "source_sha256": "e3cdab7e2cbcc8182957651a7772fd28f4b38fe7566d595c9d7686eba25185b8"
+  },
+  {
+    "sample_id": "b16b2cb59b3383eb",
+    "split": "evaluation",
+    "source": {
+      "question": "What reality show did the co-hosts of the 2014 Much Music Video Awards star in?",
+      "knowledge": "Kendall Jenner and Kylie Jenner served as co-hosts for the show. She is best known for starring in the E! reality television series \"Keeping Up with the Kardashians\" since age nine, her eponymous brand of cosmetics, and her large social media presence.",
+      "right_answer": "Keeping Up with the Kardashians"
+    },
+    "source_sha256": "429bc490e895284175578560aff6202b82cabc82a39b86259215c3da6183f280"
+  },
+  {
+    "sample_id": "0ca5cb12d5946913",
+    "split": "evaluation",
+    "source": {
+      "question": "Kim Yeong-cheol had a role as a gngster boss in a 2005 South Korean gangster action drama film that was written by Kim Jee-woon, and starred who?",
+      "knowledge": "Other notable roles include playing Gung Ye in \"Emperor Wang Gun\" (2000-2002), a gangster boss in \"A Bittersweet Life\" (2005), and a NSS deputy director in \"IRIS\" (2009). \"The Sweet Life\") is a 2005 South Korean gangster action drama film written and directed by Kim Jee-woon and starring Lee Byung-hun.",
+      "right_answer": "Lee Byung-hun"
+    },
+    "source_sha256": "4b8598a828e93fa4940e794395c4d3f4a125eb997053d9863efd075b9c8650e9"
+  },
+  {
+    "sample_id": "4c9caca13e1c31ac",
+    "split": "evaluation",
+    "source": {
+      "question": "What is the name of the album of Jay-Z that was released in 2001 and is ranked by Rolling Stone among the 500 greatest albums of all time?",
+      "knowledge": "MTV ranked him the \"Greatest MC of all time\" in 2006. \"The Blueprint is the sixth studio album by American rapper Jay-Z, released on September 11, 2001, by Roc-A-Fella Records and Def Jam Recordings.",
+      "right_answer": "The Blueprint"
+    },
+    "source_sha256": "d1036cbd3150572eb49f8a825b42e2b1190cfde25d1a4f8cf3e9508f2fbb6d10"
+  },
+  {
+    "sample_id": "80a56a5f541d438b",
+    "split": "evaluation",
+    "source": {
+      "question": "Barbara Linares is a model for what parent company of Aerie?",
+      "knowledge": "Barbara \"Barbie\" Linhares Ferreira (born December 14, 1996) is an American model. American Eagle Outfitters is also the parent company of Aerie.",
+      "right_answer": "American Eagle Outfitters"
+    },
+    "source_sha256": "fac240c2bc733ff9a2e70b81203993e8b40f10b2fbe78d76cdc2ffb533d3ecce"
+  },
+  {
+    "sample_id": "e7b0422f5fb79e6b",
+    "split": "evaluation",
+    "source": {
+      "question": "What earlier concept does the style of comedy that The War of the Roses employs correspond to?",
+      "knowledge": "The War of the Roses is a 1989 American black comedy film based upon the 1981 novel of the same name\" by Warren Adler. Black comedy corresponds to the earlier concept of gallows humor.",
+      "right_answer": "gallows humor"
+    },
+    "source_sha256": "fa7d40583c9de3bde41a10045b9029fbbd85fd78f1fbe2e6af089bd1947d65e7"
+  },
+  {
+    "sample_id": "17c2befde5935d02",
+    "split": "evaluation",
+    "source": {
+      "question": "Did both Pekka Karjalainen and John Ince work as a film director?",
+      "knowledge": "Pekka Karjalainen is a Finnish film director and sound producer.John Ince, also known as John E. Ince, (August 29, 1878 – April 10, 1947) was an American stage and motion pictures actor, a film director, and the eldest brother of Thomas H. Ince and Ralph Ince.",
+      "right_answer": "yes"
+    },
+    "source_sha256": "9b41771090050912ce9712a8c05923295fad62f16025203478a2f7bd8749ffd4"
+  },
+  {
+    "sample_id": "8a3a54456d92d671",
+    "split": "evaluation",
+    "source": {
+      "question": "Roark Capital Group is named after what character in the novel \"The Fountainhead\" who was considered to be the ideal man by the author?",
+      "knowledge": "Roark Capital Group is an American private equity firm with over $6.5 billion in equity capital raised since inception that is focused on leveraged buyout investments in middle-market companies primarily in the franchise/multi-unit, restaurant and food, retail healthcare and business services sectors. The firm is named for Howard Roark, the protagonist in Ayn Rand's novel, \"The Fountainhead\". Roark embodies what Rand believed to be the ideal man, and his struggle reflects Rand's belief that individualism is superior to collectivism.",
+      "right_answer": "Howard Roark"
+    },
+    "source_sha256": "87d3eb76efefb4d50a1b1cd8aa82f0986958103f7e917e7fedb4303b22fd4987"
+  },
+  {
+    "sample_id": "6960c74c6697ec86",
+    "split": "evaluation",
+    "source": {
+      "question": "Where was Douglas Corrigan, known as, \"The Flying Irishman\", actually born?",
+      "knowledge": "The Flying Irishman (aka Born to Fly) is a 1939 biographical drama film produced by RKO Pictures about Douglas Corrigan's unofficial transatlantic flight the previous year in a dilapidated Curtiss Robin light aircraft.Douglas Corrigan (January 22, 1907 – December 9, 1995) was an American aviator born in Galveston, Texas.",
+      "right_answer": "Galveston, Texas"
+    },
+    "source_sha256": "32a8e9fa7f0dafad3b506a7f148f28081cb61743f15b985d0f8f1c28180c3dd0"
+  },
+  {
+    "sample_id": "5a021b6ba2662659",
+    "split": "evaluation",
+    "source": {
+      "question": "Brian Keith \"Herbie\" Flowers, is an English musician specialising in electric bass, double bass and tuba, he has contributed to the recording Give My Regards to Broad Street is the fifth studio album by who, as well as the soundtrack album to his 1984 film of the same name?",
+      "knowledge": "He is noted as a member of Blue Mink, T. Rex and Sky and as one of Britain's best-known session bass players, having contributed to recordings by Elton John (\"Tumbleweed Connection\", \"Madman Across the Water\"), David Bowie (\"Space Oddity\", \"Diamond Dogs\"), Lou Reed (\"Transformer\", including the prominent bass line of \"Walk on the Wild Side\"), Melanie (\"Candles in the Rain\"), Roy Harper (\"Bullinamingvase\"), David Essex (\"Rock On\"), Allan Clarke, Al Kooper (\"New York City (You're a Woman)\"), Bryan Ferry (\"The Bride Stripped Bare\"), Harry Nilsson (\"Nilsson Schmilsson\", \"Son of Dracula\"), Cat Stevens (\"New Masters\", \"Foreigner\"), Serge Gainsbourg (\"Histoire de Melody Nelson\"), Paul McCartney (\"Give My Regards to Broad Street\"), George Harrison (\"Somewhere in England\", \"Gone Troppo\", \"Brainwashed\") and Ringo Starr (\"Stop and Smell the Roses\").Give My Regards to Broad Street is the fifth studio album by Paul McCartney, as well as the soundtrack album to his 1984 film of the same name.",
+      "right_answer": "Paul McCartney"
+    },
+    "source_sha256": "b65b7d91c83e81dac7a96067bd86f852e78e21fabab6282297f4f660fb68827c"
+  },
+  {
+    "sample_id": "bd0868f59d6d0930",
+    "split": "evaluation",
+    "source": {
+      "question": "one of the stars of Sioux City Sue was the voice actor for which movie",
+      "knowledge": "The film stars Gene Autry, Lynne Roberts, Sterling Holloway, Richard Lane, Ralph Sanford and Ken Lundy. He was also a voice actor for The Walt Disney Company, well known for his distinctive tenor voice, and served as the original voice of the title character in Walt Disney's \"Winnie the Pooh\".",
+      "right_answer": "The Walt Disney Company,"
+    },
+    "source_sha256": "c075734c25384bd37beb9840f1d44d33139fdb2293ee6263457b2e958b2d718a"
+  },
+  {
+    "sample_id": "0873aa73e196491c",
+    "split": "evaluation",
+    "source": {
+      "question": "Where is the Head Office of the starter of the No issue, lelo tissue ad campaign?",
+      "knowledge": "No issue, lelo tissue (Urdu: ‎ ) was a Pakistani television advertisement campaign started by Jazz Pakistan, following the victory of Pakistan's cricket team in the 2017 ICC Champions Trophy Final.Jazz (Urdu: ‎ ) is the largest mobile network in Pakistan formed by the merger of Mobilink and Warid. Its Head Office is located in Islamabad, and the current CEO is Aamir Ibrahim.",
+      "right_answer": "Islamabad"
+    },
+    "source_sha256": "0b30d0e6d4b6bd2716ea111b8747e5b0e19eaf47d236bd174ffefb533b92f1e5"
+  },
+  {
+    "sample_id": "09b90ae4804d9970",
+    "split": "evaluation",
+    "source": {
+      "question": "Which English philosopher did Henry Seymour believe authored plays under the pseudonym of William Shakespeare?",
+      "knowledge": "Henry Albert Seymour (1861–1938) was a British secularist, individualist anarchist, gramophone innovator and survey author, and Baconian.The Baconian theory of Shakespearean authorship holds that Sir Francis Bacon, philosopher, essayist and scientist, wrote the plays which were publicly attributed to William Shakespeare.",
+      "right_answer": "Sir Francis Bacon"
+    },
+    "source_sha256": "29a0442804b7c80a522544c897769be064f97bb81e8814bcbc0a7091edbf344c"
+  },
+  {
+    "sample_id": "6e44d136252b092d",
+    "split": "evaluation",
+    "source": {
+      "question": "Who was appointed the fifth Poet Laureate Consultant in Poetry to the Library of Congress in 1946, Woody Allen or Karl Shapiro ?",
+      "knowledge": "Karl Jay Shapiro (November 10, 1913 – May 14, 2000) was an American poet. He was appointed the fifth Poet Laureate Consultant in Poetry to the Library of Congress in 1946.Heywood \"Woody\" Allen (born Allan Stewart Konigsberg; December 1, 1935) is an American filmmaker, writer, actor, comedian, and musician whose career spans more than six decades.",
+      "right_answer": "Karl Jay Shapiro"
+    },
+    "source_sha256": "dbe99b4f6947275b72a63b6e490b5ed31dc82afaf8996e6cef5c8dc9de25399c"
+  },
+  {
+    "sample_id": "9d4dc794b78c14fb",
+    "split": "evaluation",
+    "source": {
+      "question": "Walter Iván Montoya is an Argentine professional footballer who plays for a club that was formed on what date?",
+      "knowledge": "Walter Iván Montoya (born 21 July 1993) is an Argentine professional footballer who plays as a central midfielder for Spanish club Sevilla FC.Sevilla Fútbol Club, S.A.D. (] ), or simply Sevilla, is Spain’s oldest sporting club solely devoted to football. The club was formed on 25 January 1890, Scot Mr. Edward Farquharson Johnston being their first president.",
+      "right_answer": "25 January 1890"
+    },
+    "source_sha256": "57d3fc4bbbd97444de4e3aae1b2e9e88c37320b954f52f80290dd109f58d244b"
+  },
+  {
+    "sample_id": "251c219bdf53fe4c",
+    "split": "evaluation",
+    "source": {
+      "question": "During which years was the British statesman, for which Knox Cunningham was Parliamentary Private Secretary, Prime Minister of the United Kingdom?",
+      "knowledge": "As an Ulster Unionist politician at a time when the Unionists were part of the Conservative Party, he was also a significant figure in United Kingdom politics as Parliamentary Private Secretary to Harold Macmillan.Maurice Harold Macmillan, 1st Earl of Stockton, {'1': \", '2': \", '3': \", '4': \"} (10 February 1894 – 29 December 1986) was a British statesman of the Conservative Party who served as Prime Minister of the United Kingdom from 1957 to 1963.",
+      "right_answer": "1957 to 1963"
+    },
+    "source_sha256": "144eb7916b856756a2988545f849aaa9e0872f550b7b1d0a83ed487e79ae1f0d"
+  },
+  {
+    "sample_id": "738cfef7f0f2d211",
+    "split": "evaluation",
+    "source": {
+      "question": "Which president of Indonesia created a series of extrajudicial government executions between 1983 and 1985?",
+      "knowledge": "The Petrus killings were a series of extrajudicial executions in Indonesia that occurred between 1983 and 1985 under President Suharto's New Order regime.General of the Army Hajji Suharto (also spelled Soeharto;    , or Muhammad Soeharto; Javanese : ꦩꦸꦲꦩ꧀ꦩꦢ꧀ꦯꦸꦲꦂꦠ ; 8 June 1921 – 27 January 2008) was the second President of Indonesia, holding the office for 31 years from the ousting of Sukarno in 1967 until his resignation in 1998.",
+      "right_answer": "Suharto"
+    },
+    "source_sha256": "f7a742c0672155167797e9dd2539d451f170d07b092b837f58644a805c338add"
+  },
+  {
+    "sample_id": "aff3612e9d78c237",
+    "split": "evaluation",
+    "source": {
+      "question": "The person who finished third in the 1984 World's Strongest Man was born on what date?",
+      "knowledge": "Ab Wolders from the Netherlands finished second and, 1983 champion Geoff Capes from the United Kingdom finished third.Geoffrey Lewis Capes (born 23 August 1949) is a British former shot putter, strongman and professional Highland Games competitor.",
+      "right_answer": "23 August 1949"
+    },
+    "source_sha256": "08a592782e0214fb41300c026036639a13f804986ce2d331e8e614c8dcbcfbf5"
+  },
+  {
+    "sample_id": "11a9f00cd5e54a67",
+    "split": "evaluation",
+    "source": {
+      "question": "Aladdin's Problem is a 1983 novella by a highly decorated German soldier who became famous for what World War I memoir?",
+      "knowledge": "Aladdin's Problem (German: Aladins Problem ) is a 1983 novella by the German writer Ernst Jünger.Ernst Jünger (29 March 1895 – 17 February 1998) was a highly decorated German soldier, author, and entomologist who became famous for his World War I memoir \"Storm of Steel\".",
+      "right_answer": "Storm of Steel"
+    },
+    "source_sha256": "b36c459e5d24a9e597bdf78617f6a8326da887048e665f6f72c87c879866ee69"
+  },
+  {
+    "sample_id": "04900f2ecebf1f45",
+    "split": "evaluation",
+    "source": {
+      "question": "The father of the child who's death inspired \"Tears in Heaven\" was named number five in what magazine's \"The 10 Best Electric Guitar Players\"?",
+      "knowledge": "The song was written about the pain and loss Clapton felt following the death of his 4-year-old son, Conor. He was also named number five in \"Time\" magazine's list of \"The 10 Best Electric Guitar Players\" in 2009.",
+      "right_answer": "Time"
+    },
+    "source_sha256": "43b5fcf17456d09e8462272480ceaab5f29d2bb9b83c44b6dea7072b0647f9e0"
+  },
+  {
+    "sample_id": "1b7e269508f8749d",
+    "split": "evaluation",
+    "source": {
+      "question": "Ranjhay Hath Gandasa is a comedy film starring which Pakistani-American singer-songwriter",
+      "knowledge": "It stars Nadia Ali, Rana Rehman, Fozia Rana, Durdana Rehman, Azhar Rangeela and Shafqat Cheema in lead roles.Nadia Ali (Urdu: ‎ , born 3 August 1980) is a Pakistani American singer-songwriter.",
+      "right_answer": "Nadia Ali"
+    },
+    "source_sha256": "b22bcb52490cfe5bc5b8b67a2e95ba41b235be7eb34366cc30488bbfa896281d"
+  },
+  {
+    "sample_id": "2998dbb4ed8136b6",
+    "split": "evaluation",
+    "source": {
+      "question": "Which breed of dog is now extinct: Chinese Crested Dog or the Chien-gris?",
+      "knowledge": "The Chinese crested dog is a hairless breed of dog. Like most hairless dog breeds, the Chinese crested comes in two varieties, with and without fur, which are born in the same litter: the Powderpuff and the Hairless.The Chien-gris a.k.a. Gris de Saint-Louis (\"Grey St. Louis Hound\") was a breed of dog, now extinct, which originated in Medieval times.",
+      "right_answer": "Chien-gris"
+    },
+    "source_sha256": "87f17149cac5eaf50cc5d8c7d728ec7d9599be1bffcb10f9f0ea7b82663f7af7"
+  },
+  {
+    "sample_id": "0c971b2dad2e162d",
+    "split": "evaluation",
+    "source": {
+      "question": "What actor born in 1930 starred in a movie produced by Don Siegel?",
+      "knowledge": "He is best known for the original sci-fi film \"Invasion of the Body Snatchers\" (1956), as well as five films with Clint Eastwood, including the police thriller \"Dirty Harry\" (1971) and the prison drama \"Escape from Alcatraz\" (1979), and John Wayne's final film the 1976 Western \"The Shootist\".Clinton Eastwood Jr. (born May 31, 1930) is an American actor, filmmaker, musician, and political figure.",
+      "right_answer": "Clinton Eastwood Jr."
+    },
+    "source_sha256": "98de28b6dce23b92c90619e97531fa791cceadadcbb582444b5afdbeba77a7fc"
+  },
+  {
+    "sample_id": "e58552a2cf3b06a6",
+    "split": "evaluation",
+    "source": {
+      "question": "When was the American rapper from Atlanta, Georgia born who's song is \"Sneakin'\"?",
+      "knowledge": "\"Sneakin'\" is a song by Canadian rapper Drake and American rapper 21 Savage.Shayaa Bin Abraham-Joseph (born October 22, 1992), better known by his stage name 21 Savage, is an American rapper from Atlanta, Georgia.",
+      "right_answer": "October 22, 1992"
+    },
+    "source_sha256": "7a4d7bd6841f500546cad368f8c424782cc1b900b4b7b52202843ab2f58b003c"
+  },
+  {
+    "sample_id": "25fb186ab0d7fb13",
+    "split": "evaluation",
+    "source": {
+      "question": "What was the full name of the leader of the band that Tommy Duncan was a part of?",
+      "knowledge": "He recorded and toured with bandleader Bob Wills on and off into the early 1960s.James Robert Wills (March 6, 1905 – May 13, 1975) was an American Western swing musician, songwriter, and bandleader.",
+      "right_answer": "James Robert Wills"
+    },
+    "source_sha256": "72e4c74dbf5d3752d9dc32b5d5f4aabd5deea936da69101bdb8005bc24d82611"
+  },
+  {
+    "sample_id": "38f3e2c3398179ff",
+    "split": "evaluation",
+    "source": {
+      "question": "Who You Are was on an album that followed what album?",
+      "knowledge": "Featuring lyrics written by vocalist Eddie Vedder and music co-written by drummer Jack Irons and guitarist Stone Gossard, \"Who You Are\" was released on July 30, 1996 as the first single from the band's fourth studio album, \"No Code\" (1996). Following a troubled tour for its previous album, \"Vitalogy\" (1994), in which Pearl Jam engaged in a much-publicized boycott of Ticketmaster, the band went into the studio to record its follow-up.",
+      "right_answer": "Vitalogy"
+    },
+    "source_sha256": "ce5e816bee28c4cb6bf6061ab7d2eb9211f824b314631eb03786834f64a43b02"
+  },
+  {
+    "sample_id": "49f22def7b9be5e4",
+    "split": "evaluation",
+    "source": {
+      "question": "Where did the head coach of the 2016-17 Houston Cougars men's basketball team first work as a head coach?",
+      "knowledge": "The Cougars were led by third-year head coach Kelvin Sampson and were members of the American Athletic Conference. He was a head coach at Montana Tech from 1981 to 1985, Washington State University from 1987 to 1994, the University of Oklahoma from 1994 to 2006, and Indiana University 2006 to 2008.",
+      "right_answer": "Montana Tech"
+    },
+    "source_sha256": "870c6819298d53ca22c1454a845eef459ea4615f25f6e8c08a49c374398671c6"
+  },
+  {
+    "sample_id": "5b46e280174f8c7d",
+    "split": "evaluation",
+    "source": {
+      "question": "Sam Goody, who was run by Musicland Group, Inc., filed bankrupcy in which year?",
+      "knowledge": "The Musicland Group, Inc. was an entertainment company which ran Musicland, Sam Goody, Suncoast Motion Picture Company, OnCue, and the Media Play Superstore Chains. It was purchased by Best Buy in 2000, sold to Sun Capital in 2003, and filed for bankruptcy in 2006 closing most of its stores.",
+      "right_answer": "2006"
+    },
+    "source_sha256": "ca1c06e05f374ed3c1aaede1a0cdc7be3fcb6629e5c6df5bf0df078b3fe85326"
+  },
+  {
+    "sample_id": "2b692222776e0c4b",
+    "split": "evaluation",
+    "source": {
+      "question": "Who won the singles title at a 1973 tennis tournament held at a Los Angeles arena designed by architect Charles Luckman?",
+      "knowledge": "The 1973 British Motor Cars of Los Angeles was a women's tennis tournament played on indoor carpet courts at the The Forum in Los Angeles, California in the United States that was part of the 1973 Virginia Slims World Championship Series. The final was watched by 2,693 spectators who saw first-seeded Margaret Court win the singles title and earn $6,000 first-prize money.The Forum is a multi-purpose indoor arena in Inglewood, California, adjacent to Los Angeles. Architect Charles Luckman's vision was brought to life by engineers Carl Johnson and Svend Nielsen, who were able to engineer the structure so that it had no major support pillars.",
+      "right_answer": "Margaret Court"
+    },
+    "source_sha256": "2d08404e106960cc50eb5b1c537c65aa3a4f1237e1484833e4c0dc0928f04b4f"
+  },
+  {
+    "sample_id": "d8967381d463d3cd",
+    "split": "evaluation",
+    "source": {
+      "question": "What year was the prison holding one of the two arrestees in the 18 September 2014 counter-terrorism raid opened?",
+      "knowledge": "One of the two arrestees became one of only two men on remand at the highest security prison in Australia, as he is considered an \"AA\" security risk.The High Risk Management Centre (commonly called the SuperMax) was opened in September 2001.",
+      "right_answer": "2001"
+    },
+    "source_sha256": "87ab723202683d8b7fa2e55d3c6a74360b31b0bf4235de39f7fdf9a238b5fe87"
+  },
+  {
+    "sample_id": "64f8ab6a9f239d45",
+    "split": "evaluation",
+    "source": {
+      "question": "Were both Alexander Hall and Jon Amiel both considered film directors?",
+      "knowledge": "Alexander Hall (January 11, 1894, Boston, Massachusetts – July 30, 1968, San Francisco, California) was an American film director and theatre actor.Jon Amiel (born 20 May 1948) is an English film director who has since the early 1980s worked in film and television in both the UK and the US.",
+      "right_answer": "yes"
+    },
+    "source_sha256": "6571a86bf11c4ad8127286fa4c3cb28d52e648293b63eea0cc9018bda7859fb3"
+  },
+  {
+    "sample_id": "8a1a899555db2186",
+    "split": "evaluation",
+    "source": {
+      "question": "Interstate 80 runs from San Francisco, California to which county of New Jersey?",
+      "knowledge": "Interstate 80 (I-80) is a part of the Interstate Highway System that runs from San Francisco, California, to Teaneck, New Jersey.Teaneck is a township in Bergen County, New Jersey, United States, and a suburb in the New York metropolitan area.",
+      "right_answer": "Bergen County"
+    },
+    "source_sha256": "3e16a70ebd7140adb201bddcc456064c59dcbba75916b3c69dec11e33d1f5eb9"
+  },
+  {
+    "sample_id": "ffeff6c4980bcc17",
+    "split": "evaluation",
+    "source": {
+      "question": "Who was born first, Stiv Bators, or Suggs?",
+      "knowledge": "Stiv Bators (born Steven John Bator; October 22, 1949 – June 4, 1990) was an American punk rock vocalist and guitarist from Girard, Ohio.Graham McPherson (born 13 January 1961), known by the stage name Suggs, is an English singer-songwriter, musician, radio personality and actor.",
+      "right_answer": "Stiv Bators"
+    },
+    "source_sha256": "9330dfdf8dd6fce79df6458047e58b0aaeead62fb49e4719b54be24de14eb331"
+  },
+  {
+    "sample_id": "aebd513a22497026",
+    "split": "evaluation",
+    "source": {
+      "question": "Rock Dog featured the voice of which actor who got his start on \"All That\"?",
+      "knowledge": "It features the voices of Luke Wilson, Eddie Izzard, J. K. Simmons, Lewis Black, Kenan Thompson, Mae Whitman, Jorge Garcia, Matt Dillon and Sam Elliott.Kenan Thompson ( born May 10, 1978) is an American actor and comedian. In his teenage years, he was an original cast member of Nickelodeon's sketch comedy series \"All That.\"",
+      "right_answer": "Kenan Thompson"
+    },
+    "source_sha256": "b1a065bc9778ad776a7fad6f8243e57262fe981b4674e88c8501a755d6a1c29e"
+  },
+  {
+    "sample_id": "a2ccccfd179ff2b7",
+    "split": "evaluation",
+    "source": {
+      "question": "who passed away first Perry N. Vekroff or Paul Cox ?",
+      "knowledge": "Perry N. Vekroff (3 June 1881 – 3 January 1937) was an American film director, screenwriter and actor of the silent era.Paulus Henrique Benedictus \"Paul\" Cox (16 April 194018 June 2016) was a Dutch-Australian filmmaker, who has been recognized as \"Australia's most prolific film auteur\".",
+      "right_answer": "Perry N. Vekroff"
+    },
+    "source_sha256": "fef28d10a95269bfdb3d538ae6ba00ced18efbd9ccf08857ca9dfb3df6ed4a34"
+  },
+  {
+    "sample_id": "34b09c20aa847a4b",
+    "split": "evaluation",
+    "source": {
+      "question": "Zooey Deschanel, who played in Bridge to Terabithia, also played in what Fox sitcom?",
+      "knowledge": "Bridge to Terabithia is a 2007 American drama film directed by Gábor Csupó and adapted for film by David L. Paterson and Jeff Stockwell. The film stars Josh Hutcherson, AnnaSophia Robb, Robert Patrick, Bailee Madison and Zooey Deschanel. Since 2011, she has played Jessica Day on the Fox sitcom \"New Girl\", for which she has received an Emmy Award nomination and three Golden Globe Award nominations.",
+      "right_answer": "New Girl"
+    },
+    "source_sha256": "4d80cad21ad8b165d630fd3e1227746fe0d03b8a0a3f92a34f3a605ba2d355cc"
+  },
+  {
+    "sample_id": "643bf7435eeb4d57",
+    "split": "evaluation",
+    "source": {
+      "question": "What 2001 book written by British author J. K. Rowling about the magical creatures in the Harry Potter universe, which are a colourful aspect of the fictional wizarding world?",
+      "knowledge": "Magical creatures are a colourful aspect of the fictional wizarding world contained in the \"Harry Potter\" series by J. K. Rowling. Rowling has also written \"Fantastic Beasts and Where to Find Them\", a guide to the magical beasts found in the series.Fantastic Beasts and Where to Find Them is a 2001 book written by British author J. K. Rowling (under the pen name of the fictitious author Newt Scamander) about the magical creatures in the \"Harry Potter\" universe.",
+      "right_answer": "Fantastic Beasts and Where to Find Them"
+    },
+    "source_sha256": "8f7b2530973ca5e955ed8df654401b93d2d845567ece9a012952ab28a1bd5950"
+  },
+  {
+    "sample_id": "d80dc04773a4a419",
+    "split": "evaluation",
+    "source": {
+      "question": "The Turn of the Screw includes the English actress who played Mary Crawley on what drama series?",
+      "knowledge": "The film's story is told in flashbacks during consultations between the institutionalised Ann (Michelle Dockery) and Dr Fisher (Dan Stevens). She is most widely known for her performance as Lady Mary Crawley in the ITV (UK) and PBS (U.S.) television period drama series \"Downton Abbey\" (2010–15), for which she was nominated for three consecutive Emmy Awards in the category for Outstanding Lead Actress In Drama Series, and a Golden Globe Award nomination.",
+      "right_answer": "Downton Abbey"
+    },
+    "source_sha256": "923e6ccfb0fc36758b4ff029478ba1248983fc43066d123179034f21f91433d6"
+  },
+  {
+    "sample_id": "bb50a2b92fdb3dc7",
+    "split": "evaluation",
+    "source": {
+      "question": "Which opera did this American composer and pianist whose Broadway show songs were included in The Passing Show of 1916 compose?",
+      "knowledge": "It included the first George Gershwin songs introduced in a Broadway show.George Jacob Gershwin ( ; September 26, 1898 July 11, 1937) was an American composer and pianist. Among his best-known works are the orchestral compositions \"Rhapsody in Blue\" (1924) and \"An American in Paris\" (1928) as well as the opera \"Porgy and Bess\" (1935).",
+      "right_answer": "Porgy and Bess"
+    },
+    "source_sha256": "54784596c2da7069ca3ce9280b3cb9721ec7645f902aeef38236b3c95bcbe5a5"
+  },
+  {
+    "sample_id": "164b07fde6a8db0e",
+    "split": "evaluation",
+    "source": {
+      "question": "Composer George Frideric Handel  played the glockenspiel and was influenced by what composers?",
+      "knowledge": "It was first used by George Frideric Handel in the oratorio \"Saul\" (1739). He was strongly influenced both by the great composers of the Italian Baroque and by the middle-German polyphonic choral tradition.",
+      "right_answer": "Italian Baroque"
+    },
+    "source_sha256": "7ae88237ae71b7e1fdee51714457b54908c21b1943449c20181a3f752b4dbf0d"
+  },
+  {
+    "sample_id": "af4881d08fe2d39a",
+    "split": "evaluation",
+    "source": {
+      "question": "Watchers is a film starring which actress?",
+      "knowledge": "Watchers is a 1988 science fiction horror film starring Corey Haim, Michael Ironside, Barbara Williams and Lala Sloatman. She is frequently billed by her first name only, and sometimes as Lala Zappa.",
+      "right_answer": "Lala Sloatman"
+    },
+    "source_sha256": "28ef8baf834d81566b02812c110c818812de9e3c145ba2e46f819ff9407db119"
+  },
+  {
+    "sample_id": "37b206b7f04cc863",
+    "split": "evaluation",
+    "source": {
+      "question": "The Irish Mob existing since the early 19th century is said to have murdered which Lebanese American bookmaker from South Boston?",
+      "knowledge": "Louis R. Litif (December 5, 1934 – May 11, 1982), also known as Nicholas Noonan and Louis Woodward, was a Lebanese American bookmaker from South Boston, Massachusetts. After running afoul of neighborhood Irish Mob boss Whitey Bulger, Litif was murdered in 1982.The Irish Mob is the oldest organized crime group in the United States, in existence since the early 19th century.",
+      "right_answer": "Louis R. Litif"
+    },
+    "source_sha256": "18eae9fb1e14a85ed1db26af2c6408672c721114e6af8bfbd2f5a42590cee625"
+  },
+  {
+    "sample_id": "62ebba10ca00b264",
+    "split": "evaluation",
+    "source": {
+      "question": "What forensic psychiatrist consulted on numbers cases including one for a contract killer associated with the DeCavalcante crime family?",
+      "knowledge": "Park Dietz (born 1948) is a forensic psychiatrist who has consulted or testified in many of the highest profile US criminal cases including Joel Rifkin, Arthur Shawcross, Jeffrey Dahmer, The Unabomber, Richard Kuklinski, the Beltway sniper attacks, and Jared Lee Loughner. He was associated with members of the American Mafia, namely the DeCavalcante crime family of Newark, New Jersey, and the Five Families of New York City.",
+      "right_answer": "Park Dietz"
+    },
+    "source_sha256": "c3de1a584f2ad70c70717b06e02a97f7396e33fa255fb5671d7f3114bd85ba2e"
+  },
+  {
+    "sample_id": "055efcb05f73bc4f",
+    "split": "evaluation",
+    "source": {
+      "question": "In how many states of the Member states of the Commonwealth of Nations is English either spoken as first or second language or at least widely used?",
+      "knowledge": "The use of the English language in most member countries of the Commonwealth of Nations was inherited from British colonisation. English is spoken as a first or second language in most of the Commonwealth. In a few countries, such as Cyprus and Malaysia, it does not have official status, but is widely used as a lingua franca. Mozambique is an exception – although English is widely spoken there, it is a former Portuguese colony which joined the Commonwealth in 1996.The Commonwealth of Nations is a voluntary association of 52 sovereign states.",
+      "right_answer": "52"
+    },
+    "source_sha256": "b67434c20a4cff495fc896ff36beef39767cd07dd3f04fe290180509cd4c19de"
+  },
+  {
+    "sample_id": "074d42aa937bd722",
+    "split": "evaluation",
+    "source": {
+      "question": "Rachel Crow has appeared on which Nickelodeon show hosted by Jeff Sutphen?",
+      "knowledge": "She's appeared on many TV shows, including \"BrainSurge\", \"Inside Edition\", \"Big Time Rush\", \"Figure It Out\" and \"The Wendy Williams Show\".BrainSurge is an American children's game show that aired on Nickelodeon and was hosted by Jeff Sutphen.",
+      "right_answer": "BrainSurge"
+    },
+    "source_sha256": "c4e3acf4c9e8a7dbc3a659580e0a198b9971ed673cba881058f9fa6d696ea787"
+  },
+  {
+    "sample_id": "5907f032dfc38935",
+    "split": "evaluation",
+    "source": {
+      "question": "Which superhero in the Marvel Comic, \"Runaway\" both possesses the Fistigons and has control over the Leapfrog?",
+      "knowledge": "After the Pride was destroyed by the Gibborim, control of the Leapfrog rested with Chase Stein and has since been used as the primary mode of transportation for the Runaways.Chase Stein (also known as Talkback), is a fictional character, a superhero in the Marvel Comics \"Runaways\". Chase shares a psychic and empathic link with deinonychus Old Lace, granting him the ability to command the dinosaur to do his bidding and also possesses the Fistigons, the world's most powerful gauntlets.",
+      "right_answer": "Chase Stein"
+    },
+    "source_sha256": "c01c442c46776ab63efe87d9dd99a05673bb323e13e359ad1abf0074a3b1ae6f"
+  },
+  {
+    "sample_id": "d11a3865493c4e31",
+    "split": "evaluation",
+    "source": {
+      "question": "Monopoly Junior and Codenames, are which specific forms of entertainment?",
+      "knowledge": "Monopoly Junior is a simplified version of the board game Monopoly, designed for young children.Codenames is a 2015 board game designed by Vlaada Chvátil.",
+      "right_answer": "board game"
+    },
+    "source_sha256": "026e4f12f5b666a3869f9bf1b426d30b8015e04e67503bb15c8643e48769bad2"
+  },
+  {
+    "sample_id": "0d5a6ce47b125f19",
+    "split": "evaluation",
+    "source": {
+      "question": "What American actor and comedian known for playing the role of Newman in Seinfeld, also stars in the series The Exes on TV Land?",
+      "knowledge": "The first season of the TV Land original sitcom \"The Exes\" premiered on November 30, 2011 and ended February 1, 2012. The series stars Donald Faison, Wayne Knight, Kristen Johnston, David Alan Basche and Kelly Stables.Wayne Elliot Knight (born August 7, 1955) is an American actor and comedian. He is known for playing Newman in the TV sitcom \"Seinfeld\" (1992–1998) and Officer Don Orville in \"3rd Rock from the Sun\" (1996–2001).",
+      "right_answer": "Wayne Knight"
+    },
+    "source_sha256": "f448421db2a489b4dbdfb05dd93f5d05a3182745002960f77f547b48a9a1bd7b"
+  },
+  {
+    "sample_id": "d9238bffe368cfb3",
+    "split": "evaluation",
+    "source": {
+      "question": "What is the name of the fourth-largest Korean-language wiki focused on amine and manga fandom?",
+      "knowledge": "Rigveda Wiki is a Korean Otaku wiki which started on March 1, 2007. As of July 17, 2013, it had more than 200,000 articles, making it the fourth-largest Korean-language wiki, following Korean Wikipedia, Korean Wiktionary and the Namu Wiki, forked of Rigveda Wiki.Otaku (おたく/オタク ) is a Japanese term for people with obsessive interests, commonly the anime and manga fandom.",
+      "right_answer": "Rigveda Wiki"
+    },
+    "source_sha256": "ed0aa2f8c1380200a37b0ac380d7241760301b152e9f6b35e081abe169b153f9"
+  },
+  {
+    "sample_id": "e3b48c14b6d8286a",
+    "split": "evaluation",
+    "source": {
+      "question": "Are Boy George and Craig Nicholls both from the same country?",
+      "knowledge": "Craig Robert Nicholls (born 31 August 1977) is an Australian musician, best known as the lead singer, songwriter, and guitarist of the Australian alternative rock band The Vines, of which he is the only mainstay member.Boy George (born George Alan O'Dowd; 14 June 1961) is an English singer, songwriter, DJ, fashion designer and photographer.",
+      "right_answer": "no"
+    },
+    "source_sha256": "c53747d40e2f5e0998a49f539b5558b0a29ce49569c690bfd189a7a03e687f77"
+  },
+  {
+    "sample_id": "8c6a4d2bb5449be6",
+    "split": "evaluation",
+    "source": {
+      "question": "What film was Nicole Beharie in that had a rating of NC-17?",
+      "knowledge": "She is known for her roles in the drama film \"American Violet\" (2008), the drama \"Shame\" (2011), and the biographical sports drama \"42\" (2013). The film's explicit scenes reflecting the protagonist's sexual addiction resulted in a rating of NC-17 in the United States.",
+      "right_answer": "Shame"
+    },
+    "source_sha256": "5cd37c6410dff0fcd6425a145f5e0f591ee0daa4d4ecbb7a197eda374510f59c"
+  },
+  {
+    "sample_id": "8d74bbed3549049b",
+    "split": "evaluation",
+    "source": {
+      "question": "How do you say the month of March in Anglo-Saxon?",
+      "knowledge": "Hrēðmōnaþ (modern English: \"Rheda’s month\") was the Anglo-Saxon name for the month of March.In Anglo-Saxon paganism, Rheda (Latinized from Old English \"*Hrêðe\" or \"*Hrêða\", possibly meaning \"the famous\" or \"the victorious\") is a goddess connected with the month '\"Rhedmonth\"' (from Old English \"*Hrēþmōnaþ\").",
+      "right_answer": "Rheda"
+    },
+    "source_sha256": "82675b95b1d86bc1dac605a13728e7432748686a44469a41bc249bea539fbfba"
+  },
+  {
+    "sample_id": "a558c1599c79b9cf",
+    "split": "evaluation",
+    "source": {
+      "question": "Anthony D. \"Tony\" Saletan is an American folk singer and educator, who is responsible for the modern rediscovery of two of the genre's best-known songs, one being which spiritual song first recorded in the 1920s, and it became a standard campfire song in Scouting and summer camps and enjoyed broader popularity during the folk revival of the 1950s and 1960s?",
+      "knowledge": "Anthony D. \"Tony\" Saletan is an American folk singer and educator, who is responsible for the modern rediscovery of two of the genre's best-known songs, \"Michael Row the Boat Ashore\" and \"Kumbaya.\"Kum ba yah (\"\"Come by Here\"\") is a spiritual song first recorded in the 1920s.",
+      "right_answer": "Kum ba yah"
+    },
+    "source_sha256": "45c62938f11c735c92e4b8d3f075cddb57e4b413a9e64f0267f0ecced26337f3"
+  },
+  {
+    "sample_id": "38eca0a88b09c9a7",
+    "split": "evaluation",
+    "source": {
+      "question": "Where was the leader of a military raid in April 1862 in northern Georgia from?",
+      "knowledge": "James J. Andrews (c. 1829 – June 7, 1862) was a Kentucky civilian who worked for the Union Army during the early years of the American Civil War.The Great Locomotive Chase or Andrews' Raid was a military raid that occurred on April 12, 1862, in northern Georgia during the American Civil War. Volunteers from the Union Army, led by civilian scout James J. Andrews, commandeered a train and took it northward toward Chattanooga, Tennessee, doing as much damage as possible to the vital Western and Atlantic Railroad (W&A) line from Atlanta to Chattanooga as they went.",
+      "right_answer": "Kentucky"
+    },
+    "source_sha256": "c45f183e95b811367b9fd9f0ab85ccbecf3eb2fb4e4b5589ee3f6b3291abfdad"
+  },
+  {
+    "sample_id": "8c8909ac1175ce70",
+    "split": "evaluation",
+    "source": {
+      "question": "What is the nationality of the man who defeated Javier Mora in Max Schmeling Halle, Prenzlauer Berg, Berlin, Germany?",
+      "knowledge": "He was defeated by Alexander Povetkin by a 5-round TKO, in Max Schmeling Halle, Prenzlauer Berg, Berlin, Germany.Alexander Vladimirovich \"Sasha\" Povetkin ( ; Russian: Алекса́ндр Влади́мирович Пове́ткин ; born 2 September 1979) is a Russian professional boxer who held the WBA (Regular) heavyweight title from 2011 to 2013.",
+      "right_answer": "Russian"
+    },
+    "source_sha256": "340fcc01b04827db05924ccf301bdf3c409f146e5dabff7cb1ac0ad45366000d"
+  },
+  {
+    "sample_id": "3828d0a66e5b2422",
+    "split": "evaluation",
+    "source": {
+      "question": "Are Larry Gagosian and Steve Dildarian both art dealers?",
+      "knowledge": "Lawrence Gilbert \"Larry\" Gagosian (born April 19, 1945) is an Armenian American art dealer who owns the Gagosian Gallery chain of art galleries.Steve Dildarian (born November 3, 1969) is an American former advertising copywriter who is the creator, writer, producer and voice of Tim in the HBO animated television series \"The Life & Times of Tim\" (2008-2012).",
+      "right_answer": "no"
+    },
+    "source_sha256": "c1dd52dc35165725e63cd993883415e2c25105b132dee2a04fb3cd2294e8a61c"
+  },
+  {
+    "sample_id": "19c302600f8cab1c",
+    "split": "evaluation",
+    "source": {
+      "question": "Christmas Town starred the Canadian actress who also had a starring role in what cult film?",
+      "knowledge": "Christmas Town is a 2008 direct-to-video film starring Nicole de Boer and Patrick Muldoon.Nicole de Boer (born December 20, 1970) is a Canadian actress. She is known for starring in the cult film \"Cube\" as Joan Leaven, playing Ezri Dax on the final season of \"\" (1998–1999), and as Sarah Bannerman on the series \"The Dead Zone \"(2002–2007).",
+      "right_answer": "Cube"
+    },
+    "source_sha256": "b5bc0fb77e8434e6f7e03b41458eb7c228b34b4f6f4d77841e05e9f1481caf9c"
+  },
+  {
+    "sample_id": "a2e61f27dec06ae6",
+    "split": "evaluation",
+    "source": {
+      "question": "How long is the course of the road race that Bob Hodges won in 1979 ?",
+      "knowledge": "He has also won the Mount Washington Road Race (1976–1980, 1985 and 1987), the Bay to Breakers Road Race in San Francisco (1979), and the Beppu-Ōita Marathon in Japan (1982). The complete course is 7.46 mi long.",
+      "right_answer": "7.46 mi long."
+    },
+    "source_sha256": "0e82b1157410cec42460cafd9bad0ccf84c07890108952a454b02b690c08ebb7"
+  },
+  {
+    "sample_id": "a458540fb5297422",
+    "split": "evaluation",
+    "source": {
+      "question": "Who starred in Dubious Battle and was born October 12, 1992?",
+      "knowledge": "The film features an ensemble cast, consisting of Franco, Nat Wolff, Josh Hutcherson, Selena Gomez, Vincent D'Onofrio, Analeigh Tipton, Zach Braff, Bryan Cranston, Ed Harris, and Robert Duvall.Joshua Ryan \"Josh\" Hutcherson (born October 12, 1992) is an American actor.",
+      "right_answer": "Josh Hutcherson"
+    },
+    "source_sha256": "131369b4b50b811d1e1a1b789f25795986ddbf7d5a825496b9d70eb9db34e02a"
+  },
+  {
+    "sample_id": "589434b8b682775f",
+    "split": "evaluation",
+    "source": {
+      "question": "Who was born first Kevin Reynolds or Jan Bucquoy?",
+      "knowledge": "Kevin Hal Reynolds (born January 17, 1952) is an American film director and screenwriter.Jan Bucquoy (] ; born 16 November 1945) is an anarchist and author-filmmaker born in Harelbeke, Belgium who started as a theatre practitioner and who worked as a cartoon-scriptwriter.",
+      "right_answer": "Jan Bucquoy"
+    },
+    "source_sha256": "cf05b76c6f64cf7262849d267f45231c6ccad774c884aa51d956a596ed880ee1"
+  },
+  {
+    "sample_id": "9498defcc0026ad2",
+    "split": "evaluation",
+    "source": {
+      "question": "Are Jackson Hole Airport and Yeager Airport both public?",
+      "knowledge": "Jackson Hole Airport (IATA: JAC, ICAO: KJAC, FAA LID: JAC) is a United States public airport located seven miles (11 km) north of Jackson, in Teton County, Wyoming.Yeager Airport (IATA: CRW, ICAO: KCRW, FAA LID: CRW) is a public airport three miles (6 km) east of downtown Charleston, in Kanawha County, West Virginia, United States.",
+      "right_answer": "yes"
+    },
+    "source_sha256": "e9705ae304a85aefb59e75d1a2b81bcb4dd9929db830a712dfa573b0acb31eed"
+  },
+  {
+    "sample_id": "7123ba126f4c3aa1",
+    "split": "evaluation",
+    "source": {
+      "question": "What is the birthdate of this American director, screenwriter, and producer, who reunited with Tom Cross on the romantic comedy \"La La Land\"?",
+      "knowledge": "Tom Cross is an American television and film editor. He has cited \"The Wild Bunch\" (1969) and \"The French Connection\" (1971) as influences on the editing of this film, and reunited with writer/director Damien Chazelle on the romantic comedy \"La La Land\" (2016).Damien Sayre Chazelle ( ; born January 19, 1985) is an American director, screenwriter and producer.",
+      "right_answer": "January 19, 1985"
+    },
+    "source_sha256": "b4ad4706cda9a34376b0c6df46d63f60b38b886fa270e3ea420f6ce0a4a70b1d"
+  },
+  {
+    "sample_id": "be1a359dab2bf461",
+    "split": "evaluation",
+    "source": {
+      "question": "\"Robbers\" is a song by the eponymous English rock band The 1975, released as the sixth single, on which date?",
+      "knowledge": "\"Robbers\" is a song by English rock band The 1975, released as the sixth single from their self-titled debut on 26 May 2014The 1975 is the eponymous debut album by English rock band The 1975.",
+      "right_answer": "26 May 2014"
+    },
+    "source_sha256": "b2f94aa9e3946a23ec7033fa1a94ade5d8dc403a76ff56d7ffe4d31eaaf4219b"
+  },
+  {
+    "sample_id": "3a378e0e6145e74b",
+    "split": "evaluation",
+    "source": {
+      "question": "While Gordon Robert \"Gordie\" Tapp was known as as a  radio and television presenter, comedian and a CBS broadcaster, the actress who played his wife on the show \"Hee Haw\" was also a?",
+      "knowledge": "Veronica Loretta \"Roni\" Stoneman (born May 5, 1938) is a noted bluegrass banjo player and former member of the television variety show \"Hee Haw\" gang having played the role of Ida Lee Nagger, the ironing, nagging wife of Laverne Nagger (Gordie Tapp).Gordon Robert \"Gordie\" Tapp, CM, O.Ont (June 4, 1922 – December 18, 2016), born in London, Ontario, was a Canadian entertainer, best known as a radio and television presenter, comedian and a CBS broadcaster.",
+      "right_answer": "bluegrass banjo player"
+    },
+    "source_sha256": "05f3f28750e5060ac94cf4205b56ff98ee6cda995d91429fce74290854f8a4cd"
+  },
+  {
+    "sample_id": "15f7afaee963285b",
+    "split": "evaluation",
+    "source": {
+      "question": "Which one is a genus of perennial herbaceous, Gladiolus or Chelone?",
+      "knowledge": "Gladiolus (from Latin, the diminutive of \"gladius\", a sword,) is a genus of perennial cormous flowering plants in the iris family (Iridaceae).Chelone is a genus of four species of perennial herbaceous plants native to eastern North America.",
+      "right_answer": "Chelone"
+    },
+    "source_sha256": "1b7fdecafac4ebcb6f7a2d31fa6e78f0a6ea6a5b8c128480614b7ddfdef82cc6"
+  },
+  {
+    "sample_id": "c67871e4acc9d88c",
+    "split": "evaluation",
+    "source": {
+      "question": "Wayne Knight plays Mr. Blik in a tv series created by who?",
+      "knowledge": "His other roles include Dennis Nedry in \"Jurassic Park\", Stan Podolak in \"Space Jam\" (1996), Al McWhiggin in \"Toy Story 2\" (1999), Tantor in \"Tarzan\" (1999), the Giraffe in \"Bee Movie\" (2007), Zack Mallozzi in \"Rat Race\" (2001), Dojo in Xiaolin Showdown (2003–2006), Mr. Blik in \"Catscratch\" (2005–2007), Microchip in \"\" (2008) and Haskell Lutz in \"The Exes\" (2011–2015).Catscratch is an American animated television series created by Doug TenNapel (also known for creating \"Earthworm Jim\").",
+      "right_answer": "Doug TenNapel"
+    },
+    "source_sha256": "bb0107f16b701b503de4d6a7117e3cff2c5e99d7d521a7e56c02b126448c1942"
+  },
+  {
+    "sample_id": "16f6ef05ad2613fa",
+    "split": "evaluation",
+    "source": {
+      "question": "In between Ludwig van Beethoven and Heinrich Marschner who was the most important composer of German opera between Weber and Wagner?",
+      "knowledge": "Ludwig van Beethoven ( , ; ] ; baptised 17 December 177026 March 1827) was a German composer and pianist.Heinrich August Marschner (16 August 1795 – 14 December 1861) was the most important composer of German opera between Weber and Wagner.",
+      "right_answer": "Heinrich August Marschner"
+    },
+    "source_sha256": "9609bc9bd6e382cf3c5e1a14a4e20c5244309e5874b64771284f84d1cefc8a05"
+  },
+  {
+    "sample_id": "7c28299f6620a1ff",
+    "split": "evaluation",
+    "source": {
+      "question": "Robert Johann Maria König was born in a city approximately 30 km south of what?",
+      "knowledge": "Robert Johann Maria König (11 April 1885, Linz – 9 July 1979, Munich) was an Austrian mathematician.Linz ( ; ] ; Czech: \"Linec\" ) is the third-largest city of Austria and capital of the state of Upper Austria (German: \"Oberösterreich\" ). It is in the north centre of Austria, approximately 30 km south of the Czech border, on both sides of the River Danube.",
+      "right_answer": "Czech border"
+    },
+    "source_sha256": "c07ca991bc982f973af296addc0589460986346d21e4207d71d836b4309f0717"
+  },
+  {
+    "sample_id": "afe5ed9af37ab96d",
+    "split": "evaluation",
+    "source": {
+      "question": "What does Sam Weir and Gold Coast, Queensland have in common?",
+      "knowledge": "Sam \"Sammy\" Weir (born 1990 in the Gold Coast, Australia) is an Australian endurance athlete.The Gold Coast is a coastal area in the Australian state of Queensland, approximately 66 km south-southeast of the state capital Brisbane and immediately north of the border with New South Wales.",
+      "right_answer": "Australia"
+    },
+    "source_sha256": "71586b3ae61665c9707541e4b21dec824019cd189c21ba9503dabd2baa2e59b4"
+  },
+  {
+    "sample_id": "762ef63c09e5cb4d",
+    "split": "evaluation",
+    "source": {
+      "question": "What Teaneck, NJ headquartered the multinational corporation featuring Betsy Atkins on the Board of Directors?",
+      "knowledge": "Atkins is on the Board of Directors of Cognizant, HD Supply, SL Green Realty Corp, Schneider Electric and Volvo Car Corporation. It is headquartered in Teaneck, New Jersey, United States.",
+      "right_answer": "Cognizant"
+    },
+    "source_sha256": "150dc18bf71446c62e167cfaf651fde5975b13ee5ff24eb3e04c00c420b65a94"
+  },
+  {
+    "sample_id": "0c11cfa7571ac727",
+    "split": "evaluation",
+    "source": {
+      "question": "Name the mother of Edward Stafford, 4th Baron Stafford, who was the daughter of the English nobleman and politician Edward Stanley, 3rd Earl of Derby?",
+      "knowledge": "Edward Stafford, 4th Baron Stafford (1572 – 16 September 1625) was the son of Edward Stafford, 3rd Baron Stafford and Mary Stanley, daughter of Edward Stanley, 3rd Earl of Derby and Dorothy Howard.Edward Stanley, 3rd Earl of Derby KG (c. 10 May 1509 – 24 October 1572) was an English nobleman and politician.",
+      "right_answer": "Mary Stanley"
+    },
+    "source_sha256": "db03a587b41ca67754958ed76633ef25556106103f61419bc0cd699c1236d4de"
+  },
+  {
+    "sample_id": "ad0df61b5dd7c88c",
+    "split": "evaluation",
+    "source": {
+      "question": "Are Hal Ashby and Ciro Ippolito of the same nationality?",
+      "knowledge": "Hal Ashby (September 2, 1929 – December 27, 1988) was an American film director and editor associated with the New Hollywood wave of filmmaking.Ciro Ippolito (born Naples, Italy, 27 January 1947) is an Italian film director and producer.",
+      "right_answer": "no"
+    },
+    "source_sha256": "4d832f5ee9c5a7f937bdafa3f8b845558fb06622315a25c351a7dfb36c9d3a41"
+  },
+  {
+    "sample_id": "d4042ac92afd15ae",
+    "split": "evaluation",
+    "source": {
+      "question": "Which song is sampled in \"Sugar\", a song from the 2015 album of the same name by Robin Schulz?",
+      "knowledge": "Sugar is the second studio album by German DJ and record producer Robin Schulz, it was released on 25 September 2015. The album includes the singles \"Headlights\", \"Sugar\", \"Show Me Love\", and \"Heatwave\".\"Sugar\" is a song by German DJ and record producer Robin Schulz. The song was released in Germany on 17 July 2015, and samples Baby Bash's 2003 single \"Suga Suga\".",
+      "right_answer": "Suga Suga"
+    },
+    "source_sha256": "7359958f147c9d639a9a7d178c821020a5b826b773b8bf15e547f39db56257cf"
+  },
+  {
+    "sample_id": "9523b6a85eee259a",
+    "split": "evaluation",
+    "source": {
+      "question": "The Burlington Mall is a large, two-story, indoor shopping mall complex located off Route 3 and Route 128 in Burlington, Massachusetts, the mall is one of many shopping venues in the Middlesex County area, including which 115 store shopping mall located along US Route 1 (Broadway) between Main Street and Essex Street in Saugus, Massachusetts?",
+      "knowledge": "The mall is one of many shopping venues in the Middlesex County area, including the Shops at Billerica, Square One Mall, Acton Plaza, and Middlesex Commons.Square One Mall (formerly the New England Shopping Center) is a 115 store shopping mall located along US Route 1 (Broadway) between Main Street and Essex Street in Saugus, Massachusetts.",
+      "right_answer": "Square One Mall"
+    },
+    "source_sha256": "3df29fd742fa0db7ed433de327380e0e5de59db57eb505ea54e3999474abe9ab"
+  },
+  {
+    "sample_id": "28a69fa5c2e7f946",
+    "split": "evaluation",
+    "source": {
+      "question": "Matthew Perry's co-star in the film \"Almost Heroes\" appeared in what NBC comedy show?",
+      "knowledge": "Almost Heroes is a 1998 American adventure comedy film directed by Christopher Guest, narrated by Guest's friend and frequent collaborator Harry Shearer, and starring Chris Farley and Matthew Perry. Farley was known for his loud, energetic comedic style, and was a member of Chicago's Second City Theatre and later a cast member of the NBC sketch comedy show \"Saturday Night Live\" between 1990 and 1995.",
+      "right_answer": "Saturday Night Live"
+    },
+    "source_sha256": "2f17ce31b12fac48b2a21ac6f589b670510bc1eaca7086b92c1c7f5ebd020cd6"
+  },
+  {
+    "sample_id": "da2f0db7c3f2968c",
+    "split": "evaluation",
+    "source": {
+      "question": "Which is the larger dog breed, Lakeland Terrier or Schapendoes?",
+      "knowledge": "The Lakeland Terrier is a dog breed, which takes its name from its place of origin, the Lake District in England. The dog is a small to mid-size member of the Terrier family.The Schapendoes (] ) or Dutch Sheepdog, is a breed of dog originating in the Netherlands. The Schapendoes was originally a herding dog and general farm dog, but today also participates in dog sports such as agility and flyball.",
+      "right_answer": "Schapendoes"
+    },
+    "source_sha256": "d318c80499b485472d34d51322eb62197284c870f6d7bb00ab2e338a38eca1ec"
+  },
+  {
+    "sample_id": "144fd3df37b70c65",
+    "split": "evaluation",
+    "source": {
+      "question": "What year was the romantic comedy filmed starring a Primetime Emmy Award winner for her work on the \"The Handmaid's Tale\"?",
+      "knowledge": "The Good Guy is a 2009 romantic comedy film directed by Julio DePietro starring Alexis Bledel, Scott Porter, and Bryan Greenberg. She won a Primetime Emmy Award for her work on the Hulu drama series \"The Handmaid's Tale\".",
+      "right_answer": "2009"
+    },
+    "source_sha256": "24a690a961523f5dc048294f37d8333a5d9bf056541c59a29d5a50b16102b2ae"
+  },
+  {
+    "sample_id": "aa8fcfabec07c369",
+    "split": "evaluation",
+    "source": {
+      "question": "WWF The Music, Vol. 5 is a soundtrack album whose songs were composed and performed by an American music composer best known for his work with WWE (formerly WWF) from what year onward?",
+      "knowledge": "WWF The Music, Vol. 5 is a soundtrack album by WWE (then known as the World Wrestling Federation, or WWF). Released on February 20, 2001 by Koch Records, it features entrance theme music of various WWE superstars, all of which were composed and performed by Jim Johnston (with the exception of one song, performed by Motörhead).James Alan \"Jim\" Johnston (born 1959) is an American music composer best known for his work with WWE (formerly WWF) from 1985 onwards.",
+      "right_answer": "1985"
+    },
+    "source_sha256": "ec4e1e9c90c6360c693a4799bae825e7ccabb3c216f456d6a4ec62597a547dac"
+  },
+  {
+    "sample_id": "1c3e7fd78faa3444",
+    "split": "evaluation",
+    "source": {
+      "question": "Alisha Daniels is a fictional character from the television show Misfits which airs on which British public-service television broadcaster?",
+      "knowledge": "Alisha Daniels is a fictional character from the British Channel 4 science fiction comedy-drama \"Misfits\", portrayed by Antonia Thomas.Channel 4 is a British public-service television broadcaster that began transmission on 2 November 1982.",
+      "right_answer": "Channel 4"
+    },
+    "source_sha256": "97557da4d0f1ec862a372b21c6bce82b7b93955c656e4aa159843517a08879ab"
+  },
+  {
+    "sample_id": "d634ab831c504432",
+    "split": "evaluation",
+    "source": {
+      "question": "Legend is a science fiction Western television show starring an American , director, producer, writer, singer, musician, voice artist and stand-up what?",
+      "knowledge": "Legend is a science fiction Western television show that ran on UPN from April 18, 1995 until August 22, 1995, with one final re-airing of the pilot on July 3, 1996. It starred Richard Dean Anderson and John de Lancie.Jonathan de Lancie (born March 20, 1948) is an American stand-up comedian, actor, director, producer, writer, singer, musician, and voice artist, best known for his role as Q in \"\" (1987–94), \"\" (1993–99), and \"\" (1995–2001) and the voice of in \"\" (2010–present).",
+      "right_answer": "comedian"
+    },
+    "source_sha256": "e7f18f38c430cc6b561d79203c419314581bf66441f0b4e7aa83cc7a9b512f85"
+  },
+  {
+    "sample_id": "7209a309d0944a17",
+    "split": "evaluation",
+    "source": {
+      "question": "Which Australian mammalogist wrote Chasing Kangaroos",
+      "knowledge": "Chasing Kangaroos: A Continent, a Scientist, and a Search for the World's Most Extraordinary Creature, is a 2007 book (ISBN  ) by Professor Tim Flannery.Timothy Fridtjof \"Tim\" Flannery (born 28 January 1956) is an Australian mammalogist, palaeontologist, environmentalist and global warming activist.",
+      "right_answer": "Timothy Fridtjof"
+    },
+    "source_sha256": "d311095e6614f23db78fa64e4c92458917d7ec2600834deea03b8865ba8d46ec"
+  },
+  {
+    "sample_id": "a7119372f465ebc9",
+    "split": "evaluation",
+    "source": {
+      "question": "Santuario Alta Vista is a certain area located in one of how many Mexican states?",
+      "knowledge": "Santuario Alta Vista refers to a specific area located just outside the very small village of Alta Vista located north of Puerto Vallarta and west of Compostela and just south of Las Varas in the Mexican state of Nayarit.Nayarit (] ), officially the Free and Sovereign State of Nayarit (Spanish: \"Estado Libre y Soberano de Nayarit\" ), is one of the 31 states which, with the Federal District, make up the 32 federal entities of Mexico.",
+      "right_answer": "31 states"
+    },
+    "source_sha256": "6ff604b7b15c1b008a1c77e553d937325632a0e1e536ae0e77925c491af3b3ad"
+  },
+  {
+    "sample_id": "af7c4d5f30a45c7b",
+    "split": "evaluation",
+    "source": {
+      "question": "Both Arthur C. Clarke and John Richardson are noted literary figures, the first as a science fiction author and the second as a reviewer for which publication?",
+      "knowledge": "Sir Arthur Charles Clarke, CBE, FRAS (16 December 1917 – 19 March 2008) was a British science fiction writer, science writer and futurist, inventor, undersea explorer, and television series host.Sir John Patrick Richardson, KBE, FBA (born 6 February 1924) is a British art historian and Picasso biographer. Richardson has also worked as an industrial designer and as a reviewer for \"The New Observer\".",
+      "right_answer": "The New Observer"
+    },
+    "source_sha256": "3e9f16b669442a2908f4f7d8a7b3e55bf75677a0ab6b8104570b398272bb0ebd"
+  },
+  {
+    "sample_id": "0fc17fd5ca70f1d4",
+    "split": "evaluation",
+    "source": {
+      "question": "are Leckie Mine and Giant Mine located in the same town",
+      "knowledge": "Leckie Mine, also known as Penrose Mine and Little Dan Mine, is an abandoned gold producing underground mine in Northeastern Ontario, Canada, located on the eastern shore of Arsenic Lake 4 km north of the town of Temagami.The Giant Mine was a gold mine located on the Ingraham Trail, 5 km north of Yellowknife, Northwest Territories.",
+      "right_answer": "no"
+    },
+    "source_sha256": "69c7a3e40a70ed6bc58aff7db6276315eb001429cfb758efd437429fae97294d"
+  },
+  {
+    "sample_id": "6282bf78251c8e18",
+    "split": "evaluation",
+    "source": {
+      "question": "Were Michael Jackson and Joe Strummer the same nationality?",
+      "knowledge": "Michael Joseph Jackson (August 29, 1958 – June 25, 2009) was an American singer, songwriter, and dancer.John Graham Mellor (21 August 1952 – 22 December 2002), known by his stage name Joe Strummer, was an English musician, singer, actor and songwriter who was the co-founder, lyricist, rhythm guitarist and lead vocalist of the Clash, a punk rock band formed in 1976 as part of the original wave of British punk.",
+      "right_answer": "no"
+    },
+    "source_sha256": "2e07410bb2d8855b70e0edc7bd9d1cb786b0f7edfdcaa860b5d0c096104d4481"
+  },
+  {
+    "sample_id": "887c91f75f00fe5c",
+    "split": "evaluation",
+    "source": {
+      "question": "Bogjurgan Hill is part of a region that includes which 14th-century towerhouse?",
+      "knowledge": "Historical features in this region of Kincardineshire include Fetteresso Castle, Drumtochty Castle and Muchalls Castle.Fetteresso Castle is a 14th-century towerhouse, rebuilt in 1761 as a Scottish gothic style Palladian manor, with clear evidence of prehistoric use of the site.",
+      "right_answer": "Fetteresso Castle"
+    },
+    "source_sha256": "d6d5e41ef92640b3a02b649afe943fea5ffeb814818cc8a643653e5498962652"
+  },
+  {
+    "sample_id": "8e13dbfc76030fc9",
+    "split": "evaluation",
+    "source": {
+      "question": "In what year did the co-founder of the RedState group blog launch his english-language online magazine?",
+      "knowledge": "The site was co-founded by Ben Domenech and Sean Davis and launched in September 2013. He also co-founded the RedState group blog.",
+      "right_answer": "2013"
+    },
+    "source_sha256": "85ace0abc0fb50fb1267f6730b128df86dd3dae86be44b333c97d4d34b97fdfb"
+  },
+  {
+    "sample_id": "435579e7e023224a",
+    "split": "evaluation",
+    "source": {
+      "question": "Which is farther south, Palm Beach International Airport or Fairbanks International Airport?",
+      "knowledge": "Palm Beach International Airport (IATA: PBI, ICAO: KPBI, FAA LID: PBI) is a public airport three miles west of Palm Beach, Florida, in West Palm Beach.Fairbanks International Airport (IATA: FAI, ICAO: PAFA, FAA LID: FAI) is a state-owned public-use airport located three miles (5 km) southwest of the central business district of Fairbanks, a city in the Fairbanks North Star Borough of the United States state of Alaska.",
+      "right_answer": "Palm Beach International Airport"
+    },
+    "source_sha256": "91a89f8f9e5d00a8733f375b77ba3bddb0f92c00cecb3c82fe6a01540177465c"
+  },
+  {
+    "sample_id": "7a6ad8f9a4234693",
+    "split": "evaluation",
+    "source": {
+      "question": "Who are the creators of the American medical drama television series for which Shelley Meals is a Co-Executive Producer?",
+      "knowledge": "She is currently a Co-Executive Producer on \"Chicago Med\".Chicago Med is an American medical drama television series created by Dick Wolf and Matt Olmstead, and is the third installment of Dick Wolf’s \"Chicago\" franchise.",
+      "right_answer": "Dick Wolf and Matt Olmstead"
+    },
+    "source_sha256": "0df309b89cc01efb6e323184ea3537f63a4ca24336dbccefbb98ae622a3f49c0"
+  },
+  {
+    "sample_id": "4bbede48d595d176",
+    "split": "evaluation",
+    "source": {
+      "question": "What actor from \"Chronicle\" also stars in a 2015 British-American biographical adventure film directed by Baltasar Kormákur?",
+      "knowledge": "He is best known for his role as Doug Stamper in \"House of Cards\", as well as for roles in films such as \"Changeling\", \"Dawn of the Dead\", \"The Adjustment Bureau\", \"Chronicle\", \"Now You See Me\", and \"Everest\".Everest is a 2015 British-American biographical adventure film directed and co-produced by Baltasar Kormákur, co-produced by Tim Bevan, Eric Fellner, Nicky Kentish Barnes, Tyler Thompson and Brian Oliver and written by William Nicholson and Simon Beaufoy, adapted from Beck Weathers' memoir \"Left for Dead: My Journey Home from Everest\" (2000). It stars an ensemble cast of Jason Clarke, Josh Brolin, John Hawkes, Robin Wright, Michael Kelly, Sam Worthington, Keira Knightley, Emily Watson, and Jake Gyllenhaal.",
+      "right_answer": "Michael Kelly"
+    },
+    "source_sha256": "1320a2ccd338c8aa3d857fd356cbedecd801ac8002a3a2b9c480fe28b470a71e"
+  },
+  {
+    "sample_id": "b35cb7a156661ffc",
+    "split": "evaluation",
+    "source": {
+      "question": "What did the wife of the 15th Mughal Emperor serve as?",
+      "knowledge": "She was an administrator and served as de facto regent of India from 1748 to 1754. He succeeded his father to the throne as the 15th Mughal Emperor in 1748 at the age of 22.",
+      "right_answer": "de facto regent of India"
+    },
+    "source_sha256": "ead007b1871019664cdd8ab07e01de8e85ae8986b934cdbc2f327a6e05ec4515"
+  },
+  {
+    "sample_id": "17bf89798a071aea",
+    "split": "evaluation",
+    "source": {
+      "question": "What connection does the private liberal arts college known for its distinctive curriculum centered on reading and discussing the Great Books of Western Civilization have to] EnVISIONing Annapolis?",
+      "knowledge": "Important contributors and co-sponsors include the University of Maryland, Annapolis Charter 300, and St. Johns College.St. John's College is a private liberal arts college known for its distinctive curriculum centered on reading and discussing the Great Books of Western Civilization.",
+      "right_answer": "Important contributors and co-sponsors"
+    },
+    "source_sha256": "1e6996f9225f986c592892af305239cd36fbba8333abe1ccd72de1e4725a1fa2"
+  },
+  {
+    "sample_id": "6b44cc8cac53864e",
+    "split": "evaluation",
+    "source": {
+      "question": "What city does Bundestag and Reichstag building have in common?",
+      "knowledge": "Bundestag is a Berlin U-Bahn station located on the U55 .The Reichstag (German: \"Reichstagsgebäude\" ] ; officially: \"Deutscher Bundestag - Plenarbereich Reichstagsgebäude\" ] ) is a historic edifice in Berlin, Germany, constructed to house the Imperial Diet (German: \"Reichstag\"), of the German Empire.",
+      "right_answer": "Berlin"
+    },
+    "source_sha256": "71f765ec92a75fc6843509cdb71b745ce3b25b8ee4571f7ff67b780db9b4196c"
+  },
+  {
+    "sample_id": "18ee749d9218794f",
+    "split": "evaluation",
+    "source": {
+      "question": "How many spectators does the stadium that hosts a football team founded in 1927 hold?",
+      "knowledge": "It has a capacity of 6,900 spectators and opened in 1950. Founded on 3 May 1927 it plays in Segunda División B – Group 2, holding home matches at \"Estadio Municipal de Anduva\".",
+      "right_answer": "6,900"
+    },
+    "source_sha256": "440c7320e3df74a552c42a3143c1f6fa88644ec890f0fc75dd2f36dc20f08993"
+  },
+  {
+    "sample_id": "cf54f277148fd1bd",
+    "split": "evaluation",
+    "source": {
+      "question": "The American who owned Taprobane Island died in what year?",
+      "knowledge": "The islet passed on to the American author and composer Paul Bowles and then the Sri Lankan born former UN Chief Prosecutor Sir Desmond Lorenz de Silva before it came to the ownership of the Australian businessman Geoffrey Dobbs.Paul Frederic Bowles ( ; December 30, 1910November 18, 1999) was an American expatriate composer, author, and translator.",
+      "right_answer": "1999"
+    },
+    "source_sha256": "08d840ee583eceaf9823de832f4640aba47de1215a8c7d4c9ae32cdcc8a2981f"
+  },
+  {
+    "sample_id": "426bbd979c357110",
+    "split": "evaluation",
+    "source": {
+      "question": "What town does Bucklow and Trafford have in common?",
+      "knowledge": "Bucklow was an electoral ward of Trafford covering the town of Partington and the village of Carrington. With an estimated population of about 233,300 in 2015, it covers 41 sqmi and includes the towns of Altrincham, Partington, Sale, Stretford and Urmston.",
+      "right_answer": "Partington"
+    },
+    "source_sha256": "60e277cb738b3706652f7188982c38e2295c3b650e3e1f05aed1d95de59c9153"
+  },
+  {
+    "sample_id": "f79873b3a44aa681",
+    "split": "evaluation",
+    "source": {
+      "question": "How many weeks did the lead single from Culture Beat's second studio album spend at number one on the \"RPM\" Dance chart in Canada?",
+      "knowledge": "Serenity is the second studio album by German Eurodance band Culture Beat, released in 1993. It also spent ten weeks at number one on the \"RPM\" Dance chart in Canada.",
+      "right_answer": "ten weeks"
+    },
+    "source_sha256": "805dfa4bd9f2a593240bd8fb46d61e361f0e85e9b1501b289cd9f7fa91e00ed5"
+  },
+  {
+    "sample_id": "85031c6ca8a63362",
+    "split": "evaluation",
+    "source": {
+      "question": "The Wilton Circle were an influential group of 16th-century English poets, led by a poet born in what year ?",
+      "knowledge": "The Wilton Circle were an influential group of 16th-century English poets, led by Mary Sidney.Mary Herbert, Countess of Pembroke (née Sidney; 27 October 1561 – 25 September 1621) was one of the first English women to achieve a major reputation for her poetry and literary patronage.",
+      "right_answer": "1561"
+    },
+    "source_sha256": "c0fd9ae20a2c1d0563d060f7f5a66dc219cba643cd35000984373f8355ff2d07"
+  },
+  {
+    "sample_id": "900e6b5613cb0014",
+    "split": "evaluation",
+    "source": {
+      "question": "What are the accounting companies that make up the \"Big Four\" excluding Ernst & Young?",
+      "knowledge": "Arthur Andersen LLP, based in Chicago, is an American holding company and formerly one of the \"Big Five\" accounting firms among PricewaterhouseCoopers, Deloitte Touche Tohmatsu, Ernst & Young and KPMG, providing auditing, tax, and consulting services to large corporations. EY is one of the largest professional services firms in the world and is one of the \"Big Four\" accounting firms.",
+      "right_answer": "PricewaterhouseCoopers, Deloitte Touche Tohmatsu"
+    },
+    "source_sha256": "f9b19f9d5e54fea36fb9688235e531cdf4e0382c75e886de5c11fcf5a7d6c8ee"
+  },
+  {
+    "sample_id": "704d20080a4f6117",
+    "split": "evaluation",
+    "source": {
+      "question": "Which American author wrote \"The Colour Out of Space\" and \"The Call of Cthulhu\"?",
+      "knowledge": "It appeared in Lovecraft's short story \"The Colour Out of Space\" (1927).Howard Phillips Lovecraft ( ; August 20, 1890 – March 15, 1937) was an American author who achieved posthumous fame through his influential works of horror fiction. Among his most celebrated tales are \"The Call of Cthulhu\" and \"The Shadow over Innsmouth\", both canonical to the Cthulhu Mythos.",
+      "right_answer": "Howard Phillips Lovecraft"
+    },
+    "source_sha256": "0013e06114b25a3cc0c6bc694fc7a9fc8b5902b4b370b3116de205fe1bd49a6f"
+  },
+  {
+    "sample_id": "b481462666143220",
+    "split": "evaluation",
+    "source": {
+      "question": "Who won the 2016 Russian national silver medal with another Russian ice dancer born 29 April 1995?",
+      "knowledge": "Victoria Alexandrovna Sinitsina (Russian: Виктория Александровна Синицина ; born 29 April 1995) is a Russian ice dancer.Nikita Gennadyevich Katsalapov (Russian: Никита Геннадьевич Кацалапов ; born 10 July 1991) is a Russian ice dancer. With Victoria Sinitsina, he is the 2016 Russian national silver medalist.",
+      "right_answer": "Nikita Gennadyevich Katsalapov"
+    },
+    "source_sha256": "3658429e65fcf0a2c25d02c94156f8219080ae6413fbb27cb8684d4a29161aee"
+  },
+  {
+    "sample_id": "518b1ab7acb916ee",
+    "split": "evaluation",
+    "source": {
+      "question": "The 37th season of the VCU Rams men's basketball team was headed by a coach that played for what university?",
+      "knowledge": "Led by third-year head coach Jeff Capel III, they continued to play their home games at the Stuart C. Siegel Center. He played for Duke University and was a head coach at Virginia Commonwealth University and University of Oklahoma.",
+      "right_answer": "Duke University"
+    },
+    "source_sha256": "c148735dfcd71101c28c37b5deef0c4799658cfd22c201c9c1f6dd7716497406"
+  },
+  {
+    "sample_id": "cf35c2dd804679a2",
+    "split": "evaluation",
+    "source": {
+      "question": "Macclesfield included a village and civil parish that's about 1.5 miles north of Macclesfield, and had a population of what at the 2001 census?",
+      "knowledge": "It included the towns of Bollington, Knutsford, Macclesfield and Wilmslow and within its wider area the villages and hamlets of Adlington, Disley, Gawsworth, Kerridge, Pott Shrigley, Poynton, Prestbury, Rainow, Styal, Sutton and Tytherington.Prestbury is a village and civil parish in Cheshire, England. About 1.5 miles (3 km) north of Macclesfield, at the 2001 census, it had a population of 3,324, increasing slightly to 3,471 at the 2011 Census.",
+      "right_answer": "3,324"
+    },
+    "source_sha256": "23fd5346e83708d00ccf6dcae070b4d7f2121f7a0e05d3793801b1f57a6b372f"
+  },
+  {
+    "sample_id": "4b02e26cb672e19a",
+    "split": "evaluation",
+    "source": {
+      "question": "Who achieved national recognition when she won the third series of \"The X Factor\" in 2006, and released her second studio album \"Echo\" in 2009?",
+      "knowledge": "\"My Hands\" is a song recorded by British singer-songwriter Leona Lewis for her second studio album \"Echo\" (2009).Leona Louise Lewis (born 3 April 1985) is a British singer, songwriter and animal welfare campaigner. She was born and raised in the London Borough of Islington, London, where she attended the BRIT School for Performing Arts and Technology.",
+      "right_answer": "Leona Louise Lewis"
+    },
+    "source_sha256": "d756fa6dca0f4aa10689bcd4d630e7db9173a2f7d9d5ea857f1e4ce85cbeeb90"
+  },
+  {
+    "sample_id": "29c7cc23335c3334",
+    "split": "evaluation",
+    "source": {
+      "question": "The Bridger Trail, also known as the Bridger Road and Bridger Immigrant Road, was an overland route connecting the Oregon Trail to the gold fields of Montana, Gold was discovered in Virginia City, in 1863, Virginia City is a town in, and the county seat of which county in Montana, United States?",
+      "knowledge": "Gold was discovered in Virginia City, Montana in 1863, prompting settlers and prospectors to find a trail to travel from central Wyoming to Montana.Virginia City is a town in and the county seat of Madison County, Montana, United States.",
+      "right_answer": "Madison County"
+    },
+    "source_sha256": "3ea83168aad1ee54421125a5e908f36a8b5216468d5bfc060cd3291adb9b41c2"
+  },
+  {
+    "sample_id": "edbfe762ef86f6d7",
+    "split": "evaluation",
+    "source": {
+      "question": "Who directed the 1979 American drama film that starred the actress who won the Golden Globe Award for Best Supporting Actress for \"Psycho\"?",
+      "knowledge": "Boardwalk is a 1979 American drama film written by Stephen Verona and Leigh Chapman and directed by Verona. She is best remembered for her performance in \"Psycho\", for which she was awarded the Golden Globe Award for Best Supporting Actress and received an Academy Award nomination.",
+      "right_answer": "Verona"
+    },
+    "source_sha256": "f761a100e5fa95113ee23442dd9b8d9c9671f2ca08daa4161fc3eb60ab47bbdc"
+  },
+  {
+    "sample_id": "4f87a282093fcc0a",
+    "split": "evaluation",
+    "source": {
+      "question": "Which politician was once a Lieutenant Governor of Kentucky and a mayor in Louisville?",
+      "knowledge": "It celebrated its 100th anniversary as former city mayor Jerry Abramson's official \"Family-Friendly New Years Eve\" celebration location.Jerry Edwin Abramson (born September 12, 1946) is an American Democratic politician who was the 55th Lieutenant Governor of Kentucky.",
+      "right_answer": "Jerry Edwin Abramson"
+    },
+    "source_sha256": "2474c6c64b7a5e367422ec20682d8e3cf7839d000c0c739129e115596a7f17e7"
+  },
+  {
+    "sample_id": "fca4bdf11b51d74c",
+    "split": "evaluation",
+    "source": {
+      "question": "In what year was the woman whose former chief of staff was Rachel Noerdlinger born?",
+      "knowledge": "She is the former chief of staff to New York City Mayor Bill de Blasio's wife Chirlane McCray.Chirlane Irene McCray (born November 29, 1954) is an American writer, editor, communications professional, and political figure.",
+      "right_answer": "1954"
+    },
+    "source_sha256": "0e73780da82926b842217ae9df531e20c059c48e79c7ec8974e8218108643e0e"
+  },
+  {
+    "sample_id": "cb1d4299a2c65be4",
+    "split": "evaluation",
+    "source": {
+      "question": "Henry Ephraim Robins the the eighth President of a college in a state with what capital?",
+      "knowledge": "Henry Ephraim Robins was the eighth President of Colby College, Maine, United States, from 1873–1882. The capital is Augusta.",
+      "right_answer": "Augusta"
+    },
+    "source_sha256": "052c470bf381821e101ec5225a84bac9348275f2e0ff03d0b47dd6c91eab98f1"
+  },
+  {
+    "sample_id": "7e70667dc464b036",
+    "split": "evaluation",
+    "source": {
+      "question": "Tom Winslow was the student of what blues and gospel singer known for his fingerpicking guitar style?",
+      "knowledge": "Reverend Gary Davis, also Blind Gary Davis (born Gary D. Davis, April 30, 1896 – May 5, 1972), was a blues and gospel singer who was also proficient on the banjo, guitar and harmonica. His fingerpicking guitar style influenced many other artists.Thomas Griffin \"Tom\" Winslow (November 13, 1940, Hobgood, North Carolina – October 23, 2010, Albany, New York) was a prominent American folk singer and writer, best known as a \"disciple\" of Reverend Gary Davis and a former member of Pete Seeger's band.",
+      "right_answer": "Reverend Gary Davis"
+    },
+    "source_sha256": "0541ed4aa55ec98684c71cf0dd0c4c7610ff7c79b13c366d941cf0abc04d1250"
+  },
+  {
+    "sample_id": "77d384954f3fb366",
+    "split": "evaluation",
+    "source": {
+      "question": "Which former financier was convicted under making false statements?",
+      "knowledge": "Making false statements () is the common name for the United States federal crime laid out in Section 1001 of Title 18 of the United States Code, which generally prohibits knowingly and willfully making false or fraudulent statements, or concealing information, in \"any matter within the jurisdiction\" of the federal government of the United States, even by . A number of notable people have been convicted under the section, including Martha Stewart, Rod Blagojevich, Scooter Libby, Bernard Madoff, and Jeffrey Skilling.Bernard Lawrence \"Bernie\" Madoff ( ; born April 29, 1938) is an American fraudster and a former stockbroker, investment advisor, and financier.",
+      "right_answer": "Bernard Madoff"
+    },
+    "source_sha256": "1c6f2218635b99c28fe2c5db1fba32add9359865b4589799920520c357710c6f"
+  },
+  {
+    "sample_id": "8771c5818a071ae4",
+    "split": "evaluation",
+    "source": {
+      "question": "Who was born first Sarah Waters or Saki?",
+      "knowledge": "Sarah Waters (born 21 July 1966) is a Welsh novelist.Hector Hugh Munro (18 December 1870 – 14 November 1916), better known by the pen name Saki, and also frequently as H. H. Munro, was a British writer whose witty, mischievous and sometimes macabre stories satirize Edwardian society and culture.",
+      "right_answer": "Saki"
+    },
+    "source_sha256": "4c441a2e664f0b62449abd4b0258f91b776d8a2ce71cef9b66b939aa9cc0230e"
+  },
+  {
+    "sample_id": "03ac192b028768a5",
+    "split": "evaluation",
+    "source": {
+      "question": "What year did the famous amusement park across the street from Axeltory open?",
+      "knowledge": "Axeltorv is a public square in central Copenhagen, Denmark, located across the street from Tivoli Gardens' main entrance on Vesterbrogade. The park opened on 15 August 1843 and is the second-oldest operating amusement park in the world, after Dyrehavsbakken in nearby Klampenborg, also in Denmark.",
+      "right_answer": "1843"
+    },
+    "source_sha256": "0505e5b34afabca820bc974f090059eb3685d7337cff21bd9fce50cdba8642a6"
+  },
+  {
+    "sample_id": "c05493e5c015a656",
+    "split": "evaluation",
+    "source": {
+      "question": "What Russian helicopter is produced in Kazan and is used in Unit No. 130 at Leh Air Force Station?",
+      "knowledge": "No. 130 Helicopter Unit (Condors) is a Helicopter Unit and is equipped with Mil Mi-17 and based at Leh Air Force Station.The Mil Mi-17 (NATO reporting name: Hip) is a Russian helicopter in production at two factories in Kazan and Ulan-Ude.",
+      "right_answer": "Mil Mi-17"
+    },
+    "source_sha256": "45f51af24f7665ce9bb38e5ef1b810666e33876c28644b2c474dcd28d5cb2f67"
+  },
+  {
+    "sample_id": "920f31c76bd24d51",
+    "split": "evaluation",
+    "source": {
+      "question": "What is the name of the first book in the series based on a stealth video game series developed by the Danish company IO Interactive?",
+      "knowledge": "Hitman: Enemy Within is the first novel in the \"Hitman\" series.Hitman is a stealth video game series developed by the Danish company IO Interactive.",
+      "right_answer": "Hitman: Enemy Within"
+    },
+    "source_sha256": "2829375665999ef84eac065700d2f8aaeb3bd51deabc075b04b1296529fea9f5"
+  },
+  {
+    "sample_id": "771f7aa99f99571f",
+    "split": "evaluation",
+    "source": {
+      "question": "The Champaign Aviation Museum is an aviation museum in Urbana, Ohio, in which country, the museum and its volunteers are restoring a B-17 Flying Fortress back to flying status, a our-engine heavy bomber developed in the 1930s for the United States Army Air Corps (USAAC)?",
+      "knowledge": "The Champaign Aviation Museum is an aviation museum in Urbana, Ohio, United States.The Boeing B-17 Flying Fortress is a four-engine heavy bomber developed in the 1930s for the United States Army Air Corps (USAAC).",
+      "right_answer": "United States"
+    },
+    "source_sha256": "6586aafc1d3b9ba27016359560b634346bd21836784807dbec78d959f1db9a2e"
+  },
+  {
+    "sample_id": "a65170dd9bac3d27",
+    "split": "evaluation",
+    "source": {
+      "question": "Who was born first, Joe Manganiello or Kirk Kerkorian?",
+      "knowledge": "Joseph Michael Manganiello ( ; ] ; born December 28, 1976) is an American actor.Kerkor \"Kirk\" Kerkorian (June 6, 1917 – June 15, 2015) was an Armenian-American businessman, investor, and philanthropist.",
+      "right_answer": "Kerkor \"Kirk\" Kerkorian"
+    },
+    "source_sha256": "96985bc5747e055db6b90e3958c49a7f12f5b45ae49e68ae67ae5e3b72b986f7"
+  },
+  {
+    "sample_id": "d3a9d84408cd8955",
+    "split": "evaluation",
+    "source": {
+      "question": "Which building is nicknamed \"The Billionaire Building\" and hosts 92 condominiums units on top of a 210-room Hyatt Hotel: 30 Hudson Yards or One57?",
+      "knowledge": "30 Hudson Yards (also the North Tower) is a super tall office building currently under construction in the West Side area of Manhattan.One57, formerly known as Carnegie 57 and nicknamed \"The Billionaire Building\", is a 75-story (marketed as 90-story) supertall skyscraper at 157 West 57th Street between Sixth and Seventh Avenues in the Midtown neighborhood of Manhattan, New York City. The building has 92 condominium units on top of a new Park Hyatt Hotel with 210 rooms, which is set to become the flagship Hyatt property.",
+      "right_answer": "One57"
+    },
+    "source_sha256": "bc1ca1fca20ff51ba4c5a28f295cf96585f58e8a1aceafc3819cee8aa20294fb"
+  },
+  {
+    "sample_id": "61f8e3cb89cda297",
+    "split": "evaluation",
+    "source": {
+      "question": "Are both Lysiloma and Peltophorum large tree species?",
+      "knowledge": "Lysiloma is a genus of flowering plants in the legume family, Fabaceae.Peltophorum is a genus of 5–15 species of flowering plants in the family Fabaceae, subfamily Caesalpinioideae. The species are medium-sized to large trees growing up to 15–25 m (rarely 50 m) tall.",
+      "right_answer": "no"
+    },
+    "source_sha256": "3f25028c7dd8d993a95b6b04f557efc1ffaac0bccc2e123e2a54165018ae2d9f"
+  },
+  {
+    "sample_id": "636139ed29533179",
+    "split": "evaluation",
+    "source": {
+      "question": "Aaron Keith Heal is an Australian cricketer who played for what Australian professional men's Twenty20 cricket team whose home ground is Etihad Stadium.",
+      "knowledge": "Aaron Keith Heal (born 13 March 1983) is an Australian cricketer who played domestically for Western Australia and later the Melbourne Renegades.The Melbourne Renegades is an Australian professional men's Twenty20 cricket team based in the Australian state, Victoria. Their home ground is Etihad Stadium.",
+      "right_answer": "Melbourne Renegades"
+    },
+    "source_sha256": "7fca47d31fbbfb7146f5e6bf444ae4e190a63c69a4d6cd537cb0fd6c3b1bc15a"
+  },
+  {
+    "sample_id": "c041be9e641be1a2",
+    "split": "evaluation",
+    "source": {
+      "question": "The 129th Rescue Wing is stationed at which joint civil-military airport in California?",
+      "knowledge": "The 129th Rescue Wing (129 RQW) is a unit of the California Air National Guard, stationed at Moffett Federal Airfield in Mountain View, California.Moffett Federal Airfield (IATA: NUQ, ICAO: KNUQ, FAA LID: NUQ) , also known as Moffett Field, is a joint civil-military airport located in an unincorporated part of Santa Clara County between northern Mountain View and northern Sunnyvale, California, USA.",
+      "right_answer": "Moffett Federal Airfield"
+    },
+    "source_sha256": "636c7e2d3fb2e35a14deb327d3db45a89737c5b1cc722b66823a1235efca1602"
+  },
+  {
+    "sample_id": "63a8669d79e4bc87",
+    "split": "evaluation",
+    "source": {
+      "question": "When was the military branch, for which Christian Roy Kaldager served, established?",
+      "knowledge": "Christian Roy Kaldager (18 March 1908 – 23 June 2005) was a Royal Norwegian Air Force officer. It was established as a separate arm of the Norwegian armed forces on 10 November 1944.",
+      "right_answer": "10 November 1944"
+    },
+    "source_sha256": "05c3974df4e01fd4fbc43a75ae5ef49dba8e777f26ae2d4ddc3759c484df3318"
+  },
+  {
+    "sample_id": "7c29a88dfb136fa8",
+    "split": "evaluation",
+    "source": {
+      "question": "The sultan who ordered the extermination of specific Armenian districts in the Ottoman Empire in 1895 ws deposed on what date?",
+      "knowledge": "In early 1895, Sultan Abdul Hamid II ordered the extermination of specific Armenian districts in the Ottoman Empire. He ruled from 31 August 1876 until he was deposed shortly after the 1908 Young Turk Revolution, on 27 April 1909.",
+      "right_answer": "27 April 1909"
+    },
+    "source_sha256": "3398696a6fd70e120d5323595b2da49cc04cbdbe9537121095d5c84679d092be"
+  },
+  {
+    "sample_id": "7c162164ff9059a5",
+    "split": "evaluation",
+    "source": {
+      "question": "Blast Vegas starred the actor and musician who played the title character on what sitcom?",
+      "knowledge": "It first aired on the Syfy channel on July 18, 2013, and stars Frankie Muniz, Barry Bostwick, and Maggie Castle. He is best known for playing the title character in the Fox television family sitcom \"Malcolm in the Middle\", which earned him an Emmy Award nomination and two Golden Globe Award nominations.",
+      "right_answer": "Malcolm in the Middle"
+    },
+    "source_sha256": "1b72a8b56a6e6bcaccf08ffe2a536d0ca638e6fe812887aefe1d6ae69c14956a"
+  },
+  {
+    "sample_id": "2f1c80c053fbec4b",
+    "split": "evaluation",
+    "source": {
+      "question": "Who played Touchstone in the 2006 film of Shakespeare's As You Like It?",
+      "knowledge": "As You Like It is a 2006 film written and directed by Kenneth Branagh, and based on the Shakespearean play of the same name. It stars Bryce Dallas Howard as Rosalind, David Oyelowo as Orlando De Boys, Romola Garai as Celia, Adrian Lester as Oliver De Boys, Alfred Molina as Touchstone, Kevin Kline as Jaques, Janet McTeer as Audrey, and Brian Blessed as Duke Frederick and his brother Duke Senior.Touchstone is a fictional character in Shakespeare's play \"As You Like It\".",
+      "right_answer": "Alfred Molina"
+    },
+    "source_sha256": "c8b8541a07545c369e18d27283b82cc33a0c83a8cc81b6c96a96a18a6076ecfe"
+  },
+  {
+    "sample_id": "13aa82c11e8f2a41",
+    "split": "evaluation",
+    "source": {
+      "question": "Are Fuzhou, Jiangxi and Malipo County located in the same province?",
+      "knowledge": "Chinese: 赣东), is a prefecture-level city in the northeastern part of Jiangxi province, People's Republic of China.Malipo County (麻栗坡县; pinyin: Málìpō Xiàn, Vietnamese: \"Ma Lật Pha\" ) is located in Wenshan Zhuang and Miao Autonomous Prefecture, Yunnan province, China.",
+      "right_answer": "no"
+    },
+    "source_sha256": "13ee4acac292d7f30d769bde0723f8b0c09b7714e0573bddadcadbbf1bb64dd9"
+  },
+  {
+    "sample_id": "b93189eb56f9e464",
+    "split": "evaluation",
+    "source": {
+      "question": "What film was directed by a British film editor and was a 2010 British-American fantasy film distributed by Warner Bros?",
+      "knowledge": "Mark Day is a British film editor.Harry Potter and the Deathly Hallows – Part 1 is a 2010 British-American fantasy film directed by David Yates and distributed by Warner Bros.",
+      "right_answer": "Harry Potter and the Deathly Hallows – Part 1"
+    },
+    "source_sha256": "3b23f6d38aacb64f4c93d2b5dbf394330a8c207dfac86af8ba5b1e2e474cea39"
+  },
+  {
+    "sample_id": "d8fe9a229193676d",
+    "split": "evaluation",
+    "source": {
+      "question": "Which star of the TV series \"Will & Grace\" also appears in the film The Sisters?",
+      "knowledge": "The Sisters is a 2005 film starring Maria Bello, Mary Stuart Masterson, and Erika Christensen as the title characters; it also stars Alessandro Nivola, Rip Torn, Eric McCormack, Steven Culp, Tony Goldwyn and Chris O'Donnell.Eric James McCormack (born April 18, 1963) is a Canadian-American actor known for his role as Will Truman in the American sitcom \"Will & Grace\" and Dr. Daniel Pierce in the American crime drama \"Perception\".",
+      "right_answer": "Eric McCormack"
+    },
+    "source_sha256": "306c0d39e7884c6119050a042491651787419312331a8a0eee6823fc5b9c6c50"
+  },
+  {
+    "sample_id": "01933b5ec33ca90b",
+    "split": "evaluation",
+    "source": {
+      "question": "Who wrote the music for the musical where Laura Ann Osnes played Bonnie Parker?",
+      "knowledge": "Laura Ann Osnes (born November 19, 1985) is an American actress and singer known for her work on the Broadway stage. She has played starring roles in \"Grease\" as Sandy, \"South Pacific\" as Nellie Forbush, \"Anything Goes\" as Hope Harcourt, and \"Bonnie and Clyde\" as Bonnie Parker, for which she received a Tony Award nomination for Best Actress in a Musical.Bonnie & Clyde is a musical with music by Frank Wildhorn, lyrics by Don Black and a book by Ivan Menchell.",
+      "right_answer": "Frank Wildhorn"
+    },
+    "source_sha256": "88df739e001624a4572f6b9a6d8c77aa0f2ab1eb9f61ccbdbc232f7088e1423c"
+  },
+  {
+    "sample_id": "15323c740923f62c",
+    "split": "evaluation",
+    "source": {
+      "question": "Where is a multi-use indoor arena, that was opened byan English ice dancer who won a gold medal at the 1984 Winter Olympics, located at?",
+      "knowledge": "Motorpoint Arena Nottingham (originally the Nottingham Arena, formerly the Capital FM Arena Nottingham) is a multi-use indoor arena located within the National Ice Centre in the Lace Market district of Nottingham, England. With Christopher Dean, she won a gold medal at the 1984 Winter Olympics and a bronze medal at the 1994 Winter Olympics.",
+      "right_answer": "National Ice Centre"
+    },
+    "source_sha256": "7dbcc690426faeab6911a9331c1d0fc4659ce680045819d1acab844430ea00c4"
+  },
+  {
+    "sample_id": "17fcafd89b8e2599",
+    "split": "evaluation",
+    "source": {
+      "question": "The lead drummer of Stand By Me is known for innovation in what type of music?",
+      "knowledge": "Stand By Me (Whatcha See Is Whatcha Get) is an album led by jazz drummer Bernard Purdie which was recorded for the Mega label in 1971.Bernard Lee \"Pretty\" Purdie (born June 11, 1941) is an American drummer, considered an influential and innovative funk musician.",
+      "right_answer": "funk"
+    },
+    "source_sha256": "132854d4fe92dfaaf4ae5aeee51e4f32e6b6f147ad277fc126fe45cfb9817cf5"
+  },
+  {
+    "sample_id": "halueval:qa:3236",
+    "split": "development",
+    "source": {
+      "question": "The schmaltrum turret could be found on what tanks other than the Panzerkampfwagen IV?",
+      "knowledge": "The Schmalturm turret was a tank turret designed for use on the Panzer V Ausf. B Panther II medium tank, Panther A and G medium tank, Panzer IV Ausf. J medium tank and the VK 30.02 DB (a medium tank prototype).The \"Panzerkampfwagen\" IV (PzKpfw IV), commonly known as the Panzer IV, was a German medium tank developed in the late 1930s and used extensively during the Second World War.",
+      "right_answer": "B Panther II medium tank, Panther A and G medium tank"
+    },
+    "source_sha256": "fbd9a1802cfe037f4f1c359675a807130e3acb44bcc6cf80cdbcab675fe3721c"
+  },
+  {
+    "sample_id": "halueval:qa:8448",
+    "split": "development",
+    "source": {
+      "question": "What German rally and auto racing driver, born on March 7, 1947 was beaten at the World Rally Championship while attempting to defend his title as World Champion?",
+      "knowledge": "The 1983 World Rally Championship was the 11th season of the Fédération Internationale de l'Automobile (FIA) World Rally Championship (WRC). Audi's Hannu Mikkola beat the defending world champion Walter Röhrl and his Lancia teammate Markku Alén to the drivers' title.Walter Röhrl (born 7 March 1947) is a German rally and auto racing driver, with victories for Fiat, Opel, Lancia and Audi as well as Porsche, Ford and BMW.",
+      "right_answer": "Walter Röhrl"
+    },
+    "source_sha256": "87baf016b9bdb2752c62d52fad0a612aa09a6012527edc068901c046c6c1233a"
+  },
+  {
+    "sample_id": "halueval:qa:5299",
+    "split": "development",
+    "source": {
+      "question": "Which of the following films is a documentary about a London, Midland, and Scottish Railway mail train: Night Mail or What Would Jesus Buy?",
+      "knowledge": "Night Mail is a 1936 documentary film about a London, Midland and Scottish Railway (LMS) mail train from London to Scotland, produced by the GPO Film Unit.What Would Jesus Buy? is a 2007 documentary film produced by Morgan Spurlock and directed by Rob VanAlkemade.",
+      "right_answer": "Night Mail"
+    },
+    "source_sha256": "c72d515f7fc45da2d56abb3cce0c0407fa44e4e4644eb7719810c9dffbb438f1"
+  },
+  {
+    "sample_id": "halueval:qa:9182",
+    "split": "development",
+    "source": {
+      "question": "Rosamund Pike, star of Pride and Prejudice, appeared in which 2014 mystery thriller opposite Ben Affleck?",
+      "knowledge": "Gone Girl is a 2014 American psychological thriller film directed by David Fincher and written by Gillian Flynn, based on her 2012 novel of the same name. Following her breakthrough, she won the BIFA Award for Best Supporting Actress for \"The Libertine\" (2004) and portrayed Jane Bennet in \"Pride & Prejudice\" (2005).",
+      "right_answer": "Gone Girl"
+    },
+    "source_sha256": "f796e279a305f84a4280a3741d7e7923d6173658636318b44b265abfb255dc56"
+  },
+  {
+    "sample_id": "halueval:qa:6409",
+    "split": "development",
+    "source": {
+      "question": "When was the British former professional boxer born who competed from 1971 to 1980 who had a bout with Jorge Victor Ahumada?",
+      "knowledge": "Jorge Victor Ahumada (born 1946) is a former professional boxer. Notable fights include four bouts with Victor Galindez, (one of which was a world title challenge at the Madison Square Garden in New York, New York), a title bout with Bob Foster (Foster's last title defense) which ended in a draw, and a bout with John Conteh for the WBC Light Heavyweight Championship.John Anthony Conteh, {'1': \", '2': \", '3': \", '4': \"} (born 27 May 1951) is a British former professional boxer who competed from 1971 to 1980.",
+      "right_answer": "27 May 1951"
+    },
+    "source_sha256": "dbf933eb5f59ed5cdf1ee069d5f2418c326eff19dd023ff0233aeeb337a8469e"
+  },
+  {
+    "sample_id": "halueval:qa:593",
+    "split": "development",
+    "source": {
+      "question": "In what year did the submarine that sank the Tsushima Maru open to public tours?",
+      "knowledge": "Tsushima Maru (対馬丸) was a Japanese passenger/cargo ship that was sunk by the submarine USS \"Bowfin\" during World War II, while carrying hundreds of schoolchildren from Okinawa to Kagoshima. Since 1981, she has been open to public tours at the USS \"Bowfin\" Submarine Museum and Park in Pearl Harbor, Hawaii, next to the USS Arizona Memorial Visitor Center.",
+      "right_answer": "1981"
+    },
+    "source_sha256": "23b35d37f902940d537e6668610d22bcf599772f0537019f23e21c9b17ebe16c"
+  },
+  {
+    "sample_id": "halueval:qa:6068",
+    "split": "development",
+    "source": {
+      "question": " Hunnenschlacht was created by a composer who was of what nationality?",
+      "knowledge": "Hunnenschlacht (The Battle of the Huns), S.105, is a symphonic poem by Franz Liszt, written in 1857 after a painting of the same name by Wilhelm von Kaulbach.Franz Liszt (] ; Hungarian: \"Liszt Ferencz\" , in modern usage \"Liszt Ferenc\", ] ; October 22, 1811July 31, 1886) was a prolific 19th-century Hungarian composer, virtuoso pianist, conductor, music teacher, arranger, organist, philanthropist, author, nationalist and a Franciscan tertiary.",
+      "right_answer": "Hungarian"
+    },
+    "source_sha256": "1e261a27ec78620ea762ab36ce3ae10495d3e9b94f48a1198832145d8aa78918"
+  },
+  {
+    "sample_id": "halueval:qa:8987",
+    "split": "development",
+    "source": {
+      "question": "Which comedian that starred in Comedy Central's \"The Awkward Comedy Show\" also starred in \"Nerdland\"?",
+      "knowledge": " The film stars Paul Rudd, Patton Oswalt, Hannibal Buress, Kate Micucci, Riki Lindhome, John Ennis and Mike Judge. Born and raised in the Austin neighborhood of Chicago, Illinois, Buress embarked on a comedy career in late 2009, gaining notable recognition after being featured in Comedy Central's \"The Awkward Comedy Show\", alongside various other comedians.",
+      "right_answer": "Hannibal Buress"
+    },
+    "source_sha256": "ced07f27e2c1865ee31e3c5dcc20bcc741c66f751d62d9e549dc435b2f076a4e"
+  },
+  {
+    "sample_id": "halueval:qa:9950",
+    "split": "development",
+    "source": {
+      "question": "Which case occured first, Strickland v. Washington or Barron v. Baltimore?",
+      "knowledge": "Strickland v. Washington, 466 U.S. 668 (1984) , was a decision by the Supreme Court of the United States that established the standard for determining when a criminal defendant's Sixth Amendment right to counsel is violated by that counsel's inadequate performance.Barron v. Baltimore, 32 U.S. (7 Pet.)",
+      "right_answer": "Barron v. Baltimore"
+    },
+    "source_sha256": "832daf9755be5c6e0743aa14f3a4ae7485368bde5a7f5bccc9f5b0f2f33a7a22"
+  },
+  {
+    "sample_id": "halueval:qa:7570",
+    "split": "development",
+    "source": {
+      "question": "Duke Johnson serves as a director for Dino Stamatopoulos who played Alex in what NBC comedy?",
+      "knowledge": " He currently serves as a director and junior partner for Dino Stamatopoulos's animation production studio Starburns Industries in Burbank, California. As an actor, he is best known for his recurring role as the character Alex \"Star-Burns\" Osbourne on the NBC comedy series \"Community\", on which he also worked as a producer and consulting writer.",
+      "right_answer": "Community"
+    },
+    "source_sha256": "8dd9123c7321c44e75c374d419c32193e510354203f0c1cf8735b6bbec3996b7"
+  },
+  {
+    "sample_id": "halueval:qa:5475",
+    "split": "development",
+    "source": {
+      "question": "Which publication was published first The Artist's Magazine or Details ? ",
+      "knowledge": " The magazine was founded in 1983 and claims a circulation of 60,000.Details was an American monthly men's magazine published by Condé Nast, founded in 1982 by Annie Flanders.",
+      "right_answer": "Details"
+    },
+    "source_sha256": "6b592787a84090e31d6ac36b33857d424167980d5a08b451b5677eda13504e49"
+  },
+  {
+    "sample_id": "halueval:qa:7898",
+    "split": "development",
+    "source": {
+      "question": "Who is a two-time winner of the Pulitzer Prize and the National Book Award and a recipient of the Presidential Medal of Freedom, Antonin Artaud or David McCullough? ",
+      "knowledge": "Antoine Marie Joseph Artaud, better known as Antonin Artaud (] ; 4 September 1896 – 4 March 1948), was a French dramatist, poet, essayist, actor, and theatre director, widely recognized as one of the major figures of twentieth-century theatre and the European avant-garde.David Gaub McCullough ( ; born July 7, 1933) is an American author, narrator, historian, and lecturer. He is a two-time winner of the Pulitzer Prize and the National Book Award and a recipient of the Presidential Medal of Freedom, the United States' highest civilian award.",
+      "right_answer": "David Gaub McCullough"
+    },
+    "source_sha256": "26e65ed80f5098bc2d58be53d7345e28ccb139128bae56bc11e3c2ee821a6760"
+  },
+  {
+    "sample_id": "halueval:qa:4785",
+    "split": "development",
+    "source": {
+      "question": "Which movie produced by Uri Singer stars the actress who won critical acclaim with her appearance as Lydia Deetz in Tim Burton's \"Beetlejuice\"?",
+      "knowledge": " Singer has produced multiple award-winning films, among them are \"Open Road\" (Andy García, Juliette Lewis and Camilla Belle), \"Like Sunday, Like Rain\" (written and directed by Frank Whaley) with Leighton Meester, Debra Messing and Billie Joe Armstrong; \"Experimenter\" (written and directed by Michael Almereyda) with Peter Sarsgaard and Winona Ryder. As Lydia Deetz, a goth teenager in Tim Burton's \"Beetlejuice\" (1988), she won critical acclaim and widespread recognition.",
+      "right_answer": "\"Experimenter\""
+    },
+    "source_sha256": "60b055a339810fc8ddde0ffad74836f2a5b5d1b8018955b69edee71fe17b1a2c"
+  },
+  {
+    "sample_id": "halueval:qa:4866",
+    "split": "development",
+    "source": {
+      "question": "What song did Lisbeth Scott co-write and perform for a movie which grossed nearly 6 times its budget despite generally negative reviews?",
+      "knowledge": " She also co-wrote and performed \"Good To Me\" in the movie\" Shutter\", \"Edge of Heaven\" with Joel Douek for the film \"The Wildest Dream\", \"Real Love\" (for Macy Grey) for the film \"Domino\" (with Harry Gregson Williams) and countless others. Despite a generally negative reaction, the film was a box office success grossing nearly 6 times its budget.",
+      "right_answer": "\"Good To Me\""
+    },
+    "source_sha256": "7e5f3ba5f51a4b6f18fc0ecc12efbfff2dfe489846a1c5a4c48c14d950f70a0d"
+  },
+  {
+    "sample_id": "halueval:qa:8263",
+    "split": "development",
+    "source": {
+      "question": "When was the operator of the Outerbridge Crossing established?",
+      "knowledge": "The Outerbridge Crossing is a cantilever bridge which spans the Arthur Kill. The Outerbridge Crossing is one of three vehicular bridges connecting New Jersey with Staten Island, and like the others, is maintained and operated by the Port Authority of New York and New Jersey.The Port Authority of New York and New Jersey (PANYNJ) is a joint venture between the U.S. states of New York and New Jersey, established in 1921 through an interstate compact authorized by the United States Congress.",
+      "right_answer": "1921"
+    },
+    "source_sha256": "84dd73415dbd44a0898347d33a2ed63aaba832f0286242c55b50573bb9de70a0"
+  },
+  {
+    "sample_id": "halueval:qa:273",
+    "split": "development",
+    "source": {
+      "question": "For which North American auto racing series launched by the Sports Car Club of America does Jack Baldwin drive a Porsche Cayman S?",
+      "knowledge": " Baldwin currently drives a Porsche Cayman S for GTSport Racing in the Pirelli World Challenge and is the most successful Porsche Cayman S driver in the world with seven wins, over a dozen pole positions and twenty-plus podium finishes.The Pirelli World Challenge is a North American auto racing series launched in 1990 by the Sports Car Club of America.",
+      "right_answer": "Pirelli World Challenge"
+    },
+    "source_sha256": "413d1caedd297ccb730988682aac9140f8c2f11f15e3161289feac0efed2b5e9"
+  },
+  {
+    "sample_id": "halueval:qa:3064",
+    "split": "development",
+    "source": {
+      "question": "Marina Lebedeva participates in a winter sport that combines cross-country skiing and rifle shooting. What is the sport called?",
+      "knowledge": "Marina Lebedeva (born in Aqkol on (1985--) 29, 1985 ) is a Kazakh biathlete.The biathlon is a winter sport that combines cross-country skiing and rifle shooting.",
+      "right_answer": "biathlon"
+    },
+    "source_sha256": "ba8de0f0db8cb9d95d2fd58d702d27d91aba64eead0c242af7bd79cce0a5a7bd"
+  },
+  {
+    "sample_id": "halueval:qa:7555",
+    "split": "development",
+    "source": {
+      "question": "Which states in the United States of America have connections to both the Saint Louis River and Lake Superior?",
+      "knowledge": "The Saint Louis River (abbreviated St. Louis River) is a river in the U.S. states of Minnesota and Wisconsin that flows into Lake Superior. The lake is shared by the Canadian province of Ontario to the north, the US state of Minnesota to the west, and Wisconsin and the Upper Peninsula of Michigan to the south.",
+      "right_answer": "Minnesota and Wisconsin"
+    },
+    "source_sha256": "ff3d5c98e317eba3b5a49e89419aa778e57d07fe3e970c19c1d6330d4a455115"
+  },
+  {
+    "sample_id": "halueval:qa:943",
+    "split": "development",
+    "source": {
+      "question": "What is the urdu name of Afghan citizens living as refugee in a country other than Iran?",
+      "knowledge": "The population of Afghanistan is around 33 million as of 2016, which includes the roughly 3 million Afghan citizens living as refugees in both Pakistan and Iran.Afghans in Pakistan (Urdu: افغان مهاجرين‎ , \"Afghan Muhajreen\") are refugees who have fled wars in Afghanistan.",
+      "right_answer": "Afghan Muhajreen"
+    },
+    "source_sha256": "981eaf969c40323e38314e9a50ddc2d011c9c09fd339810889b1937369ec0a8a"
+  },
+  {
+    "sample_id": "halueval:qa:8070",
+    "split": "development",
+    "source": {
+      "question": "Which historic complex remains of 12th to 16th centuries were in the manor of Norton?",
+      "knowledge": "Richard Brooke (died 1569) bought the manor of Norton, near Runcorn, Cheshire from Henry VIII in 1545 following the dissolution of the monasteries. The manor included the former monastery of Norton Priory and also the settlements of Norton, Stockham, Acton Grange and Aston Grange in Cheshire and Cuerdley in Lancashire.Norton Priory is a historic site in Norton, Runcorn, Cheshire, England, comprising the remains of an abbey complex dating from the 12th to 16th centuries, and an 18th-century country house; it is now a museum.",
+      "right_answer": "abbey complex"
+    },
+    "source_sha256": "59c5265d7f69478567db64543a0d1e82626905920b8f338e6e6b80d04ec4ee9d"
+  },
+  {
+    "sample_id": "halueval:qa:8683",
+    "split": "development",
+    "source": {
+      "question": "What is the name of the musician who is a winner of four Academy Awards and also composed music for It's Always Fair Weather?",
+      "knowledge": "It's Always Fair Weather is a 1955 MGM musical satire scripted by Betty Comden and Adolph Green, who also wrote the show's lyrics, with music by André Previn and starring Gene Kelly, Dan Dailey, Cyd Charisse, Dolores Gray, and dancer/choreographer Michael Kidd in his first film acting role.André George Previn, KBE ( ; born Andreas Ludwig Priwin; April 6, 1929) is a German-American pianist, conductor, and composer.",
+      "right_answer": "André Previn"
+    },
+    "source_sha256": "2b6bc602a973c9b1de4b1c8ef8beb6e34abe1526734bb8d777ecb5400a679767"
+  },
+  {
+    "sample_id": "halueval:qa:7427",
+    "split": "development",
+    "source": {
+      "question": "Margaret Mary Ray stalked an American physician and retired NASA astronaut who is a public speaker and consultant to Disney's IMagineering group, and who else?",
+      "knowledge": " She received much media attention for stalking American late night television talk show host David Letterman and retired astronaut Story Musgrave.Franklin Story Musgrave, M.D. (born August 19, 1935) is an American physician and a retired NASA astronaut. He is a public speaker and consultant to both Disney's Imagineering group and Applied Minds in California.",
+      "right_answer": "Applied Minds"
+    },
+    "source_sha256": "3714303e88e8929a53022fc8b9397796d8ba98e275a85f3b591f44a5ba0b0bce"
+  },
+  {
+    "sample_id": "halueval:qa:4279",
+    "split": "development",
+    "source": {
+      "question": "Who was the Italian professor of genetics who edited the Theoretical Biological Forum?",
+      "knowledge": " In its previous incarnation, it was edited by noted creationist Giuseppe Sermonti, but now the journal broadly covers theoretical biology.Giuseppe Sermonti (born 1925) is a retired Italian professor of genetics.",
+      "right_answer": "Giuseppe Sermonti"
+    },
+    "source_sha256": "cad1f0d88cac217fc53ff38eb58cc9ac417ddb81ef3f7f1124e50f658a9426c6"
+  },
+  {
+    "sample_id": "halueval:qa:2757",
+    "split": "development",
+    "source": {
+      "question": "What NFL team did the host of \"The Challenge\" play for when they won the Super Bowl?",
+      "knowledge": " The series was hosted by NFL wide receiver Victor Cruz. With the Giants he won Super Bowl XLVI over the New England Patriots, and made the 2012 Pro Bowl.",
+      "right_answer": "With the Giants he won Super Bowl XLVI"
+    },
+    "source_sha256": "968520cfc7a03d22818f55754fc5342f3c8b0b8a91093f1a49e61d3e788cb77e"
+  },
+  {
+    "sample_id": "halueval:qa:8711",
+    "split": "development",
+    "source": {
+      "question": "Sean James, is a former American football player and activist who signed as a rookie free agent with the Minnesota Vikings, 2] Sean is the cousin of father and son Major League Baseball players Cecil Fielder and Prince Fielder, an American professional baseball first baseman and designated hitter, for which sports organization?",
+      "knowledge": " Sean is the cousin of father and son Major League Baseball players Cecil Fielder and Prince Fielder.Prince Semien Fielder (born May 9, 1984) is an American professional baseball first baseman and designated hitter for the Texas Rangers of Major League Baseball (MLB).",
+      "right_answer": "Texas Rangers"
+    },
+    "source_sha256": "31e192b72937ee5a8e4ae3c5c784846f0284aefa9b45a1b8c1f3c1c0a4fd9d00"
+  },
+  {
+    "sample_id": "halueval:qa:5458",
+    "split": "development",
+    "source": {
+      "question": "Oxford is the 52nd largest city where?",
+      "knowledge": "Donnington Bridge Road is a road in south Oxford, England, in the estate of Donnington. With an estimated 2015 population of 168,270, it is the 52nd largest city in the United Kingdom, and one of the fastest growing and most ethnically diverse.",
+      "right_answer": "United Kingdom"
+    },
+    "source_sha256": "8bc705f04d4dc8850028fdd3a1ac94456f2f78135181e7803b74c1897f15e857"
+  },
+  {
+    "sample_id": "halueval:qa:9347",
+    "split": "development",
+    "source": {
+      "question": "Who is the female singer of \"consideration\" and \"fourfiveseconds\" who also released an album called \"Anti\"?",
+      "knowledge": "\"Consideration\" is a song recorded by Barbadian singer Rihanna from her eighth studio album \"Anti\" (2016). Work continued into 2015, during which she released three singles including \"FourFiveSeconds\", which reached the top 10 in several markets; they were ultimately removed from the final track listing.",
+      "right_answer": "Rihanna"
+    },
+    "source_sha256": "f845524462088b452b091709dbb8bb617619a02101f50058db6bdd6b747f8a16"
+  },
+  {
+    "sample_id": "halueval:qa:1200",
+    "split": "development",
+    "source": {
+      "question": " Argent Corporation was a company in Las Vegas that at one time controlled a hotel that operated when?",
+      "knowledge": "Argent Corporation was a company in Las Vegas that at one time controlled the Hacienda Hotel/Casino, the Stardust Resort & Casino, the Fremont Hotel and Casino and the casino in the Marina Hotel.The Hacienda Resort Hotel and Casino was a hotel and casino on the Las Vegas Strip in Paradise, Nevada, that operated from 1956 to 1996.",
+      "right_answer": "from 1956 to 1996"
+    },
+    "source_sha256": "4a76bbe22ef796f3070144a95496878dac5d09ff82e8ae0446b496437992da15"
+  },
+  {
+    "sample_id": "halueval:qa:3574",
+    "split": "development",
+    "source": {
+      "question": "What member of the country-music stage concert in Nashville was born in Copeville, Texas?",
+      "knowledge": "Charlie Walker (November 2, 1926 – September 12, 2008)<ref name='cmt.com/1594705'> </ref> was an American country musician born in Copeville, Texas. He held membership in the Grand Ole Opry from 1967, and was inducted into the Country Radio DJ Hall of Fame in 1981.The Grand Ole Opry is a weekly country-music stage concert in Nashville, Tennessee, which was founded on November 28, 1925, by George D. Hay as a one-hour radio \"barn dance\" on WSM.",
+      "right_answer": "Charlie Walker"
+    },
+    "source_sha256": "1259fac2d9de55490c69ab715a4b20490849663ca0160527b219992d7f1ec466"
+  },
+  {
+    "sample_id": "halueval:qa:1274",
+    "split": "development",
+    "source": {
+      "question": "What album, produced by John Leckie and engineered by Nigel Godrich, features artwork by the same person who did the artwork for another of the band's albums, Johnny Greenwood is the Controller?",
+      "knowledge": "Jonny Greenwood Is the Controller is a compilation album created by Jonny Greenwood of Radiohead and released on Trojan Records. The album features artwork by Stanley Donwood, who has provided art for every Radiohead album since \"The Bends\" (1995).The Bends (stylised as the bends) is the second studio album by the English alternative rock band Radiohead, released on 13 March 1995 by Parlophone Records in the United Kingdom and by Capitol Records in the United States. The album was produced by John Leckie and engineered by Nigel Godrich, who would go on to co-produce all future albums by the band.",
+      "right_answer": "The Bends"
+    },
+    "source_sha256": "10f6359953b3446c5b95d27d54ee8bacd0fd97b601ff1dbd4b14c9a4b8baec4b"
+  }
+]

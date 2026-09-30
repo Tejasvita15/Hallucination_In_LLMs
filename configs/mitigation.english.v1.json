@@ -1,0 +1,21 @@
+{
+  "protocol": "english_mitigation_v1",
+  "study_status": "exploratory fixed-alpha English-first extension",
+  "seed": 20260930,
+  "model": "Qwen/Qwen2.5-7B-Instruct",
+  "model_loading": {
+    "dtype": "bfloat16",
+    "device_map": "auto",
+    "trust_remote_code": false
+  },
+  "sources": "data/mitigation/english_v1_sources.json",
+  "methods": [
+    "baseline",
+    "evidence_first",
+    "cad"
+  ],
+  "cad_alpha": 1.0,
+  "max_new_tokens": 512,
+  "output_dir": "results/english_mitigation_v1/qwen2.5-7b/en",
+  "sources_sha256": "99b52fcc2a6a5292d14637a914a055bae160f54c898b73f9bd038a0935d7632d"
+}
