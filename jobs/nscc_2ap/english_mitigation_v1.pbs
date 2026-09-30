@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -N qwen-en-mitig
 #PBS -P 13014407
-#PBS -q aiq1
+#PBS -q normal
 #PBS -l select=1:ngpus=1
 #PBS -l walltime=24:00:00
 #PBS -j oe

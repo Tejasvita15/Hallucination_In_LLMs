@@ -8,7 +8,7 @@ From the repository root on ASPIRE2A+, after pulling this commit:
 qsub jobs/nscc_2ap/english_mitigation_v1.pbs
 ```
 
-The PBS file uses project 13014407, queue aiq1 (as in the supplied successful allocation log), one GPU and a 24-hour limit. It uses the existing settings.local.sh, conda environment and cached Qwen model. No dependency reinstall, smoke job or online download is performed. Queue acceptance and actual H100 execution must be confirmed on ASPIRE; they have not been tested locally.
+The PBS file uses project 13014407, submission queue normal (matching the existing ASPIRE scripts), one GPU and a 24-hour limit. A job log may show a different execution queue after routing; that does not establish permission to submit directly to it. It uses the existing settings.local.sh, conda environment and cached Qwen model. No dependency reinstall, smoke job or online download is performed. Queue acceptance and actual H100 execution must be confirmed on ASPIRE; they have not been tested locally.
 
 ## What runs
 
