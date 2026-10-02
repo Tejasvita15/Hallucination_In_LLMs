@@ -1,0 +1,194 @@
+[
+  {
+    "dataset": "mu_shroom",
+    "model": "deepseek-r1-7b",
+    "method": "baseline",
+    "sample_id": "mu_shroom:EN:test:tst-en-1:500",
+    "recovered": "{\"hallucinated_spans\": [{\"start\": 0, \"end\": 20}]}",
+    "original_parse_error": null
+  },
+  {
+    "dataset": "mu_shroom",
+    "model": "deepseek-r1-7b",
+    "method": "claim_check",
+    "sample_id": "mu_shroom:EN:test:tst-en-1:500",
+    "recovered": "{\"hallucinated_spans\": [{\"start\": 0, \"end\": 6}]}",
+    "original_parse_error": "invalid_or_truncated_answer"
+  },
+  {
+    "dataset": "mu_shroom",
+    "model": "deepseek-r1-7b",
+    "method": "claim_check",
+    "sample_id": "mu_shroom:EN:test:tst-en-10:501",
+    "recovered": "{\"hallucinated_spans\": []}",
+    "original_parse_error": "invalid_or_truncated_answer"
+  },
+  {
+    "dataset": "mu_shroom",
+    "model": "deepseek-r1-7b",
+    "method": "claim_check",
+    "sample_id": "mu_shroom:EN:test:tst-en-100:502",
+    "recovered": "{\"hallucinated_spans\": []}",
+    "original_parse_error": "invalid_or_truncated_answer"
+  },
+  {
+    "dataset": "mu_shroom",
+    "model": "deepseek-r1-7b",
+    "method": "claim_check",
+    "sample_id": "mu_shroom:EN:test:tst-en-101:503",
+    "recovered": "{\"hallucinated_spans\": []}",
+    "original_parse_error": "invalid_or_truncated_answer"
+  },
+  {
+    "dataset": "mu_shroom",
+    "model": "deepseek-r1-7b",
+    "method": "baseline",
+    "sample_id": "mu_shroom:EN:test:tst-en-101:503",
+    "recovered": "{\"hallucinated_spans\": [{\"start\": 21, \"end\": 35}]}",
+    "original_parse_error": null
+  },
+  {
+    "dataset": "mu_shroom",
+    "model": "deepseek-r1-7b",
+    "method": "baseline",
+    "sample_id": "mu_shroom:EN:test:tst-en-102:504",
+    "recovered": "{\"hallucinated_spans\": [{\"start\": 0, \"end\": 14}]}",
+    "original_parse_error": null
+  },
+  {
+    "dataset": "mu_shroom",
+    "model": "deepseek-r1-7b",
+    "method": "claim_check",
+    "sample_id": "mu_shroom:EN:test:tst-en-102:504",
+    "recovered": "{\"hallucinated_spans\": [{\"start\": 0, \"end\": 135}]}",
+    "original_parse_error": "invalid_or_truncated_answer"
+  },
+  {
+    "dataset": "mu_shroom",
+    "model": "deepseek-r1-7b",
+    "method": "claim_check",
+    "sample_id": "mu_shroom:EN:test:tst-en-103:505",
+    "recovered": "{\"hallucinated_spans\": []}",
+    "original_parse_error": "invalid_or_truncated_answer"
+  },
+  {
+    "dataset": "mu_shroom",
+    "model": "deepseek-r1-7b",
+    "method": "claim_check",
+    "sample_id": "mu_shroom:EN:test:tst-en-104:506",
+    "recovered": "{\"hallucinated_spans\": []}",
+    "original_parse_error": "invalid_or_truncated_answer"
+  },
+  {
+    "dataset": "mu_shroom",
+    "model": "deepseek-r1-7b",
+    "method": "claim_check",
+    "sample_id": "mu_shroom:EN:test:tst-en-105:507",
+    "recovered": "{\"hallucinated_spans\": [{\"start\": 0, \"end\": 5}]}",
+    "original_parse_error": "invalid_or_truncated_answer"
+  },
+  {
+    "dataset": "mu_shroom",
+    "model": "deepseek-r1-7b",
+    "method": "claim_check",
+    "sample_id": "mu_shroom:EN:test:tst-en-106:508",
+    "recovered": "{\"hallucinated_spans\": []}",
+    "original_parse_error": "invalid_or_truncated_answer"
+  },
+  {
+    "dataset": "mu_shroom",
+    "model": "deepseek-r1-7b",
+    "method": "claim_check",
+    "sample_id": "mu_shroom:EN:test:tst-en-107:509",
+    "recovered": "{\"hallucinated_spans\": [{\"start\": 13, \"end\": 16}]}",
+    "original_parse_error": "invalid_or_truncated_answer"
+  },
+  {
+    "dataset": "mu_shroom",
+    "model": "deepseek-r1-7b",
+    "method": "claim_check",
+    "sample_id": "mu_shroom:EN:test:tst-en-108:510",
+    "recovered": "{\"hallucinated_spans\": []}",
+    "original_parse_error": "invalid_or_truncated_answer"
+  },
+  {
+    "dataset": "mu_shroom",
+    "model": "deepseek-r1-7b",
+    "method": "claim_check",
+    "sample_id": "mu_shroom:EN:test:tst-en-109:511",
+    "recovered": "{\"hallucinated_spans\": []}",
+    "original_parse_error": "invalid_or_truncated_answer"
+  },
+  {
+    "dataset": "mu_shroom",
+    "model": "deepseek-r1-7b",
+    "method": "claim_check",
+    "sample_id": "mu_shroom:EN:test:tst-en-11:512",
+    "recovered": "{\"hallucinated_spans\": [{\"start\": 0, \"end\": 5}, {\"start\": 5, \"end\": 15}]}",
+    "original_parse_error": "invalid_or_truncated_answer"
+  },
+  {
+    "dataset": "mu_shroom",
+    "model": "deepseek-r1-7b",
+    "method": "claim_check",
+    "sample_id": "mu_shroom:EN:test:tst-en-110:513",
+    "recovered": "{\"hallucinated_spans\": []}",
+    "original_parse_error": "invalid_or_truncated_answer"
+  },
+  {
+    "dataset": "mu_shroom",
+    "model": "deepseek-r1-7b",
+    "method": "claim_check",
+    "sample_id": "mu_shroom:EN:test:tst-en-111:514",
+    "recovered": "{\"hallucinated_spans\": []}",
+    "original_parse_error": "invalid_or_truncated_answer"
+  },
+  {
+    "dataset": "mu_shroom",
+    "model": "deepseek-r1-7b",
+    "method": "claim_check",
+    "sample_id": "mu_shroom:EN:test:tst-en-112:515",
+    "recovered": "{\"hallucinated_spans\": [{\"start\": 0, \"end\": 5}]}",
+    "original_parse_error": "invalid_or_truncated_answer"
+  },
+  {
+    "dataset": "mu_shroom",
+    "model": "deepseek-r1-7b",
+    "method": "baseline",
+    "sample_id": "mu_shroom:EN:test:tst-en-113:516",
+    "recovered": "{\"hallucinated_spans\": [{\"start\": 0, \"end\": 5}]}",
+    "original_parse_error": null
+  },
+  {
+    "dataset": "mu_shroom",
+    "model": "deepseek-r1-7b",
+    "method": "claim_check",
+    "sample_id": "mu_shroom:EN:test:tst-en-114:517",
+    "recovered": "{\"hallucinated_spans\": []}",
+    "original_parse_error": "invalid_or_truncated_answer"
+  },
+  {
+    "dataset": "mu_shroom",
+    "model": "deepseek-r1-7b",
+    "method": "baseline",
+    "sample_id": "mu_shroom:EN:test:tst-en-114:517",
+    "recovered": "{\"hallucinated_spans\": [{\"start\": 0, \"end\": 5}]}",
+    "original_parse_error": null
+  },
+  {
+    "dataset": "mu_shroom",
+    "model": "deepseek-r1-7b",
+    "method": "baseline",
+    "sample_id": "mu_shroom:EN:test:tst-en-115:518",
+    "recovered": "{\"hallucinated_spans\": [{\"start\": 0, \"end\": 15}]}",
+    "original_parse_error": null
+  },
+  {
+    "dataset": "mu_shroom",
+    "model": "deepseek-r1-7b",
+    "method": "claim_check",
+    "sample_id": "mu_shroom:EN:test:tst-en-115:518",
+    "recovered": "{\"hallucinated_spans\": [{\"start\": 0, \"end\": 5}]}",
+    "original_parse_error": "invalid_or_truncated_answer"
+  }
+]
