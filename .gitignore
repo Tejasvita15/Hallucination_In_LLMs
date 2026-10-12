@@ -32,3 +32,5 @@ data/benchmarks/
 Thumbs.db
 .vscode/
 .idea/
+.report-deps/
+.report-cache/

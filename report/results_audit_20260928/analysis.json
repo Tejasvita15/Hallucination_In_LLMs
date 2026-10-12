@@ -1,0 +1,573 @@
+{
+  "archive_sha256": "f0656070df3867c4199838a6313f0da59f2e15e811378bf65ba642a1e76b7aca",
+  "inventory": [
+    {
+      "path": "mu_shroom/deepseek-r1-7b/predictions.jsonl",
+      "bytes": 183554897
+    },
+    {
+      "path": "mu_shroom/deepseek-r1-7b/run_metadata.json",
+      "bytes": 3648
+    },
+    {
+      "path": "mu_shroom/deepseek-r1-7b/summary.json",
+      "bytes": 24529
+    },
+    {
+      "path": "mu_shroom/llama3.1-8b/predictions.jsonl",
+      "bytes": 25966444
+    },
+    {
+      "path": "mu_shroom/llama3.1-8b/run_metadata.json",
+      "bytes": 3641
+    },
+    {
+      "path": "mu_shroom/llama3.1-8b/summary.json",
+      "bytes": 24586
+    },
+    {
+      "path": "mu_shroom/qwen2.5-7b/predictions.jsonl",
+      "bytes": 20116998
+    },
+    {
+      "path": "mu_shroom/qwen2.5-7b/run_metadata.json",
+      "bytes": 3633
+    },
+    {
+      "path": "mu_shroom/qwen2.5-7b/summary.json",
+      "bytes": 24459
+    },
+    {
+      "path": "token_confidence_qwen_paired150_v1/qwen2.5-7b/en/predictions.jsonl",
+      "bytes": 1628029
+    },
+    {
+      "path": "token_confidence_qwen_paired150_v1/qwen2.5-7b/en/run_metadata.json",
+      "bytes": 3090
+    },
+    {
+      "path": "token_confidence_qwen_paired150_v1/qwen2.5-7b/en/summary.json",
+      "bytes": 117
+    },
+    {
+      "path": "token_confidence_qwen_paired150_v1/qwen2.5-7b/zh/predictions.jsonl",
+      "bytes": 2649766
+    },
+    {
+      "path": "token_confidence_qwen_paired150_v1/qwen2.5-7b/zh/run_metadata.json",
+      "bytes": 3090
+    },
+    {
+      "path": "token_confidence_qwen_paired150_v1/qwen2.5-7b/zh/summary.json",
+      "bytes": 117
+    },
+    {
+      "path": "token_confidence_v1/deepseek-r1-7b/en/predictions.jsonl",
+      "bytes": 709437168
+    },
+    {
+      "path": "token_confidence_v1/deepseek-r1-7b/en/run_metadata.json",
+      "bytes": 3082
+    },
+    {
+      "path": "token_confidence_v1/deepseek-r1-7b/en/summary.json",
+      "bytes": 121
+    },
+    {
+      "path": "token_confidence_v1/llama3.1-8b/en/predictions.jsonl",
+      "bytes": 42146643
+    },
+    {
+      "path": "token_confidence_v1/llama3.1-8b/en/run_metadata.json",
+      "bytes": 3113
+    },
+    {
+      "path": "token_confidence_v1/llama3.1-8b/en/summary.json",
+      "bytes": 121
+    },
+    {
+      "path": "token_confidence_v1/qwen2.5-7b/en/predictions.jsonl",
+      "bytes": 85181432
+    },
+    {
+      "path": "token_confidence_v1/qwen2.5-7b/en/run_metadata.json",
+      "bytes": 3090
+    },
+    {
+      "path": "token_confidence_v1/qwen2.5-7b/en/summary.json",
+      "bytes": 121
+    },
+    {
+      "path": "truthfulqa_mc_v1/deepseek-r1-7b/likelihood_cache_rank0.db",
+      "bytes": 1437696
+    },
+    {
+      "path": "truthfulqa_mc_v1/deepseek-r1-7b/results.json",
+      "bytes": 12263
+    },
+    {
+      "path": "truthfulqa_mc_v1/deepseek-r1-7b/run_metadata.json",
+      "bytes": 999
+    },
+    {
+      "path": "truthfulqa_mc_v1/deepseek-r1-7b/summary.json",
+      "bytes": 448
+    },
+    {
+      "path": "truthfulqa_mc_v1/deepseek-r1-7b/truthfulqa_mc1.jsonl",
+      "bytes": 4086722
+    },
+    {
+      "path": "truthfulqa_mc_v1/deepseek-r1-7b/truthfulqa_mc2.jsonl",
+      "bytes": 5426795
+    },
+    {
+      "path": "truthfulqa_mc_v1/llama3.1-8b/likelihood_cache_rank0.db",
+      "bytes": 1454080
+    },
+    {
+      "path": "truthfulqa_mc_v1/llama3.1-8b/results.json",
+      "bytes": 12158
+    },
+    {
+      "path": "truthfulqa_mc_v1/llama3.1-8b/run_metadata.json",
+      "bytes": 982
+    },
+    {
+      "path": "truthfulqa_mc_v1/llama3.1-8b/summary.json",
+      "bytes": 446
+    },
+    {
+      "path": "truthfulqa_mc_v1/llama3.1-8b/truthfulqa_mc1.jsonl",
+      "bytes": 4090160
+    },
+    {
+      "path": "truthfulqa_mc_v1/llama3.1-8b/truthfulqa_mc2.jsonl",
+      "bytes": 5431388
+    },
+    {
+      "path": "truthfulqa_mc_v1/qwen2.5-7b/likelihood_cache_rank0.db",
+      "bytes": 1437696
+    },
+    {
+      "path": "truthfulqa_mc_v1/qwen2.5-7b/results.json",
+      "bytes": 12117
+    },
+    {
+      "path": "truthfulqa_mc_v1/qwen2.5-7b/run_metadata.json",
+      "bytes": 965
+    },
+    {
+      "path": "truthfulqa_mc_v1/qwen2.5-7b/summary.json",
+      "bytes": 443
+    },
+    {
+      "path": "truthfulqa_mc_v1/qwen2.5-7b/truthfulqa_mc1.jsonl",
+      "bytes": 4085864
+    },
+    {
+      "path": "truthfulqa_mc_v1/qwen2.5-7b/truthfulqa_mc2.jsonl",
+      "bytes": 5425328
+    }
+  ],
+  "findings": {
+    "mu_shroom/deepseek-r1-7b/predictions.jsonl": {
+      "counts": {
+        "rows": 1902,
+        "duplicate_ids": 0,
+        "invalid": 586,
+        "gold_positive": 1845,
+        "correct": 1135,
+        "truncated": 7,
+        "language:AR": 150,
+        "language:CA": 100,
+        "language:CS": 100,
+        "language:DE": 150,
+        "language:EN": 154,
+        "language:ES": 152,
+        "language:EU": 99,
+        "language:FA": 100,
+        "language:FI": 150,
+        "language:FR": 150,
+        "language:HI": 150,
+        "language:IT": 150,
+        "language:SV": 147,
+        "language:ZH": 150
+      },
+      "means": {
+        "iou": 0.18407291605769413
+      },
+      "summary_accuracy_matches": true,
+      "summary_iou_matches": true,
+      "always_positive_accuracy": 0.9700315457413249,
+      "balanced_accuracy": 0.37559549279703325,
+      "expected_rows": 1902,
+      "row_count_matches": true
+    },
+    "mu_shroom/llama3.1-8b/predictions.jsonl": {
+      "counts": {
+        "rows": 1902,
+        "duplicate_ids": 0,
+        "invalid": 256,
+        "gold_positive": 1845,
+        "correct": 1582,
+        "truncated": 17,
+        "language:AR": 150,
+        "language:CA": 100,
+        "language:CS": 100,
+        "language:DE": 150,
+        "language:EN": 154,
+        "language:ES": 152,
+        "language:EU": 99,
+        "language:FA": 100,
+        "language:FI": 150,
+        "language:FR": 150,
+        "language:HI": 150,
+        "language:IT": 150,
+        "language:SV": 147,
+        "language:ZH": 150
+      },
+      "means": {
+        "iou": 0.3009399349310946
+      },
+      "summary_accuracy_matches": true,
+      "summary_iou_matches": true,
+      "always_positive_accuracy": 0.9700315457413249,
+      "balanced_accuracy": 0.47123092283554413,
+      "expected_rows": 1902,
+      "row_count_matches": true
+    },
+    "mu_shroom/qwen2.5-7b/predictions.jsonl": {
+      "counts": {
+        "rows": 1902,
+        "duplicate_ids": 0,
+        "invalid": 441,
+        "gold_positive": 1845,
+        "correct": 1319,
+        "truncated": 0,
+        "language:AR": 150,
+        "language:CA": 100,
+        "language:CS": 100,
+        "language:DE": 150,
+        "language:EN": 154,
+        "language:ES": 152,
+        "language:EU": 99,
+        "language:FA": 100,
+        "language:FI": 150,
+        "language:FR": 150,
+        "language:HI": 150,
+        "language:IT": 150,
+        "language:SV": 147,
+        "language:ZH": 150
+      },
+      "means": {
+        "iou": 0.24820390284653673
+      },
+      "summary_accuracy_matches": true,
+      "summary_iou_matches": true,
+      "always_positive_accuracy": 0.9700315457413249,
+      "balanced_accuracy": 0.43396091855655394,
+      "expected_rows": 1902,
+      "row_count_matches": true
+    },
+    "token_confidence_qwen_paired150_v1/qwen2.5-7b/en/predictions.jsonl": {
+      "counts": {
+        "rows": 150,
+        "duplicate_ids": 0,
+        "truncated": 0,
+        "missing_final": 0,
+        "semantic_label_pending": 150,
+        "translation_warning_rows": 0,
+        "trace_length_mismatches": 0,
+        "mean_final_token_probability_mismatches": 0,
+        "mean_final_token_entropy_nats_mismatches": 0,
+        "hash_mismatches": 0,
+        "complete_final_answers": 150
+      },
+      "means": {
+        "generated_tokens_all": 33.03333333333333,
+        "final_token_probability_complete_only": 0.9621697340411283,
+        "final_entropy_complete_only": 0.0992107711932512
+      },
+      "expected_rows": 150,
+      "row_count_matches": true
+    },
+    "token_confidence_qwen_paired150_v1/qwen2.5-7b/zh/predictions.jsonl": {
+      "counts": {
+        "rows": 150,
+        "duplicate_ids": 0,
+        "truncated": 0,
+        "missing_final": 0,
+        "semantic_label_pending": 150,
+        "translation_warning_rows": 0,
+        "trace_length_mismatches": 0,
+        "mean_final_token_probability_mismatches": 0,
+        "mean_final_token_entropy_nats_mismatches": 0,
+        "hash_mismatches": 0,
+        "complete_final_answers": 150
+      },
+      "means": {
+        "generated_tokens_all": 55.233333333333334,
+        "final_token_probability_complete_only": 0.9088561546096875,
+        "final_entropy_complete_only": 0.2616028927149909
+      },
+      "expected_rows": 150,
+      "row_count_matches": true
+    },
+    "token_confidence_v1/deepseek-r1-7b/en/predictions.jsonl": {
+      "counts": {
+        "rows": 10000,
+        "duplicate_ids": 0,
+        "truncated": 92,
+        "missing_final": 90,
+        "semantic_label_pending": 10000,
+        "translation_warning_rows": 0,
+        "trace_length_mismatches": 0,
+        "mean_final_token_probability_mismatches": 0,
+        "mean_final_token_entropy_nats_mismatches": 0,
+        "hash_mismatches": 0,
+        "complete_final_answers": 9908
+      },
+      "means": {
+        "generated_tokens_all": 316.1538,
+        "final_token_probability_complete_only": 0.9355899577087069,
+        "final_entropy_complete_only": 0.1706820836354864
+      },
+      "expected_rows": 10000,
+      "row_count_matches": true
+    },
+    "token_confidence_v1/llama3.1-8b/en/predictions.jsonl": {
+      "counts": {
+        "rows": 10000,
+        "duplicate_ids": 0,
+        "truncated": 4,
+        "missing_final": 0,
+        "semantic_label_pending": 10000,
+        "translation_warning_rows": 0,
+        "trace_length_mismatches": 0,
+        "mean_final_token_probability_mismatches": 0,
+        "mean_final_token_entropy_nats_mismatches": 0,
+        "hash_mismatches": 0,
+        "complete_final_answers": 9996
+      },
+      "means": {
+        "generated_tokens_all": 10.9739,
+        "final_token_probability_complete_only": 0.8822125976838857,
+        "final_entropy_complete_only": 0.3411014196337286
+      },
+      "expected_rows": 10000,
+      "row_count_matches": true
+    },
+    "token_confidence_v1/qwen2.5-7b/en/predictions.jsonl": {
+      "counts": {
+        "rows": 10000,
+        "duplicate_ids": 0,
+        "truncated": 0,
+        "missing_final": 0,
+        "semantic_label_pending": 10000,
+        "translation_warning_rows": 0,
+        "trace_length_mismatches": 0,
+        "mean_final_token_probability_mismatches": 0,
+        "mean_final_token_entropy_nats_mismatches": 0,
+        "hash_mismatches": 0,
+        "complete_final_answers": 10000
+      },
+      "means": {
+        "generated_tokens_all": 32.4094,
+        "final_token_probability_complete_only": 0.9610868585057544,
+        "final_entropy_complete_only": 0.10171332574846874
+      },
+      "expected_rows": 10000,
+      "row_count_matches": true
+    },
+    "truthfulqa_mc_v1/deepseek-r1-7b/truthfulqa_mc1.jsonl": {
+      "counts": {
+        "rows": 817,
+        "duplicate_ids": 0,
+        "score_mismatches": 0
+      },
+      "means": {
+        "score": 0.28518971848225216
+      },
+      "summary_matches": true,
+      "expected_rows": 817,
+      "row_count_matches": true
+    },
+    "truthfulqa_mc_v1/deepseek-r1-7b/truthfulqa_mc2.jsonl": {
+      "counts": {
+        "rows": 817,
+        "duplicate_ids": 0,
+        "score_mismatches": 0
+      },
+      "means": {
+        "score": 0.45628223125407674
+      },
+      "summary_matches": true,
+      "expected_rows": 817,
+      "row_count_matches": true
+    },
+    "truthfulqa_mc_v1/llama3.1-8b/truthfulqa_mc1.jsonl": {
+      "counts": {
+        "rows": 817,
+        "duplicate_ids": 0,
+        "score_mismatches": 0
+      },
+      "means": {
+        "score": 0.37209302325581395
+      },
+      "summary_matches": true,
+      "expected_rows": 817,
+      "row_count_matches": true
+    },
+    "truthfulqa_mc_v1/llama3.1-8b/truthfulqa_mc2.jsonl": {
+      "counts": {
+        "rows": 817,
+        "duplicate_ids": 0,
+        "score_mismatches": 0
+      },
+      "means": {
+        "score": 0.5399330650161149
+      },
+      "summary_matches": true,
+      "expected_rows": 817,
+      "row_count_matches": true
+    },
+    "truthfulqa_mc_v1/qwen2.5-7b/truthfulqa_mc1.jsonl": {
+      "counts": {
+        "rows": 817,
+        "duplicate_ids": 0,
+        "score_mismatches": 0
+      },
+      "means": {
+        "score": 0.4773561811505508
+      },
+      "summary_matches": true,
+      "expected_rows": 817,
+      "row_count_matches": true
+    },
+    "truthfulqa_mc_v1/qwen2.5-7b/truthfulqa_mc2.jsonl": {
+      "counts": {
+        "rows": 817,
+        "duplicate_ids": 0,
+        "score_mismatches": 0
+      },
+      "means": {
+        "score": 0.6481527887470876
+      },
+      "summary_matches": true,
+      "expected_rows": 817,
+      "row_count_matches": true
+    }
+  },
+  "paired_comparisons": {
+    "mu_shroom/deepseek-r1-7b/predictions.jsonl versus mu_shroom/llama3.1-8b/predictions.jsonl": {
+      "paired_rows": 1902,
+      "same_id_sets": true,
+      "source_mismatches": 0
+    },
+    "mu_shroom/deepseek-r1-7b/predictions.jsonl versus mu_shroom/qwen2.5-7b/predictions.jsonl": {
+      "paired_rows": 1902,
+      "same_id_sets": true,
+      "source_mismatches": 0
+    },
+    "mu_shroom/llama3.1-8b/predictions.jsonl versus mu_shroom/qwen2.5-7b/predictions.jsonl": {
+      "paired_rows": 1902,
+      "same_id_sets": true,
+      "source_mismatches": 0
+    },
+    "token_confidence_qwen_paired150_v1/qwen2.5-7b/en/predictions.jsonl versus token_confidence_qwen_paired150_v1/qwen2.5-7b/zh/predictions.jsonl": {
+      "paired_rows": 150,
+      "same_id_sets": true,
+      "source_mismatches": 0,
+      "complete_pairs": 150,
+      "mean_token_probability_difference": 0.05331357943144079
+    },
+    "token_confidence_v1/deepseek-r1-7b/en/predictions.jsonl versus token_confidence_v1/llama3.1-8b/en/predictions.jsonl": {
+      "paired_rows": 10000,
+      "same_id_sets": true,
+      "source_mismatches": 0
+    },
+    "token_confidence_v1/deepseek-r1-7b/en/predictions.jsonl versus token_confidence_v1/qwen2.5-7b/en/predictions.jsonl": {
+      "paired_rows": 10000,
+      "same_id_sets": true,
+      "source_mismatches": 0
+    },
+    "token_confidence_v1/llama3.1-8b/en/predictions.jsonl versus token_confidence_v1/qwen2.5-7b/en/predictions.jsonl": {
+      "paired_rows": 10000,
+      "same_id_sets": true,
+      "source_mismatches": 0
+    },
+    "truthfulqa_mc_v1/deepseek-r1-7b/truthfulqa_mc1.jsonl versus truthfulqa_mc_v1/llama3.1-8b/truthfulqa_mc1.jsonl": {
+      "paired_rows": 817,
+      "same_id_sets": true,
+      "source_mismatches": 0,
+      "prompt_mismatches": 0,
+      "mean_difference": -0.08690330477356181,
+      "paired_bootstrap_95_ci": [
+        -0.11505507955936352,
+        -0.05752753977968176
+      ]
+    },
+    "truthfulqa_mc_v1/deepseek-r1-7b/truthfulqa_mc1.jsonl versus truthfulqa_mc_v1/qwen2.5-7b/truthfulqa_mc1.jsonl": {
+      "paired_rows": 817,
+      "same_id_sets": true,
+      "source_mismatches": 0,
+      "prompt_mismatches": 0,
+      "mean_difference": -0.19216646266829865,
+      "paired_bootstrap_95_ci": [
+        -0.2252141982864137,
+        -0.16034271725826194
+      ]
+    },
+    "truthfulqa_mc_v1/deepseek-r1-7b/truthfulqa_mc2.jsonl versus truthfulqa_mc_v1/llama3.1-8b/truthfulqa_mc2.jsonl": {
+      "paired_rows": 817,
+      "same_id_sets": true,
+      "source_mismatches": 0,
+      "prompt_mismatches": 0,
+      "mean_difference": -0.08365083376203816,
+      "paired_bootstrap_95_ci": [
+        -0.11031934109167929,
+        -0.056530337165775754
+      ]
+    },
+    "truthfulqa_mc_v1/deepseek-r1-7b/truthfulqa_mc2.jsonl versus truthfulqa_mc_v1/qwen2.5-7b/truthfulqa_mc2.jsonl": {
+      "paired_rows": 817,
+      "same_id_sets": true,
+      "source_mismatches": 0,
+      "prompt_mismatches": 0,
+      "mean_difference": -0.19187055749301088,
+      "paired_bootstrap_95_ci": [
+        -0.22270293566536162,
+        -0.16101043508752233
+      ]
+    },
+    "truthfulqa_mc_v1/llama3.1-8b/truthfulqa_mc1.jsonl versus truthfulqa_mc_v1/qwen2.5-7b/truthfulqa_mc1.jsonl": {
+      "paired_rows": 817,
+      "same_id_sets": true,
+      "source_mismatches": 0,
+      "prompt_mismatches": 0,
+      "mean_difference": -0.10526315789473684,
+      "paired_bootstrap_95_ci": [
+        -0.13586291309669524,
+        -0.07466340269277846
+      ]
+    },
+    "truthfulqa_mc_v1/llama3.1-8b/truthfulqa_mc2.jsonl versus truthfulqa_mc_v1/qwen2.5-7b/truthfulqa_mc2.jsonl": {
+      "paired_rows": 817,
+      "same_id_sets": true,
+      "source_mismatches": 0,
+      "prompt_mismatches": 0,
+      "mean_difference": -0.10821972373097273,
+      "paired_bootstrap_95_ci": [
+        -0.13259981541180849,
+        -0.08265374314492262
+      ]
+    }
+  },
+  "limitations": [
+    "Semantic answer labels are pending; no answer hallucination rates or factuality calibration inferred.",
+    "Mu-SHROOM is heavily imbalanced; span IoU and coverage are more informative than accuracy alone.",
+    "Cross-language token likelihood differences can reflect tokenization and do not establish factual consistency.",
+    "Bootstrap intervals are unadjusted exploratory pairwise intervals."
+  ]
+}
