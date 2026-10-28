@@ -1,6 +1,19 @@
 # Hallucination Evaluation and Inference-Time Mitigation
 
-Empirical master's project evaluating factual-choice selection, evidence-grounded candidate review, hallucinated-span detection, token-level confidence and inference-time mitigation in three open-weight language models. Results are reported separately by task; there is no composite model ranking.
+This repository accompanies a master's dissertation investigating factual reliability in three open-weight language models. It brings together four benchmark datasets, token-level generation traces, researcher-labelled answers, a paired English–Chinese study and inference-time mitigation experiments.
+
+The research examines **when models make reliable factual decisions, whether token likelihood distinguishes supported answers, and how prompting and decoding interventions affect performance**. Comparisons use matched inputs within each experiment and task-specific metrics, with explicit reporting of output validity.
+
+## Principal findings and contributions
+
+- **Comparative benchmark evaluation:** Llama achieves the highest observed English HaluEval review accuracy and multilingual Mu-SHROOM span IoU. Qwen leads the official TruthfulQA evaluation and RAGTruth balanced accuracy and positive-only span overlap. These results identify distinct strengths across tasks.
+- **Measured benefit from claim checking:** Llama's TruthfulQA generated-choice accuracy increases from **58.14% to 65.73%**, a gain of **7.59 percentage points** with an exploratory paired 95% bootstrap interval of **4.90–10.16 points**.
+- **Evidence about token-confidence behaviour:** Across the 90-answer researcher-labelled pilot, unsupported answers have higher mean selected-token probability within each model. This demonstrates that high token likelihood can accompany unsupported claims and motivates evaluating confidence against semantic judgments.
+- **Paired cross-lingual analysis:** Qwen's English candidate-review accuracy exceeds Chinese by **6.38 percentage points** on the primary matched sample. Class-specific results reveal increased hallucination recall but reduced grounded recall in Chinese, alongside translation and validator effects.
+- **Evaluation methodology:** The analysis separates correctness, output validity, span localization and token likelihood. Strict and recovery results expose the impact of output conventions, while overall and positive-only overlap reveal sensitivity to metric definitions.
+- **Traceable experimental evidence:** The project analyses **30,000 English generation traces** and an English mitigation suite of **99,876 outputs across 39 shards**, supported by saved predictions, audit summaries and reproducible plotting code.
+
+The contribution is an empirical characterization of model and intervention behaviour under documented conditions. Detailed results and the scope of each finding are provided below.
 
 ## Models
 
@@ -148,6 +161,19 @@ python scripts/analyze_mitigation_suite_archive.py --archive /path/to/mitigation
 
 Reported runs used a CUDA-enabled GPU environment. Original run metadata retains the actual hardware and software configuration; provider and access arrangements are not needed to interpret this repository. CPU plotting is independent of the inference hardware.
 
-## Evidence and limitations
+## Verification and reproducibility
 
-Saved-output checks establish internal consistency, not an independent replay of every forward pass. The mitigation archive contains empty checkpoint copies despite intact prediction files, so it is not a complete resumable backup. Bootstrap intervals are exploratory and unadjusted for multiple comparisons. Source groups, rather than output-row counts alone, determine dependence. Historical metadata, hashes, exclusion records and annotation versions remain intact. No universal model ranking, improved tokenizer, or general generation-level hallucination reduction is claimed.
+Reported scores were checked against the retained predictions, and token summaries were recomputed from saved traces. The mitigation audit examined all **99,876 prediction rows across 39 shards**, with no discrepancies in the integrity conditions tested. These checks support agreement between the recorded outputs and the reported calculations. The analysis scripts and plotting manifest provide a traceable route from retained evidence to tables and figures.
+
+The verification covers saved-output analysis; it does not constitute a second, independent execution of every model forward pass. Original configurations, hashes, exclusion records and annotation versions are retained so that analysis choices can be inspected.
+
+## Scope of interpretation
+
+The findings apply to the evaluated checkpoints, inputs and protocols. Their interpretation follows four principles:
+
+1. **Match the conclusion to the task.** Likelihood-based answer ranking, generated choices, candidate review and span detection measure different capabilities. Claim-checking improvements are attributed to the task on which they were observed. CAD generation results characterize structural validity and output behaviour; semantic reduction in unsupported generation requires answer-specific labels.
+2. **Report uncertainty with the comparison.** Paired bootstrap intervals retain the specified question or source grouping. They are exploratory and are not adjusted for multiple comparisons; repeated outputs from one source are not treated as additional independent source questions.
+3. **Keep semantic evidence explicit.** The English confidence pilot uses one researcher and small unsupported-answer groups. The bilingual comparison includes translation interventions and has no independent bilingual adjudication. These design boundaries define how broadly the findings can be generalized.
+4. **Distinguish analysis artifacts from restart checkpoints.** The prediction files support the reported analysis. Some checkpoint copies in the supplied mitigation archive are empty, so that archive alone is insufficient for complete job resumption. This is a backup-completeness issue, distinct from the verified calculations on retained predictions.
+
+Together, the results support task-specific conclusions about factual decisions, confidence behaviour, language sensitivity and mitigation. They provide a basis for further semantic validation and controlled extensions, with the evidence for each claim made explicit.
