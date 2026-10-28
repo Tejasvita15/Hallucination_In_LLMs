@@ -25,7 +25,7 @@ def escaped(value):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--out', type=Path, default=ROOT / 'report/submission_20261002/assets')
+    parser.add_argument('--out', type=Path, default=ROOT / 'analysis/assets')
     args = parser.parse_args()
     out = args.out.resolve()
     for folder in ('figures','tables','data'):
@@ -36,10 +36,10 @@ def main():
         data = p.read_bytes()
         provenance[relative] = hashlib.sha256(data).hexdigest()
         return json.loads(data)
-    suite = read('report/mitigation_suite_audit_20261001/analysis.json')
-    base = read('report/results_audit_20260928/analysis.json')['findings']
-    extra = read('report/results_audit_20260928/supplementary_analysis.json')
-    review = read('report/prediction_audit_20260920/quantitative_results.json')
+    suite = read('analysis/inputs/mitigation_results.json')
+    base = read('analysis/inputs/benchmark_results.json')['findings']
+    extra = read('analysis/inputs/supplementary_results.json')
+    review = read('analysis/inputs/paired_review_results.json')
     if suite['integrity_errors'] or suite['rows_checked'] != 99876 or suite['shards_checked'] != 39:
         raise ValueError('Unexpected mitigation audit status; inspect before publishing.')
     stats = {(r['dataset'],r['model'],r['method']):r for r in suite['stats']}
@@ -125,13 +125,66 @@ def main():
     table('crosslingual_exploratory',['Language','N','Accuracy %','Grounded recall %','Hallucination recall %'],[[lang, cross[lang]['scored_rows']]+[100*cross[lang][k] for k in ('accuracy','grounded_recall','hallucination_recall')] for lang in ('en','zh')],inventory[-1]['caption'])
 
     traces=[base[f'token_confidence_v1/{m}/en/predictions.jsonl'] for m in MODELS]
-    bars('token_probability_descriptive',{'Complete-answer mean':[r['means']['final_token_probability_complete_only'] for r in traces]},'Mean selected-token probability','Descriptive token likelihood only. Not a calibrated factuality probability; semantic labels pending.',(0,1.08))
+    bars('token_probability_descriptive',{'Complete-answer mean':[r['means']['final_token_probability_complete_only'] for r in traces]},'Mean selected-token probability','Complete-answer token likelihood across the English generation set. These means are not calibrated factuality probabilities.',(0,1.08))
     table('token_probability_descriptive',['Model','Complete','Truncated','Mean probability'],[[NAMES[i],r['counts']['complete_final_answers'],r['counts']['truncated'],r['means']['final_token_probability_complete_only']] for i,r in enumerate(traces)],inventory[-1]['caption'])
     table('halueval_review_paired',['Model A','Model B','Delta pp','Lower','Upper'],[[r['a'],r['b'],r['accuracy_difference_pp'],*r['cluster_bootstrap_95_ci_pp']] for r in review['paired_comparisons']],'HaluEval candidate-review paired source-cluster comparisons; exploratory intervals.')
+    # Human labels come exclusively from the clarified researcher version.
+    human = read('analysis/inputs/human_review.json')
+    groups = {r['model']: r for r in human['groups']}
+    if set(groups) != set(MODELS) or any(groups[m]['n'] != 30 for m in MODELS):
+        raise ValueError('Expected three matched groups of 30 researcher-labelled answers')
+    for m in MODELS:
+        if sum(c['n'] for c in groups[m]['categories'].values()) != 30:
+            raise ValueError('Inconsistent human annotation category counts')
+    for name, key, ylabel, cap, limits in [
+        ('human_probability_by_support', 'mean_final_token_probability', 'Mean selected-token probability',
+         'Single-researcher English sample: 30 matched sources per model. Supported/unsupported counts are Llama 21/4, Qwen 23/3 and DeepSeek 21/5. Thirteen uncertain answers are excluded. Descriptive means, not calibrated factuality probabilities.', (0,1.12)),
+        ('human_length_by_support', 'final_answer_tokens', 'Mean final-answer tokens',
+         'Final-answer length by researcher support judgment. Small unsupported groups (4, 3 and 5 answers); uncertain answers excluded. No causal length effect is inferred.', (0,72))]:
+        bars(name,{label.title():[groups[m]['categories'][label][key] for m in MODELS]
+                   for label in ('supported','unsupported')},ylabel,cap,limits)
+    fig,ax=plt.subplots(figsize=(7.5,4.4)); bottom=np.zeros(3)
+    for j,label in enumerate(('supported','unsupported','uncertain','abstention')):
+        values=np.array([groups[m]['categories'][label]['n'] for m in MODELS])
+        rect=ax.bar(NAMES,values,bottom=bottom,label=label.title(),color=COLORS[j])
+        ax.bar_label(rect,labels=[str(v) if v else '' for v in values],label_type='center')
+        bottom+=values
+    ax.set_ylim(0,33);ax.set_ylabel('Number of answers');ax.legend(ncol=2,frameon=False,loc='upper center',bbox_to_anchor=(.5,1.22))
+    save(fig,'human_annotation_counts','Clarified researcher labels: 65 supported, 12 unsupported, 13 uncertain and no abstentions across 90 answers from 30 matched sources. Single reviewer; no inter-annotator agreement estimate.')
+    fig,ax=plt.subplots(figsize=(7.5,4.3))
+    values=[groups[m]['error_auroc_negative_mean_probability'] for m in MODELS]
+    ax.bar_label(ax.bar(NAMES,values,color=COLORS[:3]),fmt='%.3f',padding=3)
+    ax.axhline(.5,color='#555555',linestyle='--',label='AUROC reference: 0.5')
+    ax.set_ylim(0,1);ax.set_ylabel('Error AUROC');ax.legend(frameon=False)
+    save(fig,'human_error_auroc','Error score is negative mean selected-token probability. Uncertain answers excluded; score direction is not reversed. Exploratory small-sample estimates without uncertainty intervals or significance claims.')
+    fig,ax=plt.subplots(figsize=(7.5,3.8))
+    comparisons=review['paired_comparisons']
+    for i,r in enumerate(comparisons):
+        d=r['accuracy_difference_pp'];lo,hi=r['cluster_bootstrap_95_ci_pp']
+        ax.errorbar(d,i,xerr=[[d-lo],[hi-d]],fmt='o',capsize=4,color=COLORS[0])
+    ax.axvline(0,color='#555555',linestyle='--')
+    ax.set_yticks(range(len(comparisons)),[r['a'].title()+' minus '+r['b'].title() for r in comparisons])
+    ax.invert_yaxis();ax.set_xlabel('Accuracy difference (percentage points)')
+    save(fig,'halueval_paired_differences','English HaluEval candidate review: paired source-cluster bootstrap 95% intervals. Exploratory comparisons; no multiple-comparison adjustment.')
     captions='\n\n'.join('## '+r['name']+'\n\n'+r['caption'] for r in inventory)
     (out/'CAPTIONS.md').write_text(captions+'\n',encoding='utf-8')
     snippets='\n'.join('\\begin{figure}[htbp]\n\\centering\n\\includegraphics[width=.95\\textwidth]{assets/figures/'+r['name']+'.pdf}\n\\caption{'+escaped(r['caption'])+'}\n\\label{fig:'+r['name']+'}\n\\end{figure}\n' for r in inventory)
     (out/'figure_includes.tex').write_text(snippets,encoding='utf-8')
+    chapter_names={4:['truthfulqa_official','halueval_paired_differences','ragtruth_iou_sensitivity','mushroom_multilingual'],
+                   5:['token_probability_descriptive','human_annotation_counts','human_probability_by_support','human_error_auroc','human_length_by_support'],
+                   6:['crosslingual_exploratory'],
+                   7:['truthfulqa_mitigation','truthfulqa_paired_deltas','mushroom_english_mitigation','halueval_qa_invalid','ragtruth_invalid']}
+    for chapter,names in chapter_names.items():
+        blocks=[]
+        for r in inventory:
+            if r['name'] in names:
+                blocks.append('\\begin{figure}[htbp]\n\\centering\n\\includegraphics[width=.95\\textwidth]{assets/figures/'+r['name']+'.pdf}\n\\caption{'+escaped(r['caption'])+'}\n\\label{fig:'+r['name']+'}\n\\end{figure}\n')
+        (out/f'chapter{chapter}_figures.tex').write_text('\n'.join(blocks),encoding='utf-8')
+    import html
+    gallery='<!doctype html><html lang="en"><meta charset="utf-8"><title>Thesis figures</title><style>body{max-width:1000px;margin:40px auto;font:17px/1.5 system-ui;padding:20px;background:#f6f7f9}figure{background:white;padding:24px;margin:24px 0}img{width:100%}figcaption{margin-top:16px}</style><h1>Thesis figure gallery</h1><p>Plots from audited results and clarified researcher labels. PDF versions are intended for LaTeX.</p>'
+    for r in inventory:
+        gallery+='<figure><img src="figures/'+r['name']+'.png" alt="'+html.escape(r['name'])+'"><figcaption>'+html.escape(r['caption'])+'</figcaption></figure>'
+    (out/'gallery.html').write_text(gallery+'</html>',encoding='utf-8')
     (out/'manifest.json').write_text(json.dumps({'inputs_sha256':provenance,'script_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),'matplotlib':matplotlib.__version__,'figures':inventory,'limits':'Saved audit inputs; no new inference, no invented human labels, no new confidence intervals.'},indent=2),encoding='utf-8')
     print(f'Generated {len(inventory)} figures (PDF/PNG/SVG) and {len(list((out/"tables").glob("*.tex")))} tables in {out}')
 

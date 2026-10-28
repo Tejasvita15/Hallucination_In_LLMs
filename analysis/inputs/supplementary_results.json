@@ -1,0 +1,414 @@
+{
+  "ragtruth": {
+    "deepseek-r1-7b": {
+      "rows": 2675,
+      "duplicate_ids": 0,
+      "counts": {
+        "decision_parse_mismatches": 0,
+        "span_parse_mismatches": 0,
+        "decision_truncated": 26,
+        "span_truncated": 93
+      },
+      "response_level": {
+        "num_samples": 2675,
+        "invalid_instances": 901,
+        "coverage": 0.6631775700934579,
+        "invalid_by_gold_label": {
+          "positive": 247,
+          "negative": 654
+        },
+        "accuracy": 0.44710280373831773,
+        "balanced_accuracy": 0.40879036978440875,
+        "precision": 0.6446078431372549,
+        "recall": 0.2788971367974549,
+        "specificity": 0.5386836027713626,
+        "f1": 0.389341228719467,
+        "mcc": null,
+        "confusion_matrix": {
+          "tp": 263,
+          "fp": 145,
+          "tn": 933,
+          "fn": 433
+        }
+      },
+      "span_level": {
+        "num_samples": 2675,
+        "invalid_instances": 1248,
+        "mean_hard_span_iou": 0.2777269389290532,
+        "exact_span_match_rate": 0.26242990654205606,
+        "hallucinated_character_precision": 0.09116129390223603,
+        "hallucinated_character_recall": 0.0770592718531981,
+        "hallucinated_character_f1": 0.0835191927664144,
+        "response_level": {
+          "num_samples": 2675,
+          "invalid_instances": 1248,
+          "coverage": 0.5334579439252336,
+          "invalid_by_gold_label": {
+            "positive": 460,
+            "negative": 788
+          },
+          "accuracy": 0.3491588785046729,
+          "balanced_accuracy": 0.32735832768007367,
+          "precision": 0.48975409836065575,
+          "recall": 0.25344644750795337,
+          "specificity": 0.40127020785219397,
+          "f1": 0.3340321453529001,
+          "mcc": null,
+          "confusion_matrix": {
+            "tp": 239,
+            "fp": 249,
+            "tn": 695,
+            "fn": 244
+          }
+        }
+      },
+      "metrics_match_saved": true,
+      "always_negative_accuracy": 0.6474766355140187,
+      "gold_positive": 943,
+      "source_groups": 450,
+      "positive_only_span_iou": 0.05081607808612654
+    },
+    "llama3.1-8b": {
+      "rows": 2675,
+      "duplicate_ids": 0,
+      "counts": {
+        "decision_parse_mismatches": 0,
+        "span_parse_mismatches": 0,
+        "decision_truncated": 3,
+        "span_truncated": 153
+      },
+      "response_level": {
+        "num_samples": 2675,
+        "invalid_instances": 14,
+        "coverage": 0.994766355140187,
+        "invalid_by_gold_label": {
+          "positive": 6,
+          "negative": 8
+        },
+        "accuracy": 0.4119626168224299,
+        "balanced_accuracy": 0.5413114501162082,
+        "precision": 0.3740890688259109,
+        "recall": 0.9798515376458112,
+        "specificity": 0.10277136258660508,
+        "f1": 0.5414591268678581,
+        "mcc": null,
+        "confusion_matrix": {
+          "tp": 924,
+          "fp": 1546,
+          "tn": 178,
+          "fn": 13
+        }
+      },
+      "span_level": {
+        "num_samples": 2675,
+        "invalid_instances": 874,
+        "mean_hard_span_iou": 0.07328946798737501,
+        "exact_span_match_rate": 0.028037383177570093,
+        "hallucinated_character_precision": 0.07662563531060568,
+        "hallucinated_character_recall": 0.37246878114557075,
+        "hallucinated_character_f1": 0.127103147769513,
+        "response_level": {
+          "num_samples": 2675,
+          "invalid_instances": 874,
+          "coverage": 0.6732710280373833,
+          "invalid_by_gold_label": {
+            "positive": 328,
+            "negative": 546
+          },
+          "accuracy": 0.2497196261682243,
+          "balanced_accuracy": 0.3409041092871015,
+          "precision": 0.3514908256880734,
+          "recall": 0.6500530222693531,
+          "specificity": 0.03175519630484989,
+          "f1": 0.4562709341272794,
+          "mcc": null,
+          "confusion_matrix": {
+            "tp": 613,
+            "fp": 1131,
+            "tn": 55,
+            "fn": 2
+          }
+        }
+      },
+      "metrics_match_saved": true,
+      "always_negative_accuracy": 0.6474766355140187,
+      "gold_positive": 943,
+      "source_groups": 450,
+      "positive_only_span_iou": 0.14957510802357177
+    },
+    "qwen2.5-7b": {
+      "rows": 2675,
+      "duplicate_ids": 0,
+      "counts": {
+        "decision_parse_mismatches": 0,
+        "span_parse_mismatches": 0,
+        "decision_truncated": 0,
+        "span_truncated": 2
+      },
+      "response_level": {
+        "num_samples": 2675,
+        "invalid_instances": 0,
+        "coverage": 1.0,
+        "invalid_by_gold_label": {
+          "positive": 0,
+          "negative": 0
+        },
+        "accuracy": 0.6811214953271028,
+        "balanced_accuracy": 0.5991678687496785,
+        "precision": 0.5872093023255814,
+        "recall": 0.3213149522799576,
+        "specificity": 0.8770207852193995,
+        "f1": 0.41535298149417416,
+        "mcc": 0.24014834259091009,
+        "confusion_matrix": {
+          "tp": 303,
+          "fp": 213,
+          "tn": 1519,
+          "fn": 640
+        }
+      },
+      "span_level": {
+        "num_samples": 2675,
+        "invalid_instances": 739,
+        "mean_hard_span_iou": 0.17344913106732954,
+        "exact_span_match_rate": 0.11327102803738318,
+        "hallucinated_character_precision": 0.14849581724581726,
+        "hallucinated_character_recall": 0.21646244943424986,
+        "hallucinated_character_f1": 0.17615037809212566,
+        "response_level": {
+          "num_samples": 2675,
+          "invalid_instances": 739,
+          "coverage": 0.7237383177570094,
+          "invalid_by_gold_label": {
+            "positive": 220,
+            "negative": 519
+          },
+          "accuracy": 0.3644859813084112,
+          "balanced_accuracy": 0.45295926714162216,
+          "precision": 0.428226779252111,
+          "recall": 0.7529162248144221,
+          "specificity": 0.15300230946882218,
+          "f1": 0.5459438677431757,
+          "mcc": null,
+          "confusion_matrix": {
+            "tp": 710,
+            "fp": 948,
+            "tn": 265,
+            "fn": 13
+          }
+        }
+      },
+      "metrics_match_saved": true,
+      "always_negative_accuracy": 0.6474766355140187,
+      "gold_positive": 943,
+      "source_groups": 450,
+      "positive_only_span_iou": 0.2110036326671331
+    }
+  },
+  "crosslingual": {
+    "en.quality.json": {
+      "language": "en",
+      "num_samples": 150,
+      "samples_with_automatic_warnings": 0,
+      "automatic_sample_warning_rate": 0.0,
+      "automatic_warning_counts": {},
+      "samples_with_warnings": 0,
+      "sample_warning_rate": 0.0,
+      "samples_with_critical_warnings": 0,
+      "critical_warning_rate": 0.0,
+      "grounded_alignment_loss_samples": 0,
+      "grounded_alignment_loss_rate": 0.0,
+      "max_critical_warning_rate": 0.1,
+      "max_grounded_alignment_loss_rate": 0.25,
+      "quality_gate_passed": true,
+      "grounded_answer_alignment_counts": {
+        "not_applicable": 12,
+        "translated_answer": 121,
+        "translated_numeric_answer": 15,
+        "translated_numeric_components": 2
+      },
+      "translation_strategy_counts": {
+        "hallucinated_answer:identity": 150,
+        "knowledge:identity": 150,
+        "question:identity": 150,
+        "right_answer:identity": 150
+      },
+      "warning_counts": {},
+      "reviewed_samples": 0,
+      "reviewed_alignment_samples": 0,
+      "manual_override_samples": 0
+    },
+    "zh.quality.json": {
+      "language": "zh",
+      "num_samples": 150,
+      "samples_with_automatic_warnings": 44,
+      "automatic_sample_warning_rate": 0.29333333333333333,
+      "automatic_warning_counts": {
+        "grounded_alignment_lost": 24,
+        "non_content_output": 1,
+        "numbers_missing": 17,
+        "question_intent_lost": 3,
+        "repeated_output": 4
+      },
+      "samples_with_warnings": 0,
+      "sample_warning_rate": 0.0,
+      "samples_with_critical_warnings": 0,
+      "critical_warning_rate": 0.0,
+      "grounded_alignment_loss_samples": 0,
+      "grounded_alignment_loss_rate": 0.0,
+      "max_critical_warning_rate": 0.0,
+      "max_grounded_alignment_loss_rate": 0.05,
+      "quality_gate_passed": true,
+      "grounded_answer_alignment_counts": {
+        "not_applicable": 12,
+        "reviewed_semantic_alignment": 3,
+        "source_answer_alias": 16,
+        "source_answer_components": 2,
+        "translated_answer": 91,
+        "translated_answer_alias": 9,
+        "translated_numeric_answer": 15,
+        "translated_numeric_components": 2
+      },
+      "translation_strategy_counts": {
+        "hallucinated_answer:model": 143,
+        "hallucinated_answer:review_override": 7,
+        "knowledge:model": 5,
+        "knowledge:review_override": 26,
+        "knowledge:sentence_segments": 115,
+        "knowledge:sentence_segments_numeric_range_repair": 4,
+        "question:model": 125,
+        "question:question_clause_retry": 19,
+        "question:review_override": 6,
+        "right_answer:model": 112,
+        "right_answer:preserved_numeric": 15,
+        "right_answer:review_override": 23
+      },
+      "warning_counts": {},
+      "reviewed_samples": 49,
+      "reviewed_alignment_samples": 6,
+      "manual_override_samples": 41
+    },
+    "en": {
+      "rows": 300,
+      "duplicate_keys": 0,
+      "counts": {
+        "parse_mismatches": 0,
+        "correctness_mismatches": 0,
+        "evidence_quote_not_in_source": 59
+      },
+      "scored_rows": 282,
+      "accuracy": 0.8049645390070922,
+      "all_300_accuracy": 0.7833333333333333,
+      "saved_accuracy_matches": true,
+      "excluded_source_ids": [
+        "0fc17fd5ca70f1d4",
+        "25fb186ab0d7fb13",
+        "461e120f60f0cfd1",
+        "7209a309d0944a17",
+        "8fffb21b7331c3b2",
+        "900e6b5613cb0014",
+        "aa8fcfabec07c369",
+        "b93189eb56f9e464",
+        "fdc685e1e61bd62d"
+      ],
+      "exclusion_reasons": {
+        "The alleged hallucination states that Jim Johnston's WWE work started in 1985, which is equivalent to the grounded answer and supported by the evidence.": 2,
+        "The alleged hallucination says the mines are in different towns, which is equivalent to the grounded answer no.": 2,
+        "The question falsely says a British film editor directed the film, while the evidence says David Yates directed it; both candidates repeat the same film answer.": 2,
+        "The alleged hallucination that Tommy Duncan played with Bob Wills is explicitly supported by the evidence.": 2,
+        "Both candidates are supported: the evidence describes both works as documentary films.": 2,
+        "The alleged hallucination that the arena is in Duluth near Atlanta is supported by the evidence.": 2,
+        "The alleged hallucination, Simple Plan is not from Glastonbury, is supported by the evidence that it is from Montreal.": 2,
+        "The alleged hallucination names Tim Flannery, which is the same person as the grounded answer Timothy Fridtjof Flannery.": 2,
+        "The grounded answer omits KPMG even though the question asks for all Big Four firms other than Ernst & Young.": 2
+      },
+      "grounded_recall": 0.7092198581560284,
+      "hallucination_recall": 0.900709219858156
+    },
+    "zh": {
+      "rows": 300,
+      "duplicate_keys": 0,
+      "counts": {
+        "parse_mismatches": 0,
+        "correctness_mismatches": 0,
+        "missing_or_insufficient_explanation": 289,
+        "evidence_quote_not_in_source": 97
+      },
+      "scored_rows": 282,
+      "accuracy": 0.7411347517730497,
+      "all_300_accuracy": 0.73,
+      "saved_accuracy_matches": true,
+      "excluded_source_ids": [
+        "0fc17fd5ca70f1d4",
+        "25fb186ab0d7fb13",
+        "461e120f60f0cfd1",
+        "7209a309d0944a17",
+        "8fffb21b7331c3b2",
+        "900e6b5613cb0014",
+        "aa8fcfabec07c369",
+        "b93189eb56f9e464",
+        "fdc685e1e61bd62d"
+      ],
+      "exclusion_reasons": {
+        "The alleged hallucination states that Jim Johnston's WWE work started in 1985, which is equivalent to the grounded answer and supported by the evidence.": 2,
+        "The alleged hallucination says the mines are in different towns, which is equivalent to the grounded answer no.": 2,
+        "The question falsely says a British film editor directed the film, while the evidence says David Yates directed it; both candidates repeat the same film answer.": 2,
+        "The alleged hallucination that Tommy Duncan played with Bob Wills is explicitly supported by the evidence.": 2,
+        "Both candidates are supported: the evidence describes both works as documentary films.": 2,
+        "The alleged hallucination that the arena is in Duluth near Atlanta is supported by the evidence.": 2,
+        "The alleged hallucination, Simple Plan is not from Glastonbury, is supported by the evidence that it is from Montreal.": 2,
+        "The alleged hallucination names Tim Flannery, which is the same person as the grounded answer Timothy Fridtjof Flannery.": 2,
+        "The grounded answer omits KPMG even though the question asks for all Big Four firms other than Ernst & Young.": 2
+      },
+      "grounded_recall": 0.5106382978723404,
+      "hallucination_recall": 0.9716312056737588
+    },
+    "paired": {
+      "same_keys": true,
+      "label_mismatches": 0,
+      "exclusion_mismatches": 0,
+      "scored_source_pairs": 141,
+      "candidate_counts_per_source": {
+        "2": 141
+      },
+      "en_minus_zh_accuracy": 0.06382978723404255,
+      "source_cluster_bootstrap_95_ci": [
+        0.010638297872340425,
+        0.11702127659574468
+      ],
+      "resamples": 5000,
+      "seed": 20260928,
+      "different_verdicts": 70,
+      "en_only_correct": 44,
+      "zh_only_correct": 26
+    },
+    "explanation_flag_caveat": {
+      "method": "len(explanation.split()) < 5; not language neutral",
+      "zh_flagged": 289,
+      "flagged_character_lengths": {
+        "min": 18,
+        "median": 65,
+        "max": 142
+      },
+      "semantic_adequacy_not_verified": true
+    }
+  },
+  "pairing": {
+    "deepseek-r1-7b vs llama3.1-8b": {
+      "same_ids": true,
+      "source_mismatches": 0
+    },
+    "deepseek-r1-7b vs qwen2.5-7b": {
+      "same_ids": true,
+      "source_mismatches": 0
+    },
+    "llama3.1-8b vs qwen2.5-7b": {
+      "same_ids": true,
+      "source_mismatches": 0
+    }
+  },
+  "comparison_tolerance": {
+    "relative": 1e-10,
+    "absolute": 1e-12
+  }
+}

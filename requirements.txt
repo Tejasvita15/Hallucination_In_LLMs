@@ -8,4 +8,4 @@ protobuf
 safetensors
 numpy
 pandas
-matplotlib
+matplotlib==3.10.7

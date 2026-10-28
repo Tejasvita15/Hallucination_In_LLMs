@@ -1,0 +1,106 @@
+{
+  "reviewer": "Tejasvita Jain",
+  "review_date": "2026-10-15",
+  "input_sha256": "56c5651997dd5f50c6b87d0972618bdcb0db3733946c11f7130b4792342c3612",
+  "status": "Researcher-provided labels; authorship and independence not verified by software",
+  "limitations": "Exploratory 30-source sample; no inter-annotator agreement or calibrated factuality claim.",
+  "changed_from_AI": 23,
+  "groups": [
+    {
+      "model": "deepseek-r1-7b",
+      "n": 30,
+      "counts": {
+        "supported": 21,
+        "uncertain": 4,
+        "unsupported": 5
+      },
+      "categories": {
+        "supported": {
+          "n": 21,
+          "mean_final_token_probability": 0.9373357608098355,
+          "final_answer_tokens": 30.142857142857142
+        },
+        "unsupported": {
+          "n": 5,
+          "mean_final_token_probability": 0.9471074341207684,
+          "final_answer_tokens": 60.2
+        },
+        "abstention": {
+          "n": 0,
+          "mean_final_token_probability": null,
+          "final_answer_tokens": null
+        },
+        "uncertain": {
+          "n": 4,
+          "mean_final_token_probability": 0.9507518559653255,
+          "final_answer_tokens": 35.25
+        }
+      },
+      "error_auroc_negative_mean_probability": 0.42857142857142855
+    },
+    {
+      "model": "llama3.1-8b",
+      "n": 30,
+      "counts": {
+        "supported": 21,
+        "unsupported": 4,
+        "uncertain": 5
+      },
+      "categories": {
+        "supported": {
+          "n": 21,
+          "mean_final_token_probability": 0.8601744799864377,
+          "final_answer_tokens": 7.476190476190476
+        },
+        "unsupported": {
+          "n": 4,
+          "mean_final_token_probability": 0.8857589123236642,
+          "final_answer_tokens": 7
+        },
+        "abstention": {
+          "n": 0,
+          "mean_final_token_probability": null,
+          "final_answer_tokens": null
+        },
+        "uncertain": {
+          "n": 5,
+          "mean_final_token_probability": 0.9254456527694034,
+          "final_answer_tokens": 8.4
+        }
+      },
+      "error_auroc_negative_mean_probability": 0.4642857142857143
+    },
+    {
+      "model": "qwen2.5-7b",
+      "n": 30,
+      "counts": {
+        "supported": 23,
+        "uncertain": 4,
+        "unsupported": 3
+      },
+      "categories": {
+        "supported": {
+          "n": 23,
+          "mean_final_token_probability": 0.9684887374009203,
+          "final_answer_tokens": 29.82608695652174
+        },
+        "unsupported": {
+          "n": 3,
+          "mean_final_token_probability": 0.9848232192330935,
+          "final_answer_tokens": 20
+        },
+        "abstention": {
+          "n": 0,
+          "mean_final_token_probability": null,
+          "final_answer_tokens": null
+        },
+        "uncertain": {
+          "n": 4,
+          "mean_final_token_probability": 0.9729068800226437,
+          "final_answer_tokens": 23.25
+        }
+      },
+      "error_auroc_negative_mean_probability": 0.3333333333333333
+    }
+  ]
+}

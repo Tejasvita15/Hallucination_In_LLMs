@@ -1,0 +1,61 @@
+{
+  "input_rows_per_model": 20000,
+  "unique_source_ids": 10000,
+  "content_mismatches": {
+    "actual_label": 0,
+    "knowledge": 0,
+    "question": 0,
+    "candidate_answer": 0,
+    "prompt": 0,
+    "excluded_from_primary_metrics": 0
+  },
+  "paired_comparisons": [
+    {
+      "a": "llama",
+      "b": "qwen",
+      "a_only_correct": 2015,
+      "b_only_correct": 1907,
+      "accuracy_difference_pp": 0.54,
+      "cluster_bootstrap_95_ci_pp": [
+        -0.055,
+        1.15
+      ],
+      "mcnemar_exact_p": 0.0875197507136336
+    },
+    {
+      "a": "llama",
+      "b": "deepseek",
+      "a_only_correct": 2596,
+      "b_only_correct": 1987,
+      "accuracy_difference_pp": 3.045,
+      "cluster_bootstrap_95_ci_pp": [
+        2.4,
+        3.685
+      ],
+      "mcnemar_exact_p": 2.380159129199516e-19
+    },
+    {
+      "a": "qwen",
+      "b": "deepseek",
+      "a_only_correct": 2438,
+      "b_only_correct": 1937,
+      "accuracy_difference_pp": 2.505,
+      "cluster_bootstrap_95_ci_pp": [
+        1.8798750000000002,
+        3.15
+      ],
+      "mcnemar_exact_p": 3.807342292323372e-14
+    }
+  ],
+  "sampling": {
+    "seed": 20260920,
+    "matched_examples": 200,
+    "model_outputs": 600,
+    "strata": {
+      "any_flag=True;any_error=True": 4183,
+      "any_flag=True;any_error=False": 5962,
+      "any_flag=False;any_error=False": 6243,
+      "any_flag=False;any_error=True": 3612
+    }
+  }
+}

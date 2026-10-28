@@ -34,3 +34,38 @@ Thumbs.db
 .idea/
 .report-deps/
 .report-cache/
+
+# Local-only submission cleanup backup
+.submission-archive/
+
+# Generated submission archive
+submission/
+
+# Site-specific scheduler jobs (does not untrack existing files)
+*.pbs
+
+# Local thesis drafts, annotation packets and planning documents
+/report/
+ONE_DAY_RUNBOOK.md
+FINISH_IN_48_HOURS.md
+NINE_DAY_COMPLETION_PLAN.md
+
+# LaTeX sources and build artifacts
+*.tex
+*.aux
+*.log
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
+
+# Regenerable analysis output; analysis/inputs remains versionable
+/analysis/assets/
+/output/
+
+# Local development data, not the frozen evaluation inputs
+/data/development/
