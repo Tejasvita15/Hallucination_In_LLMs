@@ -36,8 +36,6 @@ The result alias `deepseek-r1-7b` denotes the distilled checkpoint, not full Dee
 - `analysis/assets/`: generated figures, tables, captions, provenance manifest and browser gallery.
 - `report/`: local dissertation sources and historical evidence records. Historical paths remain unchanged to preserve traceability.
 
-Deadline plans and temporary runbooks are not part of the submission documentation. Preparation timestamps inside immutable evidence records are retained for provenance; they are not experimental findings.
-
 ## Installation and analysis
 
 Use Python 3.10 or later. Model inference requires a CUDA-compatible PyTorch installation with sufficient GPU memory. Install PyTorch appropriate to the execution environment before installing the remaining dependencies.
@@ -54,10 +52,9 @@ python -m pip install matplotlib==3.10.7 numpy
 python scripts/build_thesis_assets.py
 ```
 
-The script reads the five JSON summaries in `analysis/inputs/` and generates 15 figures in PDF/PNG/SVG and 11 tables. Use PDF figures for LaTeX. Upload the generated assets directory alongside the main TeX file, add `\usepackage{graphicx}`, and insert the appropriate chapter figure blocks or individual figures. Input hashes and the script hash are recorded in `manifest.json`.
+Input hashes and the script hash are recorded in `manifest.json`.
 
-`requirements-truthfulqa.txt` is intentionally separate: the official likelihood evaluation uses a compatible pinned harness/Transformers stack in an isolated environment. `requirements-thesis.txt` supports the existing benchmark preparation adapter. These files are not redundant substitutes for the main requirements. Do not combine their installations blindly in a running inference environment.
-
+`requirements-truthfulqa.txt` is intentionally separate: the official likelihood evaluation uses a compatible pinned harness/Transformers stack in an isolated environment. `requirements-thesis.txt` supports the existing benchmark preparation adapter. These files are not redundant substitutes for the main requirements.
 ## Experimental scope
 
 | Experiment | Scope |
@@ -141,7 +138,7 @@ Source-grounded generation compares baseline, evidence-first and CAD with fixed 
 
 ## Running and verifying experiments
 
-Use the entrypoints in `scripts/`; their `--help` lists task-specific arguments. Existing PBS adapters are retained under `jobs/aspire2a/` for compatibility with saved commands. Configure allocation, queue, modules, cache paths and environment locally before submission. A different cluster or GPU requires compatible scheduler settings; no alternate hardware execution is implied by changing documentation.
+Use the entrypoints in `scripts/`; their `--help` lists task-specific arguments.
 
 ```bash
 python scripts/run_truthfulqa_mc.py --help
