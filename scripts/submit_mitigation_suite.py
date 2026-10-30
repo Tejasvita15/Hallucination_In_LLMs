@@ -53,7 +53,7 @@ def main():
                 if lock.exists():
                     raise SystemExit(f'Writer lock exists: {lock}. Verify its PBS job has ended before removing only the stale lock.')
                 env=f'MODEL={model},DATASET={dataset},SHARD={shard}'
-                result=subprocess.run(['qsub','-v',env,'jobs/nscc_2ap/mitigation_suite_v2.pbs'],cwd=ROOT,check=True,capture_output=True,text=True)
+                result=subprocess.run(['qsub','-v',env,'jobs/aspire2a/mitigation_suite_v2.pbs'],cwd=ROOT,check=True,capture_output=True,text=True)
                 job=result.stdout.strip().splitlines()[-1]
                 ledger.parent.mkdir(parents=True,exist_ok=True)
                 with ledger.open('a',encoding='utf-8') as f: f.write(json.dumps(dict(dataset=dataset,model=model,shard=shard,job_id=job,config_sha256=digest(c)))+'\n')

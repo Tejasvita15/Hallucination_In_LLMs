@@ -20,7 +20,7 @@ def main():
     if importlib.metadata.version("lm_eval") != "0.4.9.1":
         raise SystemExit("Install requirements-thesis.txt in the ASPIRE environment first")
     if importlib.metadata.version("transformers") != "4.51.3":
-        raise SystemExit("Use the dedicated TruthfulQA environment: run bash jobs/nscc_2ap/prepare_truthfulqa_login.sh, then submit truthfulqa_mc_full.pbs")
+        raise SystemExit("Use the dedicated TruthfulQA environment: run bash jobs/aspire2a/prepare_truthfulqa_login.sh, then submit truthfulqa_mc_full.pbs")
     config = json.loads((ROOT / args.config).read_text(encoding="utf-8"))
     model = next(m for m in config["models"] if m["name"] == args.model_name)
     from huggingface_hub import snapshot_download

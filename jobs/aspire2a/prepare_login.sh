@@ -2,7 +2,7 @@
 # Run on a login node with network access, not via qsub.
 set -euo pipefail
 [[ -f scripts/prefetch_hf_assets.py ]] || { echo "Run from repository root" >&2; exit 2; }
-source jobs/nscc_2ap/settings.local.sh
+source jobs/aspire2a/settings.local.sh
 : "${CONDA_ENV:?}"
 : "${HF_HOME:?}"
 [[ "$CONDA_ENV$HF_HOME" != *REPLACE_WITH* ]] || { echo "Edit settings.local.sh" >&2; exit 2; }

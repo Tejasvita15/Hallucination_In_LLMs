@@ -2,7 +2,7 @@
 # Compatibility repair on the login node; no generation or GPU smoke run.
 set -euo pipefail
 [[ -f scripts/run_truthfulqa_mc.py ]] || { echo 'Run from the repository root' >&2; exit 2; }
-source jobs/nscc_2ap/settings.local.sh
+source jobs/aspire2a/settings.local.sh
 : "${CONDA_ENV:?}" "${HF_HOME:?}"
 module purge
 unset PYTHONPATH PYTHONHOME
@@ -32,7 +32,11 @@ if Path(sys.prefix).resolve() != Path(os.environ['TRUTHFULQA_VENV']).resolve():
 Path(sys.prefix, 'torch-constraint.txt').write_text('torch==' + importlib.metadata.version('torch') + '\n')
 PY
 python -m pip install -c "$TRUTHFULQA_VENV/torch-constraint.txt" -r requirements-truthfulqa.txt
-source jobs/nscc_2ap/thesis_cache.sh
+: "${HF_HOME:?Set HF_HOME before selecting the thesis cache}"
+export HF_HOME
+export HF_HUB_CACHE="$HF_HOME/hub"
+export HF_DATASETS_CACHE="$HF_HOME/datasets-thesis-3.6.0"
+mkdir -p "$HF_HUB_CACHE" "$HF_DATASETS_CACHE"
 export HF_HUB_OFFLINE=0 TRANSFORMERS_OFFLINE=0
 python - <<'PY'
 import importlib.metadata, json, sys

@@ -17,10 +17,12 @@ def main():
            '.gitattributes'}
     paths = set()
     for name in tracked:
+        if name.startswith('jobs/nscc_2ap/'):
+            name = name.replace('jobs/nscc_2ap/', 'jobs/aspire2a/', 1)
         p = Path(name)
         if not name or not (ROOT / p).is_file():
             continue
-        if name in top or (p.parts[0] in roots and p.suffix.lower() != '.md'):
+        if name in top or (p.parts[0] in roots and p.suffix.lower() not in {'.md', '.pbs'}):
             paths.add(p)
     # Explicitly include the final analysis inputs and figures, not local drafts.
     for directory in ('analysis/inputs', 'analysis/assets'):

@@ -9,7 +9,7 @@ __pycache__/
 .env
 .venv/
 .dataset-deps/
-jobs/nscc_2ap/settings.local.sh
+jobs/aspire2a/settings.local.sh
 venv/
 env/
 

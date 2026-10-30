@@ -60,14 +60,14 @@ class RepairTests(unittest.TestCase):
 
     def test_full_review_launchers_use_full_configs(self):
         for model in ["qwen", "llama", "deepseek"]:
-            text = (ROOT / f"jobs/nscc_2ap/{model}_review_v3_full.pbs").read_text()
+            text = (ROOT / f"jobs/aspire2a/{model}_review_v3_full.pbs").read_text()
             self.assertNotIn(".smoke.json", text)
             path = text.split("--config ", 1)[1].strip()
             self.assertTrue((ROOT / path).exists())
 
     def test_new_launchers_have_no_sample_limits(self):
         for name in ["token_confidence_full", "truthfulqa_mc_full", "ragtruth_full", "mushroom_full", "qwen_crosslingual_full"]:
-            text = (ROOT / f"jobs/nscc_2ap/{name}.pbs").read_text()
+            text = (ROOT / f"jobs/aspire2a/{name}.pbs").read_text()
             self.assertNotIn("--max-samples", text)
             self.assertNotIn("smoke", text)
 

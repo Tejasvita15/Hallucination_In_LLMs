@@ -2,13 +2,13 @@
 set -euo pipefail
 cd "${PBS_O_WORKDIR:?Submit qsub from the repository root}"
 [[ -f scripts/run_halueval_detection.py ]] || { echo "Not the repository root" >&2; exit 2; }
-mkdir -p logs/nscc_2ap
-exec > >(tee -a "logs/nscc_2ap/${PBS_JOBNAME}_${PBS_JOBID}.log") 2>&1
+mkdir -p logs/aspire2a
+exec > >(tee -a "logs/aspire2a/${PBS_JOBNAME}_${PBS_JOBID}.log") 2>&1
 printf 'Job ID: %s\nJob name: %s\nNode: %s\nStart: %s\nWorkdir: %s\nQueue: %s\n' \
   "$PBS_JOBID" "$PBS_JOBNAME" "$(hostname)" "$(date)" "$PBS_O_WORKDIR" "${PBS_QUEUE:-unknown}"
 trap 'rc=$?; echo "Finished: $(date) | Exit code: $rc"' EXIT
-[[ -f jobs/nscc_2ap/settings.local.sh ]] && source jobs/nscc_2ap/settings.local.sh
-: "${CONDA_ENV:?Set CONDA_ENV in jobs/nscc_2ap/settings.local.sh}"
+[[ -f jobs/aspire2a/settings.local.sh ]] && source jobs/aspire2a/settings.local.sh
+: "${CONDA_ENV:?Set CONDA_ENV in jobs/aspire2a/settings.local.sh}"
 : "${HF_HOME:?Set HF_HOME to allocated shared storage}"
 [[ "$CONDA_ENV$HF_HOME" != *REPLACE_WITH* ]] || { echo "Edit settings.local.sh first" >&2; exit 2; }
 module purge
@@ -20,14 +20,18 @@ conda activate "$CONDA_ENV"
 if [[ "${USE_TRUTHFULQA_VENV:-0}" == 1 ]]; then
   TRUTHFULQA_VENV="${TRUTHFULQA_VENV:-${CONDA_ENV}-truthfulqa-v1}"
   [[ -f "$TRUTHFULQA_VENV/truthfulqa_ready.json" ]] || {
-    echo 'Run bash jobs/nscc_2ap/prepare_truthfulqa_login.sh first' >&2; exit 2;
+    echo 'Run bash jobs/aspire2a/prepare_truthfulqa_login.sh first' >&2; exit 2;
   }
   source "$TRUTHFULQA_VENV/bin/activate"
 fi
 export HF_HUB_CACHE="$HF_HOME/hub"
 export HF_DATASETS_CACHE="$HF_HOME/datasets"
 if [[ "${THESIS_DATA_CACHE:-0}" == 1 ]]; then
-  source jobs/nscc_2ap/thesis_cache.sh
+  : "${HF_HOME:?Set HF_HOME before selecting the thesis cache}"
+  export HF_HOME
+  export HF_HUB_CACHE="$HF_HOME/hub"
+  export HF_DATASETS_CACHE="$HF_HOME/datasets-thesis-3.6.0"
+  mkdir -p "$HF_HUB_CACHE" "$HF_DATASETS_CACHE"
 fi
 export TRANSFORMERS_CACHE="$HF_HUB_CACHE"
 export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 TOKENIZERS_PARALLELISM=false

@@ -2,7 +2,7 @@
 # Cache assets online; no model inference and no smoke experiment.
 set -euo pipefail
 [[ -f scripts/run_token_confidence.py ]] || { echo 'Run from the repository root' >&2; exit 2; }
-source jobs/nscc_2ap/settings.local.sh
+source jobs/aspire2a/settings.local.sh
 : "${CONDA_ENV:?}" "${HF_HOME:?}"
 module purge
 unset PYTHONPATH PYTHONHOME
@@ -10,7 +10,11 @@ export PYTHONNOUSERSITE=1
 module load "${CONDA_MODULE:-miniforge3/24.3.0}"
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate "$CONDA_ENV"
-source jobs/nscc_2ap/thesis_cache.sh
+: "${HF_HOME:?Set HF_HOME before selecting the thesis cache}"
+export HF_HOME
+export HF_HUB_CACHE="$HF_HOME/hub"
+export HF_DATASETS_CACHE="$HF_HOME/datasets-thesis-3.6.0"
+mkdir -p "$HF_HUB_CACHE" "$HF_DATASETS_CACHE"
 export HF_HUB_OFFLINE=0 TRANSFORMERS_OFFLINE=0
 python -m pip install -r requirements-thesis.txt
 python scripts/prefetch_hf_assets.py --config configs/benchmark_suite.thesis.json \
@@ -34,6 +38,6 @@ manifest['truthfulqa_task_overrides'] = task_configs()
 Path(os.environ['HF_DATASETS_CACHE'], 'thesis_prepared.json').write_text(json.dumps(manifest, indent=2))
 print(json.dumps(manifest, indent=2))
 PY
-python -m pip freeze > jobs/nscc_2ap/thesis_environment.lock.txt
-bash jobs/nscc_2ap/prepare_truthfulqa_login.sh
-echo 'Preparation complete. Next: bash jobs/nscc_2ap/submit_thesis_full.sh'
+python -m pip freeze > jobs/aspire2a/thesis_environment.lock.txt
+bash jobs/aspire2a/prepare_truthfulqa_login.sh
+echo 'Preparation complete. Next: bash jobs/aspire2a/submit_thesis_full.sh'
